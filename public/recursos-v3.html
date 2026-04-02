@@ -17,6 +17,8 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollSmoother.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/Observer.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/Flip.min.js"></script>
+  <!-- HLS.js -->
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.7/dist/hls.min.js"></script>
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -124,6 +126,18 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 2rem;
+      overflow: hidden;
+    }
+    #nav-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, #6d28d9, #22d3ee);
+      transform: scaleX(0);
+      transform-origin: left;
+      pointer-events: none;
     }
     .nav-logo {
       font-family: 'JetBrains Mono', monospace;
@@ -199,8 +213,17 @@
       justify-content: center;
       overflow: hidden;
     }
+    /* WebGL canvas — PRIMER hijo del hero */
+    #glcanvas {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
     .vid-wrap {
-      position: absolute; inset: 0; z-index: 0; overflow: hidden;
+      position: absolute; inset: 0; z-index: 1; overflow: hidden;
     }
     #bgvid {
       position: absolute;
@@ -208,40 +231,40 @@
       width: 150%; height: 150%;
       object-fit: cover;
       transform-origin: top left;
-      opacity: 0.45;
-      filter: saturate(1.4) contrast(1.05);
-      z-index: 0;
+      opacity: 0.28;
+      filter: saturate(1.5) contrast(1.1);
+      z-index: 1;
       pointer-events: none;
     }
     .hero-overlay-violet {
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse at 10% 30%, rgba(109,40,217,0.3) 0%, transparent 55%);
-      z-index: 1;
+      background: radial-gradient(ellipse at 10% 30%, rgba(109,40,217,0.2) 0%, transparent 55%);
+      z-index: 2;
     }
     .hero-overlay-cyan {
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse at 90% 70%, rgba(34,211,238,0.12) 0%, transparent 45%);
-      z-index: 1;
+      background: radial-gradient(ellipse at 90% 70%, rgba(34,211,238,0.08) 0%, transparent 45%);
+      z-index: 2;
     }
     .hero-overlay-top {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 35%);
-      z-index: 2;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, transparent 35%);
+      z-index: 3;
     }
     .hero-overlay-bottom {
       position: absolute;
       inset: 0;
       background: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 50%);
-      z-index: 2;
+      z-index: 3;
     }
     .hero-grain {
       position: absolute;
       inset: 0;
-      z-index: 3;
-      opacity: 0.035;
+      z-index: 4;
+      opacity: 0.03;
       pointer-events: none;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
       background-size: 200px 200px;
@@ -439,8 +462,25 @@
       background: var(--surface);
       border-right: 1px solid var(--border);
       flex-shrink: 0;
+      --mx: 50%;
+      --my: 50%;
+      overflow: hidden;
     }
     .layer-card:first-child { border-left: 1px solid var(--border); }
+    /* Spotlight glow que sigue al cursor */
+    .layer-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at var(--mx) var(--my), rgba(109,40,217,0.12) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      border-radius: inherit;
+      z-index: 0;
+    }
+    .layer-card:hover::before { opacity: 1; }
+    .layer-card > * { position: relative; z-index: 1; }
     .layer-num {
       position: absolute;
       bottom: 2rem;
@@ -451,6 +491,7 @@
       color: rgba(255,255,255,0.06);
       line-height: 1;
       user-select: none;
+      z-index: 0;
     }
     .layer-icon {
       font-size: 2rem;
@@ -537,6 +578,10 @@
       letter-spacing: -0.04em;
       display: block;
       margin-bottom: 0.6rem;
+      background: linear-gradient(135deg, #8b5cf6, #22d3ee);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
     .stat-label {
       font-family: 'JetBrains Mono', monospace;
@@ -601,6 +646,7 @@
       background: var(--border);
     }
     .pc {
+      position: relative;
       background: var(--surface);
       padding: 1.75rem;
       border: 1px solid transparent;
@@ -609,13 +655,28 @@
       color: inherit;
       display: block;
       cursor: pointer;
+      overflow: hidden;
+      --mx: 50%;
+      --my: 50%;
     }
+    /* Spotlight en project cards */
+    .pc::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at var(--mx) var(--my), rgba(109,40,217,0.10) 0%, transparent 55%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .pc:hover::before { opacity: 1; }
+    .pc > * { position: relative; z-index: 1; }
     .pc:hover {
       border-color: var(--violet-bright);
       box-shadow: 0 0 0 1px var(--violet-bright), 0 0 40px rgba(109,40,217,0.15);
       transform: translateY(-2px);
       z-index: 1;
-      position: relative;
     }
     .pc-private { cursor: default; }
     .pc-private:hover { border-color: var(--border); box-shadow: none; transform: none; }
@@ -804,7 +865,7 @@
 
   <!-- NAV (fixed, outside smooth wrapper) -->
   <nav>
-    <a href="#" class="nav-logo">DOF<span class="dot">●</span>MESH</a>
+    <a href="#" class="nav-logo">DOF<span class="dot">&#9679;</span>MESH</a>
     <div class="nav-right">
       <div class="nav-live"><div class="nav-live-dot"></div> LIVE</div>
       <button class="nav-lang-btn" onclick="toggleLang()" id="lang-btn">ES</button>
@@ -813,6 +874,7 @@
         <a href="recursos-v2.html">v2</a>
       </div>
     </div>
+    <div id="nav-progress"></div>
   </nav>
 
   <!-- SMOOTH WRAPPER -->
@@ -821,6 +883,9 @@
 
       <!-- HERO -->
       <section id="hero">
+        <!-- WebGL canvas — PRIMER hijo -->
+        <canvas id="glcanvas"></canvas>
+
         <!-- Background video -->
         <div class="vid-wrap">
           <video id="bgvid" autoplay muted loop playsinline data-speed="0.6"></video>
@@ -832,15 +897,15 @@
         <div class="hero-grain"></div>
 
         <div class="hero-content" data-speed="1">
-          <div class="hero-pill" data-i18n="hero.pill">⬡ ERC-8004 · MEDELLÍN · 2026</div>
+          <div class="hero-pill" data-i18n="hero.pill">&#11041; ERC-8004 &middot; MEDELL&Iacute;N &middot; 2026</div>
           <h1 class="hero-h1" id="hero-h1">Sovereign<br><em>Infrastructure</em></h1>
           <p class="hero-tagline" data-i18n="hero.tagline">Deterministic governance for autonomous AI agents</p>
           <p class="hero-stats">
-            <span>57K LOC</span> · <span>142 modules</span> · <span>5 chains</span>
+            <span>57K LOC</span> &middot; <span>142 modules</span> &middot; <span>5 chains</span>
           </p>
           <div class="hero-ctas">
             <a href="#projects" class="btn-primary magnetic" data-i18n="hero.cta1">Explore Ecosystem</a>
-            <a href="https://github.com/Cyberpaisa/DOF-MESH" target="_blank" rel="noopener" class="btn-ghost magnetic">GitHub ↗</a>
+            <a href="https://github.com/Cyberpaisa/DOF-MESH" target="_blank" rel="noopener" class="btn-ghost magnetic">GitHub &#8599;</a>
           </div>
         </div>
       </section>
@@ -850,67 +915,67 @@
         <div class="marquee-row">
           <div class="marquee-inner fwd">
             <span class="marquee-item">DOF-MESH</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
             <span class="marquee-item">AVALANCHE</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
             <span class="marquee-item">ERC-8004</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
             <span class="marquee-item">GOVERNANCE</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
             <span class="marquee-item">Z3 VERIFICATION</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
             <span class="marquee-item">CREWAI</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
             <span class="marquee-item">SNOWRAIL</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
             <!-- duplicate -->
             <span class="marquee-item">DOF-MESH</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
             <span class="marquee-item">AVALANCHE</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
             <span class="marquee-item">ERC-8004</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
             <span class="marquee-item">GOVERNANCE</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
             <span class="marquee-item">Z3 VERIFICATION</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
             <span class="marquee-item">CREWAI</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
             <span class="marquee-item">SNOWRAIL</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
           </div>
         </div>
         <div class="marquee-row">
           <div class="marquee-inner rev">
             <span class="marquee-item">ENIGMA</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
             <span class="marquee-item">BASE</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
             <span class="marquee-item">ULTRAVIOLETA DAO</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
             <span class="marquee-item">APEX</span>
-            <span class="marquee-item">·</span>
-            <span class="marquee-item">RUST GATE 7μs</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
+            <span class="marquee-item">RUST GATE 7&#x3BC;s</span>
+            <span class="marquee-item">&middot;</span>
             <span class="marquee-item">MULTI-AGENT</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
             <span class="marquee-item">ATTESTATION</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
             <!-- duplicate -->
             <span class="marquee-item">ENIGMA</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
             <span class="marquee-item">BASE</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
             <span class="marquee-item">ULTRAVIOLETA DAO</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
             <span class="marquee-item">APEX</span>
-            <span class="marquee-item">·</span>
-            <span class="marquee-item">RUST GATE 7μs</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
+            <span class="marquee-item">RUST GATE 7&#x3BC;s</span>
+            <span class="marquee-item">&middot;</span>
             <span class="marquee-item">MULTI-AGENT</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
             <span class="marquee-item">ATTESTATION</span>
-            <span class="marquee-item">·</span>
+            <span class="marquee-item">&middot;</span>
           </div>
         </div>
       </div>
@@ -919,56 +984,56 @@
       <section id="about">
         <div class="section-label" data-i18n="about.label">// ABOUT</div>
         <h2 class="about-h2" id="about-h2" data-i18n="about.h2">Deterministic governance<br>for the autonomous web</h2>
-        <p class="about-p" data-i18n="about.p">DOF-MESH is a 57K+ LOC framework providing 7-layer governance for AI agents. From constitutional rules to Z3 formal verification and on-chain attestations — every decision is auditable, deterministic, and sovereign.</p>
+        <p class="about-p" data-i18n="about.p">DOF-MESH is a 57K+ LOC framework providing 7-layer governance for AI agents. From constitutional rules to Z3 formal verification and on-chain attestations &mdash; every decision is auditable, deterministic, and sovereign.</p>
       </section>
 
       <!-- LAYERS — Horizontal scroll -->
       <section id="layers">
         <div class="layers-track" id="layers-track">
           <div class="layer-card">
-            <span class="layer-icon">⚖️</span>
+            <span class="layer-icon">&#9878;&#65039;</span>
             <div class="layer-name" data-i18n="layer1.name">Constitution</div>
             <p class="layer-desc" data-i18n="layer1.desc">Base rules and invariants. Defines what agents can and cannot do.</p>
             <span class="layer-tag">LAYER_00</span>
             <div class="layer-num">01</div>
           </div>
           <div class="layer-card">
-            <span class="layer-icon">🌳</span>
+            <span class="layer-icon">&#127795;</span>
             <div class="layer-name" data-i18n="layer2.name">AST</div>
             <p class="layer-desc" data-i18n="layer2.desc">Abstract Syntax Tree validation. Every operation parsed before execution.</p>
             <span class="layer-tag">LAYER_01</span>
             <div class="layer-num">02</div>
           </div>
           <div class="layer-card">
-            <span class="layer-icon">👁️</span>
+            <span class="layer-icon">&#128065;&#65039;</span>
             <div class="layer-name" data-i18n="layer3.name">Supervisor</div>
             <p class="layer-desc" data-i18n="layer3.desc">Real-time oversight of agent actions and state transitions.</p>
             <span class="layer-tag">LAYER_02</span>
             <div class="layer-num">03</div>
           </div>
           <div class="layer-card">
-            <span class="layer-icon">⚔️</span>
+            <span class="layer-icon">&#9876;&#65039;</span>
             <div class="layer-name" data-i18n="layer4.name">Adversarial</div>
             <p class="layer-desc" data-i18n="layer4.desc">Red-team simulation. Probes for edge cases before deployment.</p>
             <span class="layer-tag">LAYER_03</span>
             <div class="layer-num">04</div>
           </div>
           <div class="layer-card">
-            <span class="layer-icon">🧠</span>
+            <span class="layer-icon">&#129504;</span>
             <div class="layer-name" data-i18n="layer5.name">Memory</div>
             <p class="layer-desc" data-i18n="layer5.desc">Persistent context with cryptographic integrity guarantees.</p>
             <span class="layer-tag">LAYER_04</span>
             <div class="layer-num">05</div>
           </div>
           <div class="layer-card">
-            <span class="layer-icon">🔐</span>
+            <span class="layer-icon">&#128272;</span>
             <div class="layer-name" data-i18n="layer6.name">Z3 Formal</div>
             <p class="layer-desc" data-i18n="layer6.desc">Mathematical verification using Microsoft Z3 solver.</p>
             <span class="layer-tag">LAYER_05</span>
             <div class="layer-num">06</div>
           </div>
           <div class="layer-card">
-            <span class="layer-icon">🔮</span>
+            <span class="layer-icon">&#128302;</span>
             <div class="layer-name" data-i18n="layer7.name">Oracle</div>
             <p class="layer-desc" data-i18n="layer7.desc">On-chain attestation layer. Truth anchored to Avalanche + Base.</p>
             <span class="layer-tag">LAYER_06</span>
@@ -982,7 +1047,7 @@
       <section id="stats">
         <div class="stats-grid">
           <div class="stat-cell">
-            <span class="stat-num" style="color:var(--violet-bright)" data-count="57000">0</span>
+            <span class="stat-num" data-count="57000">0</span>
             <span class="stat-label" data-i18n="stat1.label">Lines of Code</span>
           </div>
           <div class="stat-cell">
@@ -994,7 +1059,7 @@
             <span class="stat-label" data-i18n="stat3.label">Test Files</span>
           </div>
           <div class="stat-cell">
-            <span class="stat-num" style="color:var(--cyan)" data-count="7">0</span>
+            <span class="stat-num" data-count="7">0</span>
             <span class="stat-label" data-i18n="stat4.label">Governance Layers</span>
           </div>
           <div class="stat-cell">
@@ -1002,7 +1067,7 @@
             <span class="stat-label" data-i18n="stat5.label">CrewAI Crews</span>
           </div>
           <div class="stat-cell">
-            <span class="stat-num" style="color:var(--violet-bright)" data-count="5">0</span>
+            <span class="stat-num" data-count="5">0</span>
             <span class="stat-label" data-i18n="stat6.label">Live Chains</span>
           </div>
         </div>
@@ -1027,7 +1092,7 @@
           <!-- LIVE projects -->
           <a href="https://github.com/Cyberpaisa/DOF-MESH" target="_blank" rel="noopener" class="pc" data-cat="live">
             <div class="pc-top">
-              <span class="pc-icon">🔮</span>
+              <span class="pc-icon">&#128302;</span>
               <span class="pc-badge badge-live" data-i18n="badge.live">LIVE</span>
             </div>
             <div class="pc-name">DOF-MESH</div>
@@ -1042,7 +1107,7 @@
 
           <a href="https://github.com/Cyberpaisa/Enigma-prod" target="_blank" rel="noopener" class="pc" data-cat="live">
             <div class="pc-top">
-              <span class="pc-icon">🧬</span>
+              <span class="pc-icon">&#129516;</span>
               <span class="pc-badge badge-live" data-i18n="badge.live">LIVE</span>
             </div>
             <div class="pc-name">Enigma</div>
@@ -1057,7 +1122,7 @@
 
           <a href="https://apex-arbitrage-agent-production.up.railway.app" target="_blank" rel="noopener" class="pc" data-cat="live">
             <div class="pc-top">
-              <span class="pc-icon">⚡</span>
+              <span class="pc-icon">&#9889;</span>
               <span class="pc-badge badge-mainnet" data-i18n="badge.mainnet">MAINNET</span>
             </div>
             <div class="pc-name">Apex Arbitrage Agent #1687</div>
@@ -1072,7 +1137,7 @@
 
           <a href="https://avariskscan-defi-production.up.railway.app" target="_blank" rel="noopener" class="pc" data-cat="live">
             <div class="pc-top">
-              <span class="pc-icon">🛡️</span>
+              <span class="pc-icon">&#128737;&#65039;</span>
               <span class="pc-badge badge-mainnet" data-i18n="badge.mainnet">MAINNET</span>
             </div>
             <div class="pc-name">AvaBuilder Agent #1686</div>
@@ -1087,7 +1152,7 @@
 
           <a href="https://dof-governance.vercel.app" target="_blank" rel="noopener" class="pc" data-cat="live">
             <div class="pc-top">
-              <span class="pc-icon">🏛️</span>
+              <span class="pc-icon">&#127983;&#65039;</span>
               <span class="pc-badge badge-live" data-i18n="badge.live">LIVE</span>
             </div>
             <div class="pc-name">DOF Governance</div>
@@ -1102,7 +1167,7 @@
 
           <a href="https://github.com/Cyberpaisa/snowrail-core" target="_blank" rel="noopener" class="pc" data-cat="live">
             <div class="pc-top">
-              <span class="pc-icon">🛤️</span>
+              <span class="pc-icon">&#128644;&#65039;</span>
               <span class="pc-badge badge-live" data-i18n="badge.live">LIVE</span>
             </div>
             <div class="pc-name">SnowRail Core</div>
@@ -1117,7 +1182,7 @@
 
           <a href="https://github.com/UltravioletaDAO" target="_blank" rel="noopener" class="pc" data-cat="live">
             <div class="pc-top">
-              <span class="pc-icon">🌌</span>
+              <span class="pc-icon">&#127756;</span>
               <span class="pc-badge badge-mainnet" data-i18n="badge.mainnet">MAINNET</span>
             </div>
             <div class="pc-name">Ultravioleta DAO</div>
@@ -1132,7 +1197,7 @@
 
           <a href="https://github.com/Cyberpaisa/tracer-protocol" target="_blank" rel="noopener" class="pc" data-cat="live">
             <div class="pc-top">
-              <span class="pc-icon">🔍</span>
+              <span class="pc-icon">&#128269;</span>
               <span class="pc-badge badge-live" data-i18n="badge.live">LIVE</span>
             </div>
             <div class="pc-name">TRACER Protocol</div>
@@ -1147,7 +1212,7 @@
           <!-- PRIVATE projects -->
           <div class="pc pc-private" data-cat="private">
             <div class="pc-top">
-              <span class="pc-icon">🔒</span>
+              <span class="pc-icon">&#128274;</span>
               <span class="pc-badge badge-private" data-i18n="badge.private">PRIVATE</span>
             </div>
             <div class="pc-name">OpenViking</div>
@@ -1160,7 +1225,7 @@
 
           <div class="pc pc-private" data-cat="private">
             <div class="pc-top">
-              <span class="pc-icon">🔒</span>
+              <span class="pc-icon">&#128274;</span>
               <span class="pc-badge badge-private" data-i18n="badge.private">PRIVATE</span>
             </div>
             <div class="pc-name">Super Sentinel</div>
@@ -1174,7 +1239,7 @@
 
           <div class="pc pc-private" data-cat="private">
             <div class="pc-top">
-              <span class="pc-icon">🔒</span>
+              <span class="pc-icon">&#128274;</span>
               <span class="pc-badge badge-private" data-i18n="badge.private">PRIVATE</span>
             </div>
             <div class="pc-name">SnowRail Sentinel</div>
@@ -1188,7 +1253,7 @@
 
           <div class="pc pc-private" data-cat="private">
             <div class="pc-top">
-              <span class="pc-icon">🔒</span>
+              <span class="pc-icon">&#128274;</span>
               <span class="pc-badge badge-private" data-i18n="badge.private">PRIVATE</span>
             </div>
             <div class="pc-name">ERC-8004 Builder Kit</div>
@@ -1209,10 +1274,10 @@
           <div class="creator-left">
             <div class="section-label" data-i18n="creator.label">// CREATOR</div>
             <div class="creator-name">Cyber Paisa</div>
-            <div class="creator-role" data-i18n="creator.role">Enigma Group · Medellín 🇨🇴</div>
+            <div class="creator-role" data-i18n="creator.role">Enigma Group &middot; Medell&iacute;n &#127464;&#127476;</div>
             <div class="creator-socials">
-              <a href="https://twitter.com/Cyber_paisa" target="_blank" rel="noopener" class="social-pill">𝕏 @Cyber_paisa</a>
-              <a href="https://github.com/Cyberpaisa" target="_blank" rel="noopener" class="social-pill">⌥ GitHub</a>
+              <a href="https://twitter.com/Cyber_paisa" target="_blank" rel="noopener" class="social-pill">&#120143; @Cyber_paisa</a>
+              <a href="https://github.com/Cyberpaisa" target="_blank" rel="noopener" class="social-pill">&#8997; GitHub</a>
             </div>
           </div>
           <div class="creator-right">
@@ -1241,8 +1306,8 @@
 
       <!-- FOOTER -->
       <footer>
-        DOF-MESH · Enigma Group · Medellín, Colombia · 2026 ·
-        <a href="recursos.html">v1</a> ·
+        DOF-MESH &middot; Enigma Group &middot; Medell&iacute;n, Colombia &middot; 2026 &middot;
+        <a href="recursos.html">v1</a> &middot;
         <a href="recursos-v2.html">v2</a>
       </footer>
 
@@ -1253,15 +1318,138 @@
     // ─── REGISTER PLUGINS ───────────────────────────────────────────────────
     gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, ScrambleTextPlugin, Observer, Flip);
 
+    // ── WEBGL DOMAIN-WARPED FBM SHADER ────────────────────────────────────────
+    (function initShader() {
+      const canvas = document.getElementById('glcanvas');
+      if (!canvas) return;
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      if (!gl) return;
+
+      const VS = `
+        attribute vec2 a_pos;
+        void main() { gl_Position = vec4(a_pos, 0.0, 1.0); }
+      `;
+
+      const FS = `
+        #ifdef GL_FRAGMENT_PRECISION_HIGH
+        precision highp float;
+        #else
+        precision mediump float;
+        #endif
+
+        uniform float u_time;
+        uniform vec2  u_res;
+        uniform vec2  u_mouse;
+
+        vec2 hash2(vec2 p) {
+          p = vec2(dot(p, vec2(127.1,311.7)), dot(p, vec2(269.5,183.3)));
+          return -1.0 + 2.0 * fract(sin(p) * 43758.5453);
+        }
+        float noise(vec2 p) {
+          vec2 i = floor(p), f = fract(p);
+          vec2 u = f*f*(3.0-2.0*f);
+          return mix(mix(dot(hash2(i+vec2(0,0)),f-vec2(0,0)),
+                         dot(hash2(i+vec2(1,0)),f-vec2(1,0)),u.x),
+                     mix(dot(hash2(i+vec2(0,1)),f-vec2(0,1)),
+                         dot(hash2(i+vec2(1,1)),f-vec2(1,1)),u.x),u.y);
+        }
+        float fbm(vec2 p) {
+          float v=0.0, a=0.52, f=1.0;
+          for(int i=0;i<6;i++){v+=a*noise(p*f);f*=1.97;a*=0.51;}
+          return v;
+        }
+
+        void main() {
+          vec2 uv = gl_FragCoord.xy / u_res;
+          uv.y = 1.0 - uv.y;
+
+          /* mouse soft pull */
+          vec2 m = u_mouse / u_res;
+          m.y = 1.0 - m.y;
+          float md = length(uv - m);
+          vec2 pull = (uv - m) * smoothstep(0.45, 0.0, md) * 0.18;
+
+          float t = u_time * 0.09;
+          vec2 p = (uv + pull) * 2.8;
+
+          /* domain warp — two levels */
+          vec2 q = vec2(fbm(p + t),
+                        fbm(p + vec2(5.2,1.3) + t*0.8));
+          vec2 r = vec2(fbm(p + 3.8*q + vec2(1.7,9.2) + t*0.6),
+                        fbm(p + 3.8*q + vec2(8.3,2.8) + t*0.65));
+          float f = fbm(p + 2.8*r + t*0.4);
+
+          /* color palette: deep void to violet to cyan */
+          vec3 c0 = vec3(0.0,   0.0,   0.0);
+          vec3 c1 = vec3(0.027, 0.008, 0.082);
+          vec3 c2 = vec3(0.271, 0.098, 0.545);
+          vec3 c3 = vec3(0.055, 0.714, 0.831);
+
+          float t1 = clamp(f*2.0+0.4, 0.0, 1.0);
+          float t2 = clamp(f*f*4.5,   0.0, 1.0);
+          vec3 col = mix(c0, c1, t1);
+              col  = mix(col, c2, t1*t1*0.7);
+              col  = mix(col, c3, t2*0.25);
+
+          /* radial vignette — keep edges dark */
+          float vig = 1.0 - smoothstep(0.25, 1.35, length(uv-0.5)*2.0);
+          col *= vig * 0.75;
+
+          gl_FragColor = vec4(col, 1.0);
+        }
+      `;
+
+      function compile(type, src) {
+        const s = gl.createShader(type);
+        gl.shaderSource(s, src); gl.compileShader(s);
+        return s;
+      }
+      const prog = gl.createProgram();
+      gl.attachShader(prog, compile(gl.VERTEX_SHADER, VS));
+      gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FS));
+      gl.linkProgram(prog); gl.useProgram(prog);
+
+      const buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+      const loc = gl.getAttribLocation(prog, 'a_pos');
+      gl.enableVertexAttribArray(loc);
+      gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+      const uTime  = gl.getUniformLocation(prog, 'u_time');
+      const uRes   = gl.getUniformLocation(prog, 'u_res');
+      const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+      let mx = 0, my = 0, start = performance.now();
+
+      function resize() {
+        canvas.width  = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+        gl.viewport(0, 0, canvas.width, canvas.height);
+      }
+      resize();
+      window.addEventListener('resize', resize);
+      window.addEventListener('mousemove', function(e) { mx = e.clientX; my = e.clientY; });
+
+      (function loop() {
+        var t = (performance.now() - start) * 0.001;
+        gl.uniform1f(uTime, t);
+        gl.uniform2f(uRes, canvas.width, canvas.height);
+        gl.uniform2f(uMouse, mx, my);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        requestAnimationFrame(loop);
+      })();
+    })();
+
     // ─── I18N ────────────────────────────────────────────────────────────────
-    const translations = {
+    var translations = {
       en: {
-        'hero.pill': '⬡ ERC-8004 · MEDELLÍN · 2026',
+        'hero.pill': '\u29C1 ERC-8004 \u00B7 MEDELL\u00CDN \u00B7 2026',
         'hero.tagline': 'Deterministic governance for autonomous AI agents',
         'hero.cta1': 'Explore Ecosystem',
         'about.label': '// ABOUT',
         'about.h2': 'Deterministic governance<br>for the autonomous web',
-        'about.p': 'DOF-MESH is a 57K+ LOC framework providing 7-layer governance for AI agents. From constitutional rules to Z3 formal verification and on-chain attestations — every decision is auditable, deterministic, and sovereign.',
+        'about.p': 'DOF-MESH is a 57K+ LOC framework providing 7-layer governance for AI agents. From constitutional rules to Z3 formal verification and on-chain attestations \u2014 every decision is auditable, deterministic, and sovereign.',
         'layer1.name': 'Constitution', 'layer1.desc': 'Base rules and invariants. Defines what agents can and cannot do.',
         'layer2.name': 'AST', 'layer2.desc': 'Abstract Syntax Tree validation. Every operation parsed before execution.',
         'layer3.name': 'Supervisor', 'layer3.desc': 'Real-time oversight of agent actions and state transitions.',
@@ -1287,53 +1475,53 @@
         'proj.sentinel.desc': 'Extended Enigma platform. Next.js 14 + TypeScript + Prisma. Enhanced trust scoring pipeline.',
         'proj.ssentinel.desc': 'B2B validator. pnpm monorepo + Hardhat. Fuji testnet contracts, API + SDK packages.',
         'proj.builderkit.desc': 'Registration and validation scripts for ERC-8004 agent identities on Avalanche C-Chain.',
-        'creator.label': '// CREATOR', 'creator.role': 'Enigma Group · Medellín 🇨🇴',
+        'creator.label': '// CREATOR', 'creator.role': 'Enigma Group \u00B7 Medell\u00EDn \uD83C\uDDE8\uD83C\uDDF4',
         'mini1.label': 'Agents', 'mini2.label': 'Crews', 'mini3.label': 'Chains', 'mini4.label': 'Txs',
       },
       es: {
-        'hero.pill': '⬡ ERC-8004 · MEDELLÍN · 2026',
-        'hero.tagline': 'Gobernanza determinista para agentes de IA autónomos',
+        'hero.pill': '\u29C1 ERC-8004 \u00B7 MEDELL\u00CDN \u00B7 2026',
+        'hero.tagline': 'Gobernanza determinista para agentes de IA aut\u00F3nomos',
         'hero.cta1': 'Explorar Ecosistema',
         'about.label': '// ACERCA DE',
-        'about.h2': 'Gobernanza determinista<br>para la web autónoma',
-        'about.p': 'DOF-MESH es un framework de 57K+ LOC que provee gobernanza de 7 capas para agentes de IA. Desde reglas constitucionales hasta verificación formal Z3 y attestations on-chain — cada decisión es auditable, determinista y soberana.',
-        'layer1.name': 'Constitución', 'layer1.desc': 'Reglas base e invariantes. Define qué pueden y no pueden hacer los agentes.',
-        'layer2.name': 'AST', 'layer2.desc': 'Validación de Árbol de Sintaxis Abstracta. Cada operación se parsea antes de ejecutarse.',
-        'layer3.name': 'Supervisor', 'layer3.desc': 'Supervisión en tiempo real de acciones y transiciones de estado de agentes.',
-        'layer4.name': 'Adversarial', 'layer4.desc': 'Simulación red-team. Prueba casos extremos antes del despliegue.',
-        'layer5.name': 'Memoria', 'layer5.desc': 'Contexto persistente con garantías de integridad criptográfica.',
-        'layer6.name': 'Z3 Formal', 'layer6.desc': 'Verificación matemática usando el solver Microsoft Z3.',
-        'layer7.name': 'Oráculo', 'layer7.desc': 'Capa de attestation on-chain. Verdad anclada a Avalanche + Base.',
+        'about.h2': 'Gobernanza determinista<br>para la web aut\u00F3noma',
+        'about.p': 'DOF-MESH es un framework de 57K+ LOC que provee gobernanza de 7 capas para agentes de IA. Desde reglas constitucionales hasta verificaci\u00F3n formal Z3 y attestations on-chain \u2014 cada decisi\u00F3n es auditable, determinista y soberana.',
+        'layer1.name': 'Constituci\u00F3n', 'layer1.desc': 'Reglas base e invariantes. Define qu\u00E9 pueden y no pueden hacer los agentes.',
+        'layer2.name': 'AST', 'layer2.desc': 'Validaci\u00F3n de \u00C1rbol de Sintaxis Abstracta. Cada operaci\u00F3n se parsea antes de ejecutarse.',
+        'layer3.name': 'Supervisor', 'layer3.desc': 'Supervisi\u00F3n en tiempo real de acciones y transiciones de estado de agentes.',
+        'layer4.name': 'Adversarial', 'layer4.desc': 'Simulaci\u00F3n red-team. Prueba casos extremos antes del despliegue.',
+        'layer5.name': 'Memoria', 'layer5.desc': 'Contexto persistente con garant\u00EDas de integridad criptogr\u00E1fica.',
+        'layer6.name': 'Z3 Formal', 'layer6.desc': 'Verificaci\u00F3n matem\u00E1tica usando el solver Microsoft Z3.',
+        'layer7.name': 'Or\u00E1culo', 'layer7.desc': 'Capa de attestation on-chain. Verdad anclada a Avalanche + Base.',
         'layers.hint': 'DESPLAZA PARA EXPLORAR',
-        'stat1.label': 'Líneas de Código', 'stat2.label': 'Módulos Core', 'stat3.label': 'Archivos de Test',
+        'stat1.label': 'L\u00EDneas de C\u00F3digo', 'stat2.label': 'M\u00F3dulos Core', 'stat3.label': 'Archivos de Test',
         'stat4.label': 'Capas de Gobernanza', 'stat5.label': 'Crews CrewAI', 'stat6.label': 'Chains Activas',
         'projects.label': '// ECOSISTEMA', 'projects.h2': 'Proyectos Activos',
         'filter.all': 'TODOS', 'filter.live': 'LIVE', 'filter.private': 'PRIVADOS',
         'badge.live': 'LIVE', 'badge.mainnet': 'MAINNET', 'badge.private': 'PRIVADO',
-        'proj.dof.desc': 'Framework de Observabilidad Determinista. Gobernanza 7 capas, verificación formal Z3, sistema multi-agente CrewAI con attestation on-chain completa.',
+        'proj.dof.desc': 'Framework de Observabilidad Determinista. Gobernanza 7 capas, verificaci\u00F3n formal Z3, sistema multi-agente CrewAI con attestation on-chain completa.',
         'proj.enigma.desc': 'Plataforma de Trust Score. Motor TRACER, Sentinel 27 verificaciones, 3 motores de scoring (v1, TRACER, v2 Combinado). Capa de identidad ERC-8004.',
-        'proj.apex.desc': 'Arbitraje triangular Bellman-Ford. Señales x402 paywalled, monitor de ballenas, detección de nuevos pares. Desplegado en Railway.',
-        'proj.ava.desc': 'Escáner de riesgo DeFi en Avalanche. Híbrido Node.js + Python. Puntuación de riesgo de protocolos en tiempo real.',
+        'proj.apex.desc': 'Arbitraje triangular Bellman-Ford. Se\u00F1ales x402 paywalled, monitor de ballenas, detecci\u00F3n de nuevos pares. Desplegado en Railway.',
+        'proj.ava.desc': 'Esc\u00E1ner de riesgo DeFi en Avalanche. H\u00EDbrido Node.js + Python. Puntuaci\u00F3n de riesgo de protocolos en tiempo real.',
         'proj.gov.desc': 'Frontend de gobernanza on-chain. ACP Evaluator, explorador de attestations, registro de pruebas en 5 chains.',
         'proj.snow.desc': 'Orquestador de pagos + Marketplace de Agentes. Monorepo TypeScript con Express, Drizzle ORM, contratos Hardhat, x402.',
         'proj.uvd.desc': 'Facilitador de pagos x402. Transacciones gasless EIP-3009, 9K+ txs, $509+ en volumen. Capa zero-gas SKALE.',
-        'proj.tracer.desc': 'Librería de trust scoring. Monorepo npm + Turbo. Engagement(30%) + Servicio(25%) + Publisher(20%) + Compliance(15%) + Momentum(10%).',
-        'proj.viking.desc': 'Capa de inteligencia híbrida Rust + Python. Tooling interno para paths críticos de rendimiento de DOF-MESH.',
+        'proj.tracer.desc': 'Librer\u00EDa de trust scoring. Monorepo npm + Turbo. Engagement(30%) + Servicio(25%) + Publisher(20%) + Compliance(15%) + Momentum(10%).',
+        'proj.viking.desc': 'Capa de inteligencia h\u00EDbrida Rust + Python. Tooling interno para paths cr\u00EDticos de rendimiento de DOF-MESH.',
         'proj.sentinel.desc': 'Plataforma Enigma extendida. Next.js 14 + TypeScript + Prisma. Pipeline de trust scoring mejorado.',
         'proj.ssentinel.desc': 'Validador B2B. Monorepo pnpm + Hardhat. Contratos testnet Fuji, paquetes API + SDK.',
-        'proj.builderkit.desc': 'Scripts de registro y validación para identidades de agentes ERC-8004 en Avalanche C-Chain.',
-        'creator.label': '// CREADOR', 'creator.role': 'Enigma Group · Medellín 🇨🇴',
+        'proj.builderkit.desc': 'Scripts de registro y validaci\u00F3n para identidades de agentes ERC-8004 en Avalanche C-Chain.',
+        'creator.label': '// CREADOR', 'creator.role': 'Enigma Group \u00B7 Medell\u00EDn \uD83C\uDDE8\uD83C\uDDF4',
         'mini1.label': 'Agentes', 'mini2.label': 'Crews', 'mini3.label': 'Chains', 'mini4.label': 'Txs',
       }
     };
 
-    let currentLang = 'en';
+    var currentLang = 'en';
 
     function applyLang(lang) {
       currentLang = lang;
-      const t = translations[lang];
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.dataset.i18n;
+      var t = translations[lang];
+      document.querySelectorAll('[data-i18n]').forEach(function(el) {
+        var key = el.dataset.i18n;
         if (t[key] !== undefined) {
           if (key === 'about.h2' || key === 'about.p') {
             el.innerHTML = t[key];
@@ -1351,10 +1539,10 @@
     }
 
     // ─── HEADLINE BUILDER (re-splits after lang change) ────────────────────
-    let heroSplit = null;
+    var heroSplit = null;
 
     function buildHeadline(lang) {
-      const h1 = document.getElementById('hero-h1');
+      var h1 = document.getElementById('hero-h1');
       if (!h1) return;
       if (lang === 'es') {
         h1.innerHTML = 'Infraestructura<br><em>Soberana</em>';
@@ -1363,29 +1551,58 @@
       }
       if (heroSplit) { heroSplit.revert(); }
       heroSplit = new SplitText(h1, { type: 'lines', linesClass: 'line' });
-      heroSplit.lines.forEach(line => {
-        const inner = document.createElement('div');
+      heroSplit.lines.forEach(function(line) {
+        var inner = document.createElement('div');
         inner.innerHTML = line.innerHTML;
         line.innerHTML = '';
         line.appendChild(inner);
       });
     }
 
+    // ─── SCAN LINE ──────────────────────────────────────────────────────────
+    function runScanLine(onDone) {
+      var scan = document.createElement('div');
+      scan.style.cssText = [
+        'position:fixed',
+        'left:0',
+        'right:0',
+        'top:0',
+        'height:1px',
+        'z-index:9998',
+        'background:linear-gradient(90deg,transparent 0%,rgba(109,40,217,0.9) 20%,rgba(34,211,238,1) 50%,rgba(109,40,217,0.9) 80%,transparent 100%)',
+        'box-shadow:0 0 20px rgba(34,211,238,0.6),0 0 60px rgba(109,40,217,0.4)',
+        'pointer-events:none'
+      ].join(';');
+      document.body.appendChild(scan);
+      gsap.fromTo(scan,
+        { top: '0%' },
+        {
+          top: '100%',
+          duration: 0.9,
+          ease: 'power1.inOut',
+          onComplete: function() {
+            scan.remove();
+            if (onDone) onDone();
+          }
+        }
+      );
+    }
+
     // ─── LOADER ──────────────────────────────────────────────────────────────
     function runLoader(onDone) {
-      const scrambleEl = document.getElementById('loader-scramble');
-      const countEl = document.getElementById('loader-count');
-      const bar = document.getElementById('loader-bar');
+      var scrambleEl = document.getElementById('loader-scramble');
+      var countEl = document.getElementById('loader-count');
+      var bar = document.getElementById('loader-bar');
 
-      const words = ['INITIALIZING', 'SOVEREIGN', 'DEPLOYING', 'VERIFYING', 'CONNECTED'];
-      let wordIndex = 0;
+      var words = ['INITIALIZING', 'SOVEREIGN', 'DEPLOYING', 'VERIFYING', 'CONNECTED'];
+      var wordIndex = 0;
 
       function scrambleNext() {
         if (wordIndex >= words.length) return;
         gsap.to(scrambleEl, {
           duration: 0.6,
           scrambleText: { text: words[wordIndex], chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', speed: 0.5 },
-          onComplete: () => {
+          onComplete: function() {
             wordIndex++;
             if (wordIndex < words.length) {
               gsap.delayedCall(0.3, scrambleNext);
@@ -1395,13 +1612,13 @@
       }
       scrambleNext();
 
-      // Counter 000 → 100
-      const obj = { v: 0 };
+      // Counter 000 to 100
+      var obj = { v: 0 };
       gsap.to(obj, {
         v: 100,
         duration: 2.2,
         ease: 'power2.inOut',
-        onUpdate() {
+        onUpdate: function() {
           countEl.textContent = String(Math.round(obj.v)).padStart(3, '0');
         }
       });
@@ -1409,22 +1626,24 @@
       // Progress bar
       gsap.to(bar, { width: '100%', duration: 2.4, ease: 'power2.inOut' });
 
-      // Fade out loader
+      // Fade out loader then run scan line then init
       gsap.to('#loader', {
         autoAlpha: 0,
         duration: 0.6,
         delay: 2.6,
         ease: 'power2.inOut',
-        onComplete: onDone
+        onComplete: function() {
+          runScanLine(onDone);
+        }
       });
     }
 
     // ─── HLS VIDEO ───────────────────────────────────────────────────────────
-    const HLS_URL = 'https://stream.mux.com/NcU3HlHeF7CUL86azTTzpy3Tlb00d6iF3BmCdFslMJYM.m3u8';
-    const vid = document.getElementById('bgvid');
+    var HLS_URL = 'https://stream.mux.com/NcU3HlHeF7CUL86azTTzpy3Tlb00d6iF3BmCdFslMJYM.m3u8';
+    var vid = document.getElementById('bgvid');
     if (vid) {
-      if (Hls.isSupported()) {
-        const hls = new Hls({ autoStartLoad: true });
+      if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+        var hls = new Hls({ autoStartLoad: true });
         hls.loadSource(HLS_URL);
         hls.attachMedia(vid);
       } else if (vid.canPlayType('application/vnd.apple.mpegurl')) {
@@ -1435,7 +1654,7 @@
     // ─── MAIN INIT ────────────────────────────────────────────────────────────
     function initPage() {
       // ScrollSmoother
-      const smoother = ScrollSmoother.create({
+      var smoother = ScrollSmoother.create({
         wrapper: '#smooth-wrapper',
         content: '#smooth-content',
         smooth: 1.6,
@@ -1443,10 +1662,18 @@
         smoothTouch: 0.1,
       });
 
+      // Nav progress bar tied to scroll
+      ScrollTrigger.create({
+        onUpdate: function(self) {
+          document.getElementById('nav-progress').style.transform =
+            'scaleX(' + self.progress + ')';
+        }
+      });
+
       // Build initial headline and animate
       buildHeadline('en');
-      const h1 = document.getElementById('hero-h1');
-      const lines = h1.querySelectorAll('.line > div');
+      var h1 = document.getElementById('hero-h1');
+      var lines = h1.querySelectorAll('.line > div');
       gsap.from(lines, {
         y: '110%',
         duration: 1.1,
@@ -1466,8 +1693,8 @@
       });
 
       // ── ABOUT headline SplitText ──────────────────────────────────────────
-      const aboutH2 = document.getElementById('about-h2');
-      const aboutSplit = new SplitText(aboutH2, { type: 'words', wordsClass: 'word' });
+      var aboutH2 = document.getElementById('about-h2');
+      var aboutSplit = new SplitText(aboutH2, { type: 'words', wordsClass: 'word' });
       gsap.from(aboutSplit.words, {
         autoAlpha: 0,
         y: 16,
@@ -1482,24 +1709,24 @@
       });
 
       // ── LAYERS — Horizontal pinned scroll ─────────────────────────────────
-      const track = document.getElementById('layers-track');
+      var track = document.getElementById('layers-track');
 
-      const layerAnim = gsap.to(track, {
-        x: () => -(track.scrollWidth - window.innerWidth + 40),
+      var layerAnim = gsap.to(track, {
+        x: function() { return -(track.scrollWidth - window.innerWidth + 40); },
         ease: 'none',
       });
 
-      const layerST = ScrollTrigger.create({
+      var layerST = ScrollTrigger.create({
         trigger: '#layers',
         start: 'top top',
-        end: () => '+=' + (track.scrollWidth - window.innerWidth + 40),
+        end: function() { return '+=' + (track.scrollWidth - window.innerWidth + 40); },
         scrub: 1,
         pin: true,
         anticipatePin: 1,
         animation: layerAnim,
       });
 
-      gsap.utils.toArray('.layer-card').forEach((card) => {
+      gsap.utils.toArray('.layer-card').forEach(function(card) {
         gsap.from(card, {
           autoAlpha: 0.3,
           scale: 0.96,
@@ -1514,17 +1741,49 @@
         });
       });
 
+      // ── LAYER CARD spotlight + tilt ───────────────────────────────────────
+      document.querySelectorAll('.layer-card').forEach(function(card) {
+        card.addEventListener('mousemove', function(e) {
+          var r = card.getBoundingClientRect();
+          // spotlight vars
+          var x = ((e.clientX - r.left) / r.width * 100).toFixed(1);
+          var y = ((e.clientY - r.top) / r.height * 100).toFixed(1);
+          card.style.setProperty('--mx', x + '%');
+          card.style.setProperty('--my', y + '%');
+          // 3D tilt
+          var cx = r.left + r.width / 2;
+          var cy = r.top + r.height / 2;
+          var rx = ((e.clientY - cy) / r.height) * -6;
+          var ry = ((e.clientX - cx) / r.width) * 6;
+          gsap.to(card, { rotateX: rx, rotateY: ry, duration: 0.4, ease: 'power2.out', transformPerspective: 800 });
+        });
+        card.addEventListener('mouseleave', function() {
+          gsap.to(card, { rotateX: 0, rotateY: 0, duration: 0.7, ease: 'elastic.out(1,0.4)' });
+        });
+      });
+
+      // ── PROJECT CARD spotlight ────────────────────────────────────────────
+      document.querySelectorAll('.pc').forEach(function(card) {
+        card.addEventListener('mousemove', function(e) {
+          var r = card.getBoundingClientRect();
+          var x = ((e.clientX - r.left) / r.width * 100).toFixed(1);
+          var y = ((e.clientY - r.top) / r.height * 100).toFixed(1);
+          card.style.setProperty('--mx', x + '%');
+          card.style.setProperty('--my', y + '%');
+        });
+      });
+
       // ── STATS COUNTERS ────────────────────────────────────────────────────
-      document.querySelectorAll('[data-count]').forEach(el => {
+      document.querySelectorAll('[data-count]').forEach(function(el) {
         el.textContent = '0';
-        const target = parseFloat(el.dataset.count);
-        const obj2 = { v: 0 };
+        var target = parseFloat(el.dataset.count);
+        var obj2 = { v: 0 };
         gsap.to(obj2, {
           v: target,
           duration: 2.2,
           ease: 'power2.out',
           scrollTrigger: { trigger: el, start: 'top 88%', once: true },
-          onUpdate() {
+          onUpdate: function() {
             el.textContent = target >= 1000
               ? Math.round(obj2.v).toLocaleString()
               : Math.round(obj2.v);
@@ -1533,7 +1792,7 @@
       });
 
       // ── SECTION FADE-IN ───────────────────────────────────────────────────
-      gsap.utils.toArray('#about, #stats, #projects, #creator').forEach(section => {
+      gsap.utils.toArray('#about, #stats, #projects, #creator').forEach(function(section) {
         gsap.from(section, {
           autoAlpha: 0,
           y: 32,
@@ -1562,14 +1821,14 @@
       });
 
       // ── FLIP FILTER ───────────────────────────────────────────────────────
-      document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.filter-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
           btn.classList.add('active');
-          const filter = btn.dataset.filter;
-          const state = Flip.getState('.pc');
-          document.querySelectorAll('.pc').forEach(card => {
-            const show = filter === 'all' || card.dataset.cat === filter;
+          var filter = btn.dataset.filter;
+          var state = Flip.getState('.pc');
+          document.querySelectorAll('.pc').forEach(function(card) {
+            var show = filter === 'all' || card.dataset.cat === filter;
             card.style.display = show ? '' : 'none';
           });
           Flip.from(state, {
@@ -1582,12 +1841,12 @@
       });
 
       // ── MAGNETIC BUTTONS ──────────────────────────────────────────────────
-      document.querySelectorAll('.magnetic').forEach(btn => {
+      document.querySelectorAll('.magnetic').forEach(function(btn) {
         Observer.create({
           target: btn,
           type: 'pointer',
-          onMove: self => {
-            const r = btn.getBoundingClientRect();
+          onMove: function(self) {
+            var r = btn.getBoundingClientRect();
             gsap.to(btn, {
               x: (self.x - r.left - r.width / 2) * 0.35,
               y: (self.y - r.top - r.height / 2) * 0.35,
@@ -1595,33 +1854,20 @@
               ease: 'power2.out',
             });
           },
-          onLeave: () => gsap.to(btn, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1,0.3)' })
-        });
-      });
-
-      // ── LAYER CARD 3D TILT ────────────────────────────────────────────────
-      document.querySelectorAll('.layer-card').forEach(card => {
-        card.addEventListener('mousemove', e => {
-          const r = card.getBoundingClientRect();
-          const cx = r.left + r.width / 2;
-          const cy = r.top + r.height / 2;
-          const rx = ((e.clientY - cy) / r.height) * -6;
-          const ry = ((e.clientX - cx) / r.width) * 6;
-          gsap.to(card, { rotateX: rx, rotateY: ry, duration: 0.4, ease: 'power2.out', transformPerspective: 800 });
-        });
-        card.addEventListener('mouseleave', () => {
-          gsap.to(card, { rotateX: 0, rotateY: 0, duration: 0.7, ease: 'elastic.out(1,0.4)' });
+          onLeave: function() {
+            gsap.to(btn, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1,0.3)' });
+          }
         });
       });
     }
 
     // ── REDUCED MOTION ────────────────────────────────────────────────────────
-    gsap.matchMedia().add('(prefers-reduced-motion: reduce)', () => {
+    gsap.matchMedia().add('(prefers-reduced-motion: reduce)', function() {
       gsap.globalTimeline.timeScale(20);
     });
 
-    // ── BOOT ──────────────────────────────────────────────────────────────────
-    window.addEventListener('load', () => {
+    // ── BOOT — loader -> scan line -> initPage ────────────────────────────────
+    window.addEventListener('load', function() {
       runLoader(initPage);
     });
   </script>
