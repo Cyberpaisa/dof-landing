@@ -10,6 +10,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/SplitText.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrambleTextPlugin.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollSmoother.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
 
   <style>
@@ -746,6 +749,10 @@
       }
     }
 
+    /* ── SCROLL SMOOTHER ──────────────────────────────────── */
+    #smooth-wrapper { overflow: hidden; position: fixed; inset: 0; }
+    #smooth-content { overflow: visible; }
+
     /* ── SCROLLBAR ─────────────────────────────────────────── */
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: #000; }
@@ -753,6 +760,10 @@
   </style>
 </head>
 <body>
+
+  <!-- SMOOTH SCROLL WRAPPER -->
+  <div id="smooth-wrapper">
+  <div id="smooth-content">
 
   <!-- LOADER -->
   <div id="loader">
@@ -790,11 +801,7 @@
     </div>
     <div class="hero-content">
       <div class="hero-pill">⬡ DOF-MESH · ERC-8004 · MEDELLÍN 2026</div>
-      <h1 class="hero-headline" id="heroHeadline">
-        <span class="ch">A</span><span class="ch">g</span><span class="ch">e</span><span class="ch">n</span><span class="ch">t</span><span class="ch">e</span><span class="ch">s</span>
-        <br>
-        <span class="ch">S</span><span class="ch">o</span><span class="ch">b</span><span class="ch">e</span><span class="ch">r</span><span class="ch">a</span><span class="ch">n</span><span class="ch">o</span><span class="ch">s</span>
-      </h1>
+      <h1 class="hero-headline" id="heroHeadline">Agentes<br>Soberanos</h1>
       <p class="hero-sub" data-i18n="hero_sub">Infraestructura soberana para agentes autónomos</p>
       <div class="hero-btns">
         <a href="#projects" class="btn-primary" data-i18n="hero_cta">Ver Proyectos</a>
@@ -1090,127 +1097,155 @@
     <p>DOF-MESH · Enigma Group · Medellín, Colombia · 2026</p>
   </footer>
 
+  </div><!-- /smooth-content -->
+  </div><!-- /smooth-wrapper -->
+
   <script>
-    // HLS Video
+    // ── Register all plugins (GSAP Skills best practice) ──────
+    gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, ScrambleTextPlugin);
+
+    // ── HLS Video ─────────────────────────────────────────────
     if (Hls.isSupported()) {
       const hls = new Hls({ autoStartLoad: true });
       hls.loadSource('https://stream.mux.com/NcU3HlHeF7CUL86azTTzpy3Tlb00d6iF3BmCdFslMJYM.m3u8');
       hls.attachMedia(document.getElementById('bgvid'));
     } else {
-      const vid = document.getElementById('bgvid');
-      vid.src = 'https://stream.mux.com/NcU3HlHeF7CUL86azTTzpy3Tlb00d6iF3BmCdFslMJYM.m3u8';
+      document.getElementById('bgvid').src = 'https://stream.mux.com/NcU3HlHeF7CUL86azTTzpy3Tlb00d6iF3BmCdFslMJYM.m3u8';
     }
 
-    // Loader 000 → 100
+    // ── Loader 000 → 100 with ScrambleText on word ────────────
     const loaderEl   = document.getElementById('loader');
     const counterEl  = document.getElementById('ldcount');
     const progressEl = document.getElementById('ldprogress');
     const wordEl     = document.getElementById('ldword');
-    const words      = ['BUILDING', 'SOVEREIGN', 'GOVERNANCE', 'DEPLOYING', 'VERIFYING'];
-    let wi = 0;
 
+    // ScrambleText cycling words — proper GSAP plugin usage
+    const words = ['BUILDING', 'SOVEREIGN', 'GOVERNANCE', 'DEPLOYING', 'VERIFYING'];
+    let wi = 0;
     const wordTimer = setInterval(() => {
       wi = (wi + 1) % words.length;
-      wordEl.textContent = words[wi];
-    }, 600);
+      gsap.to(wordEl, {
+        duration: 0.4,
+        scrambleText: { text: words[wi], chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', speed: 0.4 }
+      });
+    }, 700);
 
-    const start = performance.now();
-    const dur   = 2400;
-
+    const start = performance.now(), dur = 2400;
     function tick(now) {
       const p = Math.min((now - start) / dur, 1);
-      const n = Math.round(p * 100);
-      counterEl.textContent   = String(n).padStart(3, '0');
-      progressEl.style.width  = (p * 100) + '%';
+      counterEl.textContent  = String(Math.round(p * 100)).padStart(3, '0');
+      progressEl.style.width = (p * 100) + '%';
+      if (p < 1) { requestAnimationFrame(tick); return; }
 
-      if (p < 1) {
-        requestAnimationFrame(tick);
-      } else {
-        clearInterval(wordTimer);
-        setTimeout(() => {
-          gsap.registerPlugin(ScrollTrigger);
-
-          // Fade out loader
-          gsap.to('#loader', {
-            opacity: 0,
-            duration: 0.5,
-            onComplete: () => loaderEl.remove()
-          });
-
-          // Hero animations
-          gsap.to('.ch', {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            stagger: 0.025,
-            ease: 'power3.out',
-            delay: 0.1
-          });
-          gsap.to('.hero-sub', {
-            opacity: 1,
-            y: 0,
-            duration: 0.7,
-            delay: 0.5,
-            ease: 'power2.out'
-          });
-          gsap.to('.hero-btns', {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            delay: 0.7,
-            ease: 'power2.out'
-          });
-          gsap.to('.hero-pill', {
-            opacity: 1,
-            y: 0,
-            duration: 0.5,
-            delay: 0.2,
-            ease: 'power2.out'
-          });
-
-          // Cards ScrollTrigger
-          gsap.from('.pc', {
-            scrollTrigger: {
-              trigger: '#projects',
-              start: 'top 80%'
-            },
-            opacity: 0,
-            y: 40,
-            stagger: 0.08,
-            duration: 0.6,
-            ease: 'power2.out'
-          });
-
-        }, 300);
-      }
+      clearInterval(wordTimer);
+      setTimeout(initPage, 300);
     }
-
     requestAnimationFrame(tick);
 
-    // Counters IntersectionObserver
-    const cObs = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (!e.isIntersecting) return;
-        cObs.unobserve(e.target);
-        const target = parseFloat(e.target.dataset.count);
+    // ── Init after loader ─────────────────────────────────────
+    function initPage() {
+
+      // Fade out loader — autoAlpha handles visibility+opacity together
+      gsap.to('#loader', { autoAlpha: 0, duration: 0.5, onComplete: () => loaderEl.remove() });
+
+      // ScrollSmoother — smooth scroll (GSAP Plugins skill)
+      const smoother = ScrollSmoother.create({
+        wrapper: '#smooth-wrapper',
+        content: '#smooth-content',
+        smooth: 1.4,
+        effects: true,
+      });
+
+      // SplitText headline — proper plugin usage (replaces manual spans)
+      const split = new SplitText('#heroHeadline', { type: 'chars', charsClass: 'ch' });
+      gsap.set(split.chars, { autoAlpha: 0, y: 60 });
+
+      // Hero entrance timeline with position parameters
+      const heroTL = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      heroTL
+        .to('.hero-pill',  { autoAlpha: 1, y: 0, duration: 0.5 }, 0.1)
+        .to(split.chars,   { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.022 }, 0.25)
+        .to('.hero-sub',   { autoAlpha: 1, y: 0, duration: 0.6 }, '<0.3')
+        .to('.hero-btns',  { autoAlpha: 1, y: 0, duration: 0.5 }, '<0.15');
+
+      // Video parallax scrub (scroll-linked, not time-linked)
+      gsap.to('#bgvid', {
+        y: '15%',
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#hero',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+        }
+      });
+
+      // Stats section reveal — timeline on section entry
+      gsap.from('#stats .stat-item', {
+        scrollTrigger: { trigger: '#stats', start: 'top 75%' },
+        autoAlpha: 0,
+        y: 30,
+        stagger: 0.1,
+        duration: 0.6,
+        ease: 'power2.out',
+      });
+
+      // Section title reveal
+      gsap.from('#projects .section-header', {
+        scrollTrigger: { trigger: '#projects', start: 'top 80%' },
+        autoAlpha: 0,
+        y: 24,
+        duration: 0.7,
+        ease: 'power2.out',
+      });
+
+      // ScrollTrigger.batch() for project cards — GSAP Skills best practice
+      ScrollTrigger.batch('.pc', {
+        start: 'top 88%',
+        onEnter: batch => gsap.from(batch, {
+          autoAlpha: 0,
+          y: 40,
+          stagger: 0.07,
+          duration: 0.65,
+          ease: 'power2.out',
+          overwrite: true,
+        }),
+        once: true,
+      });
+
+      // Creator section
+      gsap.from('#creator .creator-inner > *', {
+        scrollTrigger: { trigger: '#creator', start: 'top 80%' },
+        autoAlpha: 0,
+        y: 30,
+        stagger: 0.15,
+        duration: 0.7,
+        ease: 'power2.out',
+      });
+
+      // Counters — GSAP-driven (no IntersectionObserver needed with ScrollTrigger)
+      document.querySelectorAll('[data-count]').forEach(el => {
+        el.textContent = '0';
+        const target = parseFloat(el.dataset.count);
         const obj = { v: 0 };
         gsap.to(obj, {
           v: target,
           duration: 2,
           ease: 'power2.out',
+          scrollTrigger: { trigger: el, start: 'top 90%', once: true },
           onUpdate() {
-            e.target.textContent = target >= 1000
+            el.textContent = target >= 1000
               ? Math.round(obj.v).toLocaleString()
               : Math.round(obj.v);
           }
         });
       });
-    }, { threshold: 0.2 });
 
-    document.querySelectorAll('[data-count]').forEach(el => {
-      el.textContent = '0';
-      cObs.observe(el);
-    });
+      // gsap.matchMedia() — respect reduced motion (GSAP Core skill)
+      gsap.matchMedia().add('(prefers-reduced-motion: reduce)', () => {
+        gsap.globalTimeline.timeScale(10);
+      });
+    }
 
     // ── i18n ─────────────────────────────────────────────────
     const T = {
@@ -1274,10 +1309,9 @@
 
     function buildHeadline(text) {
       const h = document.getElementById('heroHeadline');
-      const lines = text.split('\n');
-      h.innerHTML = lines.map((line, i) =>
-        (i > 0 ? '<br>' : '') + line.split('').map(c => `<span class="ch" style="opacity:1;transform:translateY(0)">${c}</span>`).join('')
-      ).join('');
+      h.innerHTML = text.replace('\n', '<br>');
+      const split = new SplitText(h, { type: 'chars', charsClass: 'ch' });
+      gsap.set(split.chars, { autoAlpha: 1, y: 0 });
     }
 
     function toggleLang() {
