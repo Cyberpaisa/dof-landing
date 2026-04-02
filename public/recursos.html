@@ -1301,19 +1301,23 @@ ScrollTrigger.batch('[data-wrap]',{
   once:true
 });
 
-// Stats counters
-document.querySelectorAll('.sc .big[data-count]').forEach(el=>{
-  const t=parseFloat(el.dataset.count);
-  el.textContent='0';
-  ScrollTrigger.create({
-    trigger:el,start:'top 92%',once:true,
-    onEnter:()=>{
-      const obj={v:0};
-      gsap.to(obj,{v:t,duration:2,ease:'power2.out',
-        onUpdate(){ el.textContent=t>=1000?Math.round(obj.v).toLocaleString():Math.round(obj.v); }
-      });
-    }
+// Stats counters — IntersectionObserver (funciona aunque ya estén en viewport)
+const counterObs = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(!entry.isIntersecting) return;
+    const el = entry.target;
+    counterObs.unobserve(el);
+    const t = parseFloat(el.dataset.count);
+    const obj = {v:0};
+    gsap.to(obj,{v:t,duration:2,ease:'power2.out',
+      onUpdate(){ el.textContent = t>=1000 ? Math.round(obj.v).toLocaleString() : Math.round(obj.v); }
+    });
   });
+},{threshold:0.1});
+
+document.querySelectorAll('.sc .big[data-count]').forEach(el=>{
+  el.textContent='0';
+  counterObs.observe(el);
 });
 
 // Creator section
