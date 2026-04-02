@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ecosistema DOF-MESH — Recursos Activos</title>
+  <meta name="description" content="Todos los proyectos, herramientas y activos del ecosistema DOF Mesh Legion. Infraestructura soberana para agentes autónomos.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <style>
+    /* ── Variables ── */
+    :root {
+      --bg:          #060610;
+      --bg-2:        #0c0c1e;
+      --bg-3:        #121228;
+      --bg-card:     rgba(12, 12, 30, 0.85);
+      --border:      rgba(108, 92, 231, 0.18);
+      --border-hover:rgba(108, 92, 231, 0.7);
+      --text:        #e8e8f2;
+      --text-2:      #9090b8;
+      --text-3:      #55557a;
+      --accent:      #6c5ce7;
+      --accent-2:    #a29bfe;
+      --accent-glow: rgba(108,92,231,0.35);
+      --green:       #00e676;
+      --green-dim:   rgba(0,230,118,0.15);
+      --cyan:        #18ffff;
+      --cyan-dim:    rgba(24,255,255,0.12);
+      --gold:        #fbbf24;
+      --gold-dim:    rgba(251,191,36,0.12);
+      --red:         #ff5252;
+      --orange:      #ff9800;
+      --radius:      10px;
+      --radius-lg:   16px;
+      --blur:        blur(20px);
+      --shadow:      0 4px 32px rgba(0,0,0,0.5), 0 0 0 1px var(--border);
+      --shadow-hover:0 8px 48px rgba(0,0,0,0.6), 0 0 0 1px var(--border-hover), 0 0 48px var(--accent-glow);
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Background ── */
+    .bg-mesh {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 80% 60% at 15% 30%, rgba(108,92,231,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 50% at 85% 70%, rgba(24,255,255,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 50% 90%, rgba(0,230,118,0.05) 0%, transparent 60%),
+        var(--bg);
+    }
+    .bg-grid {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.4;
+      background-image:
+        linear-gradient(rgba(108,92,231,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(108,92,231,0.05) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+    .bg-grid::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center, transparent 40%, var(--bg) 100%);
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 3rem;
+      background: rgba(6,6,16,0.7);
+      backdrop-filter: var(--blur);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .nav-logo .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse 2s infinite; }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a { font-size: 0.85rem; color: var(--text-2); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--accent);
+      color: var(--accent-2);
+      background: rgba(108,92,231,0.08);
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .nav-cta:hover { background: rgba(108,92,231,0.18); box-shadow: 0 0 24px var(--accent-glow); }
+
+    /* ── Layout ── */
+    main { position: relative; z-index: 1; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: 90vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 8rem 0 4rem;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      margin: 0 auto 2rem;
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      background: var(--green-dim);
+      border: 1px solid rgba(0,230,118,0.3);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--green);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .hero-badge .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 1.5s infinite; }
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.8rem, 6vw, 5.5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 .line-accent { color: var(--accent-2); }
+    .hero h1 .line-mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65em;
+      font-weight: 500;
+      color: var(--text-3);
+      display: block;
+      margin-top: 0.3em;
+    }
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--text-2);
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      line-height: 1.7;
+    }
+    .hero-stats {
+      display: flex; justify-content: center; gap: 3rem;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat .num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+    }
+    .hero-stat .num.green { color: var(--green); }
+    .hero-stat .num.cyan { color: var(--cyan); }
+    .hero-stat .num.gold { color: var(--gold); }
+    .hero-stat .label { font-size: 0.78rem; color: var(--text-3); font-family: 'JetBrains Mono', monospace; margin-top: 0.3rem; text-transform: uppercase; letter-spacing: 0.08em; }
+
+    /* ── Search + Filters ── */
+    .controls {
+      padding: 3rem 0 2rem;
+      display: flex; flex-direction: column; align-items: center; gap: 1.5rem;
+    }
+    .search-wrap {
+      position: relative; width: 100%; max-width: 520px;
+    }
+    .search-icon {
+      position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
+      color: var(--text-3); font-size: 0.9rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .search-input {
+      width: 100%;
+      padding: 0.85rem 1rem 0.85rem 2.8rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      backdrop-filter: var(--blur);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-input::placeholder { color: var(--text-3); }
+    .search-input:focus { border-color: var(--accent); box-shadow: 0 0 24px var(--accent-glow); }
+
+    .filters {
+      display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;
+    }
+    .filter-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: rgba(108,92,231,0.15);
+      border-color: var(--accent);
+      color: var(--accent-2);
+    }
+
+    /* ── Section titles ── */
+    .section-head {
+      display: flex; align-items: baseline; gap: 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-head h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .section-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-3);
+    }
+
+    /* ── Projects Grid ── */
+    .section-block { padding: 3rem 0; }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.2rem;
+    }
+
+    /* ── Project Card ── */
+    .project-card {
+      background: var(--bg-card);
+      backdrop-filter: var(--blur);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), box-shadow 0.3s, border-color 0.3s;
+      cursor: default;
+      will-change: transform;
+      position: relative;
+      overflow: hidden;
+    }
+    .project-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(108,92,231,0.06), transparent 70%);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .project-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); border-color: var(--accent); }
+    .project-card:hover::before { opacity: 1; }
+
+    /* Card accent line por categoría */
+    .project-card[data-cat="core"]::after     { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); }
+    .project-card[data-cat="finance"]::after  { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--green), transparent); }
+    .project-card[data-cat="identity"]::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--gold), transparent); }
+    .project-card[data-cat="agents"]::after   { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--cyan), transparent); }
+    .project-card[data-cat="frontend"]::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #ff6b9d, transparent); }
+    .project-card[data-cat="contracts"]::after{ content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--orange), transparent); }
+    .project-card[data-cat="lab"]::after      { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #ff5252, transparent); }
+
+    .card-top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+    .card-icon { font-size: 1.5rem; line-height: 1; }
+    .card-status {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .status-dot { width: 5px; height: 5px; border-radius: 50%; }
+    .status-dot.live { background: var(--green); box-shadow: 0 0 6px var(--green); animation: pulse 2s infinite; }
+    .status-dot.dev  { background: var(--orange); }
+    .status-dot.paused { background: var(--text-3); }
+    .status-live   { color: var(--green); }
+    .status-dev    { color: var(--orange); }
+    .status-paused { color: var(--text-3); }
+
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--text-2);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .card-tags {
+      display: flex; gap: 0.4rem; flex-wrap: wrap;
+      margin-bottom: 1.2rem;
+    }
+    .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      background: rgba(108,92,231,0.1);
+      border: 1px solid rgba(108,92,231,0.2);
+      color: var(--accent-2);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .tag.green  { background: rgba(0,230,118,0.08); border-color: rgba(0,230,118,0.25); color: var(--green); }
+    .tag.cyan   { background: rgba(24,255,255,0.08); border-color: rgba(24,255,255,0.2); color: var(--cyan); }
+    .tag.gold   { background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.2); color: var(--gold); }
+    .tag.orange { background: rgba(255,152,0,0.08); border-color: rgba(255,152,0,0.2); color: var(--orange); }
+    .tag.pink   { background: rgba(255,107,157,0.08); border-color: rgba(255,107,157,0.25); color: #ff6b9d; }
+
+    .card-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .card-meta {
+      display: flex; gap: 1.2rem;
+    }
+    .card-metric { text-align: center; }
+    .metric-val {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+    }
+    .metric-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .card-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      padding: 0.4rem 0.9rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      color: var(--text-2);
+      transition: all 0.2s;
+    }
+    .card-link:hover { border-color: var(--accent); color: var(--accent-2); background: rgba(108,92,231,0.08); }
+
+    /* ── Stats bar ── */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 4rem;
+    }
+    .stat-cell {
+      background: var(--bg-2);
+      padding: 1.5rem 2rem;
+      text-align: center;
+    }
+    .stat-cell .big {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+    }
+    .stat-cell .big.g { color: var(--green); }
+    .stat-cell .big.c { color: var(--cyan); }
+    .stat-cell .big.a { color: var(--accent-2); }
+    .stat-cell .big.go { color: var(--gold); }
+    .stat-cell .lbl { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.4rem; }
+
+    /* ── Terminal block ── */
+    .terminal {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin: 4rem 0;
+    }
+    .terminal-bar {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.8rem 1.2rem;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--border);
+    }
+    .t-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .t-dot.r { background: #ff5f57; }
+    .t-dot.y { background: #febc2e; }
+    .t-dot.g { background: #28c840; }
+    .terminal-title { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--text-3); margin-left: 0.5rem; }
+    .terminal-body { padding: 1.5rem; }
+    .terminal-body pre {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      line-height: 1.8;
+      color: var(--text-2);
+      white-space: pre-wrap;
+    }
+    .t-green { color: var(--green); }
+    .t-cyan  { color: var(--cyan); }
+    .t-gold  { color: var(--gold); }
+    .t-dim   { color: var(--text-3); }
+    .t-acc   { color: var(--accent-2); }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 0;
+      text-align: center;
+      color: var(--text-3);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+    }
+    footer span { color: var(--accent-2); }
+
+    /* ── Animations ── */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.6; transform: scale(0.85); }
+    }
+    .invisible { opacity: 0; }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem; }
+      .nav-links { display: none; }
+      .hero h1 { font-size: 2.2rem; }
+      .hero-stats { gap: 1.5rem; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .stats-bar { grid-template-columns: 1fr 1fr; }
+      .container { padding: 0 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+<div class="bg-grid"></div>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-logo">
+    <span class="dot"></span>
+    DOF-MESH
+  </div>
+  <div class="nav-links">
+    <a href="#core">Core</a>
+    <a href="#finance">Finanzas</a>
+    <a href="#identity">Identidad</a>
+    <a href="#agents">Agentes</a>
+    <a href="#frontend">Frontend</a>
+  </div>
+  <a href="/" class="nav-cta">← Landing</a>
+</nav>
+
+<main>
+<div class="container">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge invisible" id="badge">
+      <span class="live-dot"></span>
+      Ecosistema Activo — 2026
+    </div>
+    <h1 class="invisible" id="htitle">
+      Todos los<br><span class="line-accent">Activos del Ecosistema</span>
+      <span class="line-mono">// DOF MESH LEGION — Enigma Group</span>
+    </h1>
+    <p class="hero-sub invisible" id="hsub">
+      Infraestructura soberana para agentes autónomos. Governance determinística, contratos on-chain, identidad verificable y pagos sin fricción.
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat invisible stat-anim">
+        <div class="num green" data-count="18">0</div>
+        <div class="label">Proyectos</div>
+      </div>
+      <div class="hero-stat invisible stat-anim">
+        <div class="num cyan" data-count="57">0</div>
+        <div class="label">K+ LOC</div>
+      </div>
+      <div class="hero-stat invisible stat-anim">
+        <div class="num" data-count="4229">0</div>
+        <div class="label">Tests Passing</div>
+      </div>
+      <div class="hero-stat invisible stat-anim">
+        <div class="num gold" data-count="21">0</div>
+        <div class="label">Attestations On-chain</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats bar -->
+  <div class="stats-bar" id="statsbar">
+    <div class="stat-cell">
+      <div class="big g" data-count="2">0</div>
+      <div class="lbl">Mainnets</div>
+    </div>
+    <div class="stat-cell">
+      <div class="big c" data-count="7">0</div>
+      <div class="lbl">Capas Governance</div>
+    </div>
+    <div class="stat-cell">
+      <div class="big a" data-count="142">0</div>
+      <div class="lbl">Módulos Core</div>
+    </div>
+    <div class="stat-cell">
+      <div class="big go" data-count="4">0</div>
+      <div class="lbl">Teoremas Z3</div>
+    </div>
+    <div class="stat-cell">
+      <div class="big" data-count="9">0</div>
+      <div class="lbl">Agentes CrewAI</div>
+    </div>
+    <div class="stat-cell">
+      <div class="big g" data-count="9000">0</div>
+      <div class="lbl">Txs UVD</div>
+    </div>
+  </div>
+
+  <!-- Search + Filters -->
+  <div class="controls">
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input class="search-input" type="text" placeholder="Buscar proyecto, tech, categoría..." id="searchInput">
+    </div>
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">Todos</button>
+      <button class="filter-btn" data-filter="core">🛡️ Core</button>
+      <button class="filter-btn" data-filter="finance">💰 Finanzas</button>
+      <button class="filter-btn" data-filter="identity">🏆 Identidad</button>
+      <button class="filter-btn" data-filter="agents">🤖 Agentes</button>
+      <button class="filter-btn" data-filter="frontend">🌐 Frontend</button>
+      <button class="filter-btn" data-filter="contracts">⛓️ Contratos</button>
+      <button class="filter-btn" data-filter="lab">🧪 Lab</button>
+    </div>
+  </div>
+
+  <!-- ══ CORE ══ -->
+  <section class="section-block" id="core">
+    <div class="section-head">
+      <h2>🛡️ Core Infrastructure</h2>
+      <span class="section-count">// Fundamentos del ecosistema</span>
+    </div>
+    <div class="projects-grid" id="grid">
+
+      <div class="project-card" data-cat="core">
+        <div class="card-top">
+          <div class="card-icon">⚙️</div>
+          <div class="card-status"><span class="status-dot live"></span><span class="status-live">LIVE</span></div>
+        </div>
+        <h3 class="card-title">DOF-MESH</h3>
+        <p class="card-desc">Deterministic Observability Framework. Governance 7 capas, Z3 formal verification, on-chain attestations. El núcleo de todo el ecosistema.</p>
+        <div class="card-tags">
+          <span class="tag">Python</span>
+          <span class="tag">CrewAI</span>
+          <span class="tag green">Avalanche</span>
+          <span class="tag green">Base</span>
+          <span class="tag">Z3</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <div class="card-metric"><div class="metric-val">142</div><div class="metric-label">módulos</div></div>
+            <div class="card-metric"><div class="metric-val">4229</div><div class="metric-label">tests</div></div>
+            <div class="card-metric"><div class="metric-val">57K</div><div class="metric-label">LOC</div></div>
+          </div>
+          <a href="https://github.com/Cyberpaisa/DOF-MESH" target="_blank" class="card-link">GitHub →</a>
+        </div>
+      </div>
+
+      <div class="project-card" data-cat="core">
+        <div class="card-top">
+          <div class="card-icon">🧠</div>
+          <div class="card-status"><span class="status-dot live"></span><span class="status-live">LIVE</span></div>
+        </div>
+        <h3 class="card-title">equipo-de-agentes</h3>
+        <p class="card-desc">DOF Mesh Legion. Multi-agent system con 9 agentes especializados, SOUL.md config, A2A Server JSON-RPC, Docker Citadel soberano.</p>
+        <div class="card-tags">
+          <span class="tag">Python</span>
+          <span class="tag">CrewAI</span>
+          <span class="tag cyan">Docker</span>
+          <span class="tag">A2A</span>
+          <span class="tag">MCP</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <div class="card-metric"><div class="metric-val">9</div><div class="metric-label">agentes</div></div>
+            <div class="card-metric"><div class="metric-val">11</div><div class="metric-label">crews</div></div>
+            <div class="card-metric"><div class="metric-val">15</div><div class="metric-label">tools MCP</div></div>
+          </div>
+          <a href="#" class="card-link">Local →</a>
+        </div>
+      </div>
+
+      <div class="project-card" data-cat="core">
+        <div class="card-top">
+          <div class="card-icon">📜</div>
+          <div class="card-status"><span class="status-dot live"></span><span class="status-live">LIVE</span></div>
+        </div>
+        <h3 class="card-title">dof-sdk</h3>
+        <p class="card-desc">SDK publicado en PyPI. API pública para integrar DOF governance en cualquier agente. Constitution, AST verifier, Z3 gate.</p>
+        <div class="card-tags">
+          <span class="tag">Python</span>
+          <span class="tag green">PyPI</span>
+          <span class="tag">v0.5.0</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <div class="card-metric"><div class="metric-val">0.5.0</div><div class="metric-label">versión</div></div>
+          </div>
+          <a href="https://pypi.org/project/dof-sdk/" target="_blank" class="card-link">PyPI →</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ FINANZAS ══ -->
+  <section class="section-block" id="finance">
+    <div class="section-head">
+      <h2>💰 Finanzas & DeFi</h2>
+      <span class="section-count">// Pagos, arbitraje, DAOs</span>
+    </div>
+    <div class="projects-grid">
+
+      <div class="project-card" data-cat="finance">
+        <div class="card-top">
+          <div class="card-icon">🔄</div>
+          <div class="card-status"><span class="status-dot live"></span><span class="status-live">LIVE</span></div>
+        </div>
+        <h3 class="card-title">snowrail-core</h3>
+        <p class="card-desc">Payment Orchestrator + Agent Marketplace. Monorepo TypeScript con Drizzle ORM, contratos Hardhat, workspaces pnpm.</p>
+        <div class="card-tags">
+          <span class="tag cyan">TypeScript</span>
+          <span class="tag">pnpm</span>
+          <span class="tag">Hardhat</span>
+          <span class="tag orange">Express</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <div class="card-metric"><div class="metric-val">4</div><div class="metric-label">packages</div></div>
+          </div>
+          <a href="#" class="card-link">Local →</a>
+        </div>
+      </div>
+
+      <div class="project-card" data-cat="finance">
+        <div class="card-top">
+          <div class="card-icon">📈</div>
+          <div class="card-status"><span class="status-dot live"></span><span class="status-live">RAILWAY</span></div>
+        </div>
+        <h3 class="card-title">apex-arbitrage-agent</h3>
+        <p class="card-desc">Agent #1687. Arbitraje triangular Bellman-Ford en tiempo real. x402 paywalled signals, whale monitor, detección de nuevos pares.</p>
+        <div class="card-tags">
+          <span class="tag">Python</span>
+          <span class="tag">FastAPI</span>
+          <span class="tag green">Avalanche</span>
+          <span class="tag">ERC-8004</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <div class="card-metric"><div class="metric-val">#1687</div><div class="metric-label">agente</div></div>
+          </div>
+          <a href="https://apex-arbitrage-agent-production.up.railway.app" target="_blank" class="card-link">Railway →</a>
+        </div>
+      </div>
+
+      <div class="project-card" data-cat="finance">
+        <div class="card-top">
+          <div class="card-icon">🟣</div>
+          <div class="card-status"><span class="status-dot live"></span><span class="status-live">LIVE</span></div>
+        </div>
+        <h3 class="card-title">Ultravioleta DAO</h3>
+        <p class="card-desc">x402 payment facilitator soberano. 9,000+ txs, 300+ payers, $509+ volumen. EIP-3009 gasless. SDKs propios, infra completa.</p>
+        <div class="card-tags">
+          <span class="tag gold">DAO</span>
+          <span class="tag">x402</span>
+          <span class="tag">EIP-3009</span>
+          <span class="tag green">SKALE</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <div class="card-metric"><div class="metric-val">9K+</div><div class="metric-label">txs</div></div>
+            <div class="card-metric"><div class="metric-val">$509+</div><div class="metric-label">vol</div></div>
+          </div>
+          <a href="https://facilitator.ultravioletadao.xyz" target="_blank" class="card-link">Live →</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ IDENTIDAD ══ -->
+  <section class="section-block" id="identity">
+    <div class="section-head">
+      <h2>🏆 Identidad & Trust</h2>
+      <span class="section-count">// Reputación verificable on-chain</span>
+    </div>
+    <div class="projects-grid">
+
+      <div class="project-card" data-cat="identity">
+        <div class="card-top">
+          <div class="card-icon">🎯</div>
+          <div class="card-status"><span class="status-dot live"></span><span class="status-live">LIVE</span></div>
+        </div>
+        <h3 class="card-title">Enigma-prod</h3>
+        <p class="card-desc">Trust Score Platform. 3 engines: v1, TRACER, v2 Combined. Sentinel 27 checks, max 85 pts. ERC-8004 identity scoring.</p>
+        <div class="card-tags">
+          <span class="tag cyan">Next.js 14</span>
+          <span class="tag">TypeScript</span>
+          <span class="tag">Prisma</span>
+          <span class="tag gold">Supabase</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <div class="card-metric"><div class="metric-val">3</div><div class="metric-label">engines</div></div>
+            <div class="card-metric"><div class="metric-val">27</div><div class="metric-label">checks</div></div>
+          </div>
+          <a href="#" class="card-link">Vercel →</a>
+        </div>
+      </div>
+
+      <div class="project-card" data-cat="identity">
+        <div class="card-top">
+          <div class="card-icon">🔬</div>
+          <div class="card-status"><span class="status-dot live"></span><span class="status-live">LIVE</span></div>
+        </div>
+        <h3 class="card-title">tracer-protocol</h3>
+        <p class="card-desc">Trust scoring library. Monorepo npm + Turbo. Infraestructura(50%) + Comunidad(20%) + Correlación(15%) + RL(15%).</p>
+        <div class="card-tags">
+          <span class="tag">TypeScript</span>
+          <span class="tag">Turbo</span>
+          <span class="tag">npm</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <div class="card-metric"><div class="metric-val">v2</div><div class="metric-label">combined</div></div>
+          </div>
+          <a href="#" class="card-link">Local →</a>
+        </div>
+      </div>
+
+      <div class="project-card" data-cat="identity">
+        <div class="card-top">
+          <div class="card-icon">🛡️</div>
+          <div class="card-status"><span class="status-dot dev"></span><span class="status-dev">DEV</span></div>
+        </div>
+        <h3 class="card-title">avariskscan-defi</h3>
+        <p class="card-desc">AvaBuilder Agent #1686. Risk scanner DeFi en Avalanche. Node.js + Python hybrid.</p>
+        <div class="card-tags">
+          <span class="tag">Node.js</span>
+          <span class="tag">Python</span>
+          <span class="tag green">Avalanche</span>
+          <span class="tag">ERC-8004</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <div class="card-metric"><div class="metric-val">#1686</div><div class="metric-label">agente</div></div>
+          </div>
+          <a href="https://avariskscan-defi-production.up.railway.app" target="_blank" class="card-link">Railway →</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ AGENTES ══ -->
+  <section class="section-block" id="agents">
+    <div class="section-head">
+      <h2>🤖 Agentes Especializados</h2>
+      <span class="section-count">// Multi-agent systems</span>
+    </div>
+    <div class="projects-grid">
+
+      <div class="project-card" data-cat="agents">
+        <div class="card-top">
+          <div class="card-icon">📡</div>
+          <div class="card-status"><span class="status-dot live"></span><span class="status-live">LIVE</span></div>
+        </div>
+        <h3 class="card-title">snowrail-sentinel</h3>
+        <p class="card-desc">B2B Validator. pnpm monorepo + Hardhat. Compilación y deploy en Fuji testnet. Validación de contratos para el marketplace.</p>
+        <div class="card-tags">
+          <span class="tag">pnpm</span>
+          <span class="tag">Hardhat</span>
+          <span class="tag">Avalanche Fuji</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <div class="card-metric"><div class="metric-val">B2B</div><div class="metric-label">target</div></div>
+          </div>
+          <a href="#" class="card-link">Local →</a>
+        </div>
+      </div>
+
+      <div class="project-card" data-cat="agents">
+        <div class="card-top">
+          <div class="card-icon">🎭</div>
+          <div class="card-status"><span class="status-dot live"></span><span class="status-live">LIVE</span></div>
+        </div>
+        <h3 class="card-title">super-sentinel</h3>
+        <p class="card-desc">Extended Enigma. Next.js 14 + TypeScript + Prisma. Misma stack que Enigma-prod con checks adicionales de seguridad empresarial.</p>
+        <div class="card-tags">
+          <span class="tag cyan">Next.js 14</span>
+          <span class="tag">TypeScript</span>
+          <span class="tag gold">Supabase</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <div class="card-metric"><div class="metric-val">Enterprise</div><div class="metric-label">tier</div></div>
+          </div>
+          <a href="#" class="card-link">Local →</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ FRONTEND ══ -->
+  <section class="section-block" id="frontend">
+    <div class="section-head">
+      <h2>🌐 Frontend & UIs</h2>
+      <span class="section-count">// Interfaces soberanas</span>
+    </div>
+    <div class="projects-grid">
+
+      <div class="project-card" data-cat="frontend">
+        <div class="card-top">
+          <div class="card-icon">🚀</div>
+          <div class="card-status"><span class="status-dot live"></span><span class="status-live">VERCEL</span></div>
+        </div>
+        <h3 class="card-title">dof-landing</h3>
+        <p class="card-desc">Landing principal del ecosistema. HTML puro + GSAP. Recursos activos, governance visual, despliegue en Vercel.</p>
+        <div class="card-tags">
+          <span class="tag pink">HTML</span>
+          <span class="tag">GSAP</span>
+          <span class="tag gold">Vercel</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <div class="card-metric"><div class="metric-val">Live</div><div class="metric-label">deploy</div></div>
+          </div>
+          <a href="https://dof-landing.vercel.app" target="_blank" class="card-link">Visit →</a>
+        </div>
+      </div>
+
+      <div class="project-card" data-cat="frontend">
+        <div class="card-top">
+          <div class="card-icon">⚖️</div>
+          <div class="card-status"><span class="status-dot live"></span><span class="status-live">VERCEL</span></div>
+        </div>
+        <h3 class="card-title">dof-governance</h3>
+        <p class="card-desc">Frontend del governance DOF. ethers.js + Node.js. ACP Evaluator live, métricas on-chain, attestations visualizadas.</p>
+        <div class="card-tags">
+          <span class="tag">ethers.js</span>
+          <span class="tag">Node.js</span>
+          <span class="tag gold">Vercel</span>
+          <span class="tag green">Base</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <div class="card-metric"><div class="metric-val">ACP</div><div class="metric-label">evaluator</div></div>
+          </div>
+          <a href="https://dof-governance.vercel.app" target="_blank" class="card-link">Visit →</a>
+        </div>
+      </div>
+
+      <div class="project-card" data-cat="frontend">
+        <div class="card-top">
+          <div class="card-icon">🌿</div>
+          <div class="card-status"><span class="status-dot dev"></span><span class="status-dev">DEV</span></div>
+        </div>
+        <h3 class="card-title">dof-agent-web</h3>
+        <p class="card-desc">Frontend alternativo DOF. Flask + HTML estático. Interfaz web para interactuar con los agentes sin CLI.</p>
+        <div class="card-tags">
+          <span class="tag">Flask</span>
+          <span class="tag pink">HTML</span>
+          <span class="tag">Python</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <div class="card-metric"><div class="metric-val">Alt</div><div class="metric-label">UI</div></div>
+          </div>
+          <a href="#" class="card-link">Local →</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ CONTRATOS ══ -->
+  <section class="section-block" id="contracts">
+    <div class="section-head">
+      <h2>⛓️ Smart Contracts</h2>
+      <span class="section-count">// On-chain, 5 chains</span>
+    </div>
+    <div class="projects-grid">
+
+      <div class="project-card" data-cat="contracts">
+        <div class="card-top">
+          <div class="card-icon">🪪</div>
+          <div class="card-status"><span class="status-dot live"></span><span class="status-live">MAINNET</span></div>
+        </div>
+        <h3 class="card-title">ERC-8004 Identity</h3>
+        <p class="card-desc">Registro de identidad para agentes IA. Standard ERC-8004. Avalanche C-Chain mainnet.</p>
+        <div class="card-tags">
+          <span class="tag green">Avalanche</span>
+          <span class="tag">Solidity</span>
+          <span class="tag gold">Mainnet</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <div class="card-metric"><div class="metric-val">0x8004</div><div class="metric-label">prefix</div></div>
+          </div>
+          <a href="https://snowtrace.io/address/0x8004A169FB4a3325136EB29fA0ceB6D2e539a432" target="_blank" class="card-link">Explorer →</a>
+        </div>
+      </div>
+
+      <div class="project-card" data-cat="contracts">
+        <div class="card-top">
+          <div class="card-icon">📋</div>
+          <div class="card-status"><span class="status-dot live"></span><span class="status-live">5 CHAINS</span></div>
+        </div>
+        <h3 class="card-title">DOFProofRegistry</h3>
+        <p class="card-desc">Registro de pruebas DOF desplegado en 5 chains. 21 attestations on-chain. Avalanche + Base + Fuji + más.</p>
+        <div class="card-tags">
+          <span class="tag green">Avalanche</span>
+          <span class="tag green">Base</span>
+          <span class="tag">Fuji</span>
+          <span class="tag">Solidity</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <div class="card-metric"><div class="metric-val">21</div><div class="metric-label">attestations</div></div>
+            <div class="card-metric"><div class="metric-val">5</div><div class="metric-label">chains</div></div>
+          </div>
+          <a href="#" class="card-link">Docs →</a>
+        </div>
+      </div>
+
+      <div class="project-card" data-cat="contracts">
+        <div class="card-top">
+          <div class="card-icon">⭐</div>
+          <div class="card-status"><span class="status-dot live"></span><span class="status-live">MAINNET</span></div>
+        </div>
+        <h3 class="card-title">Reputation Registry</h3>
+        <p class="card-desc">Registro de reputación on-chain. Avalanche C-Chain. Scores de confianza verificables para agentes y entidades.</p>
+        <div class="card-tags">
+          <span class="tag green">Avalanche</span>
+          <span class="tag">Solidity</span>
+          <span class="tag gold">Mainnet</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <div class="card-metric"><div class="metric-val">0x8004B</div><div class="metric-label">addr</div></div>
+          </div>
+          <a href="https://snowtrace.io/address/0x8004B663056A597Dffe9eCcC1965A193B7388713" target="_blank" class="card-link">Explorer →</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ LAB ══ -->
+  <section class="section-block" id="lab">
+    <div class="section-head">
+      <h2>🧪 Lab & Experimental</h2>
+      <span class="section-count">// Investigación y experimentos</span>
+    </div>
+    <div class="projects-grid">
+
+      <div class="project-card" data-cat="lab">
+        <div class="card-top">
+          <div class="card-icon">⚔️</div>
+          <div class="card-status"><span class="status-dot dev"></span><span class="status-dev">DEV</span></div>
+        </div>
+        <h3 class="card-title">OpenViking</h3>
+        <p class="card-desc">Rust + Python hybrid. Cargo.toml + pyproject.toml. Experimentos de performance con Rust para componentes críticos del DOF.</p>
+        <div class="card-tags">
+          <span class="tag orange">Rust</span>
+          <span class="tag">Python</span>
+          <span class="tag">Cargo</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <div class="card-metric"><div class="metric-val">7µs</div><div class="metric-label">gate</div></div>
+          </div>
+          <a href="#" class="card-link">Local →</a>
+        </div>
+      </div>
+
+      <div class="project-card" data-cat="lab">
+        <div class="card-top">
+          <div class="card-icon">🎮</div>
+          <div class="card-status"><span class="status-dot dev"></span><span class="status-dev">DEV</span></div>
+        </div>
+        <h3 class="card-title">glade-mvp / plantaverse</h3>
+        <p class="card-desc">Juegos 3D blockchain. Vite + Three.js + Hardhat. Exploración de metaverso y gamificación con contratos on-chain.</p>
+        <div class="card-tags">
+          <span class="tag pink">Three.js</span>
+          <span class="tag">Vite</span>
+          <span class="tag">Hardhat</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <div class="card-metric"><div class="metric-val">3D</div><div class="metric-label">web</div></div>
+          </div>
+          <a href="#" class="card-link">Local →</a>
+        </div>
+      </div>
+
+      <div class="project-card" data-cat="lab">
+        <div class="card-top">
+          <div class="card-icon">🔑</div>
+          <div class="card-status"><span class="status-dot live"></span><span class="status-live">ACTIVE</span></div>
+        </div>
+        <h3 class="card-title">erc8004-builder-kit</h3>
+        <p class="card-desc">Scripts de registro y validación ERC-8004. Bash scripts para onboarding de nuevos agentes al estándar de identidad.</p>
+        <div class="card-tags">
+          <span class="tag">Bash</span>
+          <span class="tag green">ERC-8004</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <div class="card-metric"><div class="metric-val">Kit</div><div class="metric-label">builder</div></div>
+          </div>
+          <a href="#" class="card-link">Local →</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Terminal ── Quick Reference -->
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="t-dot r"></div><div class="t-dot y"></div><div class="t-dot g"></div>
+      <span class="terminal-title">dof-mesh — quick-start</span>
+    </div>
+    <div class="terminal-body">
+<pre><span class="t-dim"># ── DOF-MESH Core ──────────────────────────────────────</span>
+<span class="t-green">cd</span> ~/equipo-de-agentes
+<span class="t-green">python3</span> -m unittest discover -s tests    <span class="t-dim"># 4229 tests</span>
+<span class="t-green">python3</span> a2a_server.py --port 8080        <span class="t-dim"># A2A Server</span>
+<span class="t-green">python3</span> core/claude_commander.py         <span class="t-dim"># 5 modos</span>
+
+<span class="t-dim"># ── Docker Citadel ─────────────────────────────────────</span>
+<span class="t-green">docker</span> compose up -d                     <span class="t-dim"># inicia citadel</span>
+<span class="t-green">curl</span> http://localhost:8080/              <span class="t-cyan">{"status":"ok","agents":8}</span>
+
+<span class="t-dim"># ── Agents on Railway ──────────────────────────────────</span>
+<span class="t-acc">apex:     </span><span class="t-cyan">apex-arbitrage-agent-production.up.railway.app</span>
+<span class="t-acc">builder:  </span><span class="t-cyan">avariskscan-defi-production.up.railway.app</span>
+
+<span class="t-dim"># ── Contratos Clave (Avalanche C-Chain) ────────────────</span>
+<span class="t-acc">Identity:     </span><span class="t-gold">0x8004A169FB4a3325136EB29fA0ceB6D2e539a432</span>
+<span class="t-acc">Reputation:   </span><span class="t-gold">0x8004B663056A597Dffe9eCcC1965A193B7388713</span>
+<span class="t-acc">USDC Avax:    </span><span class="t-gold">0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E</span></pre>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<footer>
+  <div class="container">
+    <p>DOF Mesh Legion — <span>Enigma Group</span> — @Cyber_paisa — Medellín 🇨🇴</p>
+    <p style="margin-top:0.5rem;">Governance determinística · Z3 Formal Verification · On-chain Attestations</p>
+  </div>
+</footer>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// ── Hero entrance ──────────────────────────────────────────
+const heroTL = gsap.timeline({ defaults: { ease: "power3.out" }, delay: 0.2 });
+heroTL
+  .to("#badge",   { opacity: 1, y: 0, duration: 0.6, from: { y: -20, opacity: 0 } })
+  .fromTo("#htitle",  { opacity: 0, y: 44 }, { opacity: 1, y: 0, duration: 0.85 }, "-=0.3")
+  .fromTo("#hsub",    { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.65 }, "-=0.45")
+  .fromTo(".stat-anim", { opacity: 0, y: 24 }, { opacity: 1, y: 0, stagger: 0.12, duration: 0.55 }, "-=0.3");
+
+// ── Hero stat counters ─────────────────────────────────────
+document.querySelectorAll(".hero-stat .num[data-count]").forEach(el => {
+  const target = parseFloat(el.dataset.count);
+  const isK = target >= 100;
+  gsap.fromTo({ val: 0 }, { val: target }, {
+    delay: 1,
+    duration: 1.8,
+    ease: "power2.out",
+    onUpdate() {
+      const v = this.targets()[0].val;
+      el.textContent = Number.isInteger(target)
+        ? Math.round(v).toLocaleString()
+        : v.toFixed(1);
+    }
+  });
+});
+
+// ── Stats bar counters ─────────────────────────────────────
+document.querySelectorAll(".stats-bar .big[data-count]").forEach(el => {
+  const target = parseFloat(el.dataset.count);
+  gsap.from({ val: 0 }, {
+    val: target,
+    scrollTrigger: { trigger: "#statsbar", start: "top 85%" },
+    duration: 1.6,
+    ease: "power2.out",
+    onUpdate() {
+      const v = this.targets()[0].val;
+      el.textContent = target >= 1000
+        ? Math.round(v).toLocaleString()
+        : Number.isInteger(target) ? Math.round(v) : v.toFixed(1);
+    }
+  });
+});
+
+// ── Stats bar entrance ─────────────────────────────────────
+gsap.from(".stat-cell", {
+  scrollTrigger: { trigger: "#statsbar", start: "top 88%" },
+  opacity: 0, y: 30, stagger: 0.08, duration: 0.6, ease: "power2.out"
+});
+
+// ── Section heads ──────────────────────────────────────────
+gsap.utils.toArray(".section-head").forEach(el => {
+  gsap.from(el, {
+    scrollTrigger: { trigger: el, start: "top 90%" },
+    opacity: 0, x: -30, duration: 0.6, ease: "power2.out"
+  });
+});
+
+// ── Cards stagger reveal ───────────────────────────────────
+gsap.utils.toArray(".section-block").forEach(section => {
+  gsap.from(section.querySelectorAll(".project-card"), {
+    scrollTrigger: { trigger: section, start: "top 80%" },
+    opacity: 0, y: 50, stagger: { amount: 0.5, from: "start" },
+    duration: 0.7, ease: "power2.out"
+  });
+});
+
+// ── Terminal entrance ──────────────────────────────────────
+gsap.from(".terminal", {
+  scrollTrigger: { trigger: ".terminal", start: "top 85%" },
+  opacity: 0, y: 40, duration: 0.8, ease: "power3.out"
+});
+
+// ── Filter buttons ─────────────────────────────────────────
+const allCards = document.querySelectorAll(".project-card");
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const cat = btn.dataset.filter;
+    allCards.forEach(card => {
+      const show = cat === "all" || card.dataset.cat === cat;
+      gsap.to(card, {
+        opacity: show ? 1 : 0.1,
+        scale: show ? 1 : 0.97,
+        duration: 0.3, ease: "power2.out"
+      });
+      card.style.pointerEvents = show ? "auto" : "none";
+    });
+  });
+});
+
+// ── Search ────────────────────────────────────────────────
+document.getElementById("searchInput").addEventListener("input", e => {
+  const q = e.target.value.toLowerCase();
+  allCards.forEach(card => {
+    const match = !q || card.textContent.toLowerCase().includes(q);
+    gsap.to(card, { opacity: match ? 1 : 0.08, duration: 0.2 });
+    card.style.pointerEvents = match ? "auto" : "none";
+  });
+});
+
+// ── Magnetic nav cta ──────────────────────────────────────
+const navCta = document.querySelector(".nav-cta");
+navCta && navCta.addEventListener("mousemove", e => {
+  const r = navCta.getBoundingClientRect();
+  gsap.to(navCta, { x: (e.clientX - r.left - r.width/2) * 0.25, y: (e.clientY - r.top - r.height/2) * 0.25, duration: 0.3 });
+});
+navCta && navCta.addEventListener("mouseleave", () => {
+  gsap.to(navCta, { x: 0, y: 0, duration: 0.6, ease: "elastic.out(1,0.3)" });
+});
+</script>
+</body>
+</html>

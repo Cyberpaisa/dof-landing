@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOF-MESH | Deterministic Observability Framework</title>
+    <meta name="description" content="The only framework that mathematically proves autonomous AI agents behave correctly. Z3 formal verification + blockchain attestation. Zero LLM governance.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --bg-2: #12121a;
+            --bg-3: #1a1a2e;
+            --text: #e8e8f0;
+            --text-dim: #8888aa;
+            --accent: #6c5ce7;
+            --accent-2: #a29bfe;
+            --green: #00e676;
+            --green-dim: #00c853;
+            --red: #ff5252;
+            --orange: #ffab40;
+            --blue: #448aff;
+            --cyan: #18ffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* ── Grid Background ── */
+        .grid-bg {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image:
+                linear-gradient(rgba(108,92,231,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(108,92,231,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── Navigation ── */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(10,10,15,0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(108,92,231,0.1);
+        }
+
+        .logo {
+            font-weight: 900;
+            font-size: 1.4rem;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px; height: 32px;
+            background: linear-gradient(135deg, var(--accent), var(--cyan));
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px;
+        }
+
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--text); }
+
+        .nav-cta {
+            background: var(--accent) !important;
+            color: white !important;
+            padding: 0.5rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 600 !important;
+            transition: transform 0.2s, box-shadow 0.2s !important;
+        }
+        .nav-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(108,92,231,0.4);
+        }
+
+        /* ── Hero ── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+        }
+
+        .hero-glow {
+            position: absolute;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(108,92,231,0.15), transparent 70%);
+            top: 10%; left: 50%;
+            transform: translateX(-50%);
+            pointer-events: none;
+        }
+
+        .hero-content { position: relative; z-index: 1; max-width: 900px; }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(108,92,231,0.1);
+            border: 1px solid rgba(108,92,231,0.2);
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            color: var(--accent-2);
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        .badge-dot {
+            width: 8px; height: 8px;
+            background: var(--green);
+            border-radius: 50%;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: -2px;
+            margin-bottom: 1.5rem;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--text) 0%, var(--accent-2) 50%, var(--cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            font-size: 1.25rem;
+            color: var(--text-dim);
+            max-width: 650px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.7;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.8rem 2rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #7c3aed);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(108,92,231,0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.05);
+            color: var(--text);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+
+        /* ── Stats Bar ── */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            padding: 3rem 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            font-family: 'JetBrains Mono', monospace;
+            background: linear-gradient(135deg, var(--green), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-top: 0.3rem;
+            font-weight: 500;
+        }
+
+        /* ── Terminal Demo ── */
+        .terminal-section {
+            padding: 4rem 2rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .terminal {
+            background: var(--bg-2);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            max-width: 750px;
+            width: 100%;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.03);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+
+        .terminal-title {
+            flex: 1;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .terminal-body {
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.8;
+        }
+
+        .t-prompt { color: var(--green); }
+        .t-cmd { color: var(--text); }
+        .t-comment { color: var(--text-dim); }
+        .t-output { color: var(--accent-2); }
+        .t-success { color: var(--green); }
+        .t-hash { color: var(--orange); }
+
+        /* ── Governance Layers ── */
+        .layers-section {
+            padding: 6rem 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-tag {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--accent-2);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .layers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .layer-card {
+            background: var(--bg-2);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .layer-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--cyan));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .layer-card:hover {
+            border-color: rgba(108,92,231,0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(108,92,231,0.1);
+        }
+
+        .layer-card:hover::before { opacity: 1; }
+
+        .layer-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .layer-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .layer-desc {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .layer-tech {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tech-tag {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            background: rgba(108,92,231,0.1);
+            color: var(--accent-2);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* ── Chain Map ── */
+        .chains-section {
+            padding: 6rem 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .chain-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .chain-card {
+            background: var(--bg-2);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .chain-card:hover {
+            border-color: rgba(0,230,118,0.3);
+        }
+
+        .chain-status {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-live { color: var(--green); }
+        .status-testnet { color: var(--orange); }
+        .status-planned { color: var(--text-dim); }
+
+        .chain-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .chain-detail {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* ── x402 Section ── */
+        .x402-section {
+            padding: 6rem 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .x402-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+
+        .flow-node {
+            background: var(--bg-2);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 1.2rem 1.5rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .flow-arrow {
+            color: var(--accent);
+            font-size: 1.5rem;
+        }
+
+        .flow-highlight {
+            border-color: var(--accent);
+            background: rgba(108,92,231,0.1);
+        }
+
+        /* ── CTA ── */
+        .cta-section {
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .cta-box {
+            max-width: 700px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(108,92,231,0.1), rgba(24,255,255,0.05));
+            border: 1px solid rgba(108,92,231,0.2);
+            border-radius: 24px;
+            padding: 4rem 3rem;
+        }
+
+        .cta-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        .cta-sub {
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        /* ── Footer ── */
+        footer {
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1100px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-text {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.2s;
+        }
+        .footer-links a:hover { color: var(--text); }
+
+        /* ── Proof Visualization ── */
+        .proof-visual {
+            margin: 3rem auto;
+            max-width: 600px;
+            background: var(--bg-2);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .proof-line {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .proof-line:last-child { border-bottom: none; }
+
+        .proof-icon { font-size: 1.1rem; width: 24px; text-align: center; }
+        .proof-label { color: var(--text-dim); flex: 1; }
+        .proof-value { font-weight: 600; }
+        .proof-pass { color: var(--green); }
+        .proof-score { color: var(--accent-2); }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .stats-bar { gap: 1.5rem; }
+            .stat-value { font-size: 1.8rem; }
+            h1 { letter-spacing: -1px; }
+            .x402-flow { flex-direction: column; }
+            .flow-arrow { transform: rotate(90deg); }
+            .cta-box { padding: 3rem 1.5rem; }
+        }
+
+        /* ── Animations ── */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s infinite;
+            color: var(--accent);
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <div class="logo-icon">D</div>
+            <span>DOF-MESH</span>
+        </div>
+        <div class="nav-links">
+            <a href="#governance">Governance</a>
+            <a href="#chains">Chains</a>
+            <a href="#x402">x402 Payments</a>
+            <a href="https://github.com/Cyberpaisa/DOF-MESH" target="_blank">GitHub</a>
+            <a href="/recursos.html">Recursos</a>
+            <a href="https://dof-governance.vercel.app/api/health" class="nav-cta">Live API</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-glow"></div>
+        <div class="hero-content">
+            <div class="badge">
+                <span class="badge-dot"></span>
+                Live on 3 mainnets + 6 testnets
+            </div>
+            <h1>
+                Agent acted autonomously.<br>
+                <span class="gradient-text">Math proved it.</span><br>
+                Blockchain recorded it.
+            </h1>
+            <p class="hero-sub">
+                The only framework that uses Z3 formal verification to mathematically prove
+                autonomous AI agents comply with their governance contracts.
+                Zero LLM in the governance path. 100% deterministic.
+            </p>
+            <div class="hero-actions">
+                <a href="https://github.com/Cyberpaisa/DOF-MESH" class="btn btn-primary" target="_blank">
+                    View on GitHub
+                </a>
+                <a href="https://dof-governance.vercel.app/api/health" class="btn btn-secondary" target="_blank">
+                    Try the API
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <div class="stats-bar fade-up">
+        <div class="stat">
+            <div class="stat-value">51K+</div>
+            <div class="stat-label">Lines of Code</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">4,154</div>
+            <div class="stat-label">Tests Passing</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">7</div>
+            <div class="stat-label">Governance Layers</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">9</div>
+            <div class="stat-label">Blockchains</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">0</div>
+            <div class="stat-label">LLMs in Governance</div>
+        </div>
+    </div>
+
+    <!-- Terminal Demo -->
+    <section class="terminal-section fade-up">
+        <div class="terminal">
+            <div class="terminal-header">
+                <span class="terminal-dot dot-red"></span>
+                <span class="terminal-dot dot-yellow"></span>
+                <span class="terminal-dot dot-green"></span>
+                <span class="terminal-title">dof verify-states</span>
+            </div>
+            <div class="terminal-body">
+                <div><span class="t-prompt">$</span> <span class="t-cmd">dof verify-states</span></div>
+                <br>
+                <div><span class="t-success">PROVEN</span> GCR_INVARIANT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-comment"># Governance score = 1.0 always</span></div>
+                <div><span class="t-success">PROVEN</span> SS_FORMULA &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-comment"># SS(f) = 1 - f^3 for r=2</span></div>
+                <div><span class="t-success">PROVEN</span> SS_MONOTONICITY &nbsp;<span class="t-comment"># Lower failure = higher score</span></div>
+                <div><span class="t-success">PROVEN</span> SS_BOUNDARIES &nbsp;&nbsp;<span class="t-comment"># Score always in [0, 1]</span></div>
+                <br>
+                <div><span class="t-output">4/4 theorems verified</span> &middot; <span class="t-hash">Z3 proof time: 2.1ms</span></div>
+                <br>
+                <div><span class="t-prompt">$</span> <span class="t-cmd">dof attest --chain avalanche --agent 1687</span></div>
+                <div><span class="t-success">ON-CHAIN</span> TX: <span class="t-hash">0x88f604...02C052</span> &middot; Block 54,291,007</div>
+                <div><span class="t-output">Proof registered on Avalanche C-Chain</span> &middot; <span class="t-success">$0.003 gas</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7 Governance Layers -->
+    <section class="layers-section" id="governance">
+        <div class="section-header fade-up">
+            <div class="section-tag">Architecture</div>
+            <h2 class="section-title">7 Layers of <span class="gradient-text">Deterministic Governance</span></h2>
+        </div>
+        <div class="layers-grid">
+            <div class="layer-card fade-up">
+                <div class="layer-num">LAYER 01</div>
+                <div class="layer-name">Constitution</div>
+                <div class="layer-desc">Hard rules that block. Soft rules that warn. YAML-defined, version-controlled, immutable at runtime.</div>
+                <div class="layer-tech">
+                    <span class="tech-tag">YAML</span>
+                    <span class="tech-tag">regex</span>
+                    <span class="tech-tag">AST</span>
+                </div>
+            </div>
+            <div class="layer-card fade-up">
+                <div class="layer-num">LAYER 02</div>
+                <div class="layer-name">AST Verifier</div>
+                <div class="layer-desc">Static analysis of LLM-generated code. Catches dangerous patterns before execution.</div>
+                <div class="layer-tech">
+                    <span class="tech-tag">Python AST</span>
+                    <span class="tech-tag">static analysis</span>
+                </div>
+            </div>
+            <div class="layer-card fade-up">
+                <div class="layer-num">LAYER 03</div>
+                <div class="layer-name">Supervisor</div>
+                <div class="layer-desc">Meta-supervisor with weighted scoring: Quality 40%, Alignment 25%, Compliance 20%, Freshness 15%.</div>
+                <div class="layer-tech">
+                    <span class="tech-tag">weighted scoring</span>
+                    <span class="tech-tag">deterministic</span>
+                </div>
+            </div>
+            <div class="layer-card fade-up">
+                <div class="layer-num">LAYER 04</div>
+                <div class="layer-name">Adversarial</div>
+                <div class="layer-desc">Red-team testing. Prompt injection detection. Override attempt blocking. 17 attack patterns monitored.</div>
+                <div class="layer-tech">
+                    <span class="tech-tag">red team</span>
+                    <span class="tech-tag">injection scan</span>
+                </div>
+            </div>
+            <div class="layer-card fade-up">
+                <div class="layer-num">LAYER 05</div>
+                <div class="layer-name">Memory Guard</div>
+                <div class="layer-desc">ChromaDB-backed memory with poisoning detection. Ensures context integrity across agent sessions.</div>
+                <div class="layer-tech">
+                    <span class="tech-tag">ChromaDB</span>
+                    <span class="tech-tag">embeddings</span>
+                </div>
+            </div>
+            <div class="layer-card fade-up">
+                <div class="layer-num">LAYER 06</div>
+                <div class="layer-name">Z3 Formal Prover</div>
+                <div class="layer-desc">Mathematical theorem proving. 4 invariants verified in &lt;10ms. If Z3 says unknown, the answer is FAIL.</div>
+                <div class="layer-tech">
+                    <span class="tech-tag">Z3</span>
+                    <span class="tech-tag">SMT solver</span>
+                    <span class="tech-tag">2.1ms</span>
+                </div>
+            </div>
+            <div class="layer-card fade-up">
+                <div class="layer-num">LAYER 07</div>
+                <div class="layer-name">Oracle (On-Chain)</div>
+                <div class="layer-desc">Blockchain attestation of governance proofs. Immutable, publicly verifiable. Live on Avalanche, Base, and SKALE.</div>
+                <div class="layer-tech">
+                    <span class="tech-tag">Solidity</span>
+                    <span class="tech-tag">EVM</span>
+                    <span class="tech-tag">multichain</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Proof Visualization -->
+    <section style="padding: 2rem;" class="fade-up">
+        <div class="section-header">
+            <div class="section-tag">Live Verification</div>
+            <h2 class="section-title">Sentinel TRACER <span class="gradient-text">27 Checks</span></h2>
+        </div>
+        <div class="proof-visual">
+            <div class="proof-line">
+                <span class="proof-icon">T</span>
+                <span class="proof-label">Trust</span>
+                <span class="proof-value proof-pass">PASS</span>
+            </div>
+            <div class="proof-line">
+                <span class="proof-icon">R</span>
+                <span class="proof-label">Reliability</span>
+                <span class="proof-value proof-pass">PASS</span>
+            </div>
+            <div class="proof-line">
+                <span class="proof-icon">A</span>
+                <span class="proof-label">Accountability</span>
+                <span class="proof-value proof-pass">PASS</span>
+            </div>
+            <div class="proof-line">
+                <span class="proof-icon">C</span>
+                <span class="proof-label">Compliance</span>
+                <span class="proof-value proof-pass">PASS</span>
+            </div>
+            <div class="proof-line">
+                <span class="proof-icon">E</span>
+                <span class="proof-label">Efficiency</span>
+                <span class="proof-value proof-pass">PASS</span>
+            </div>
+            <div class="proof-line">
+                <span class="proof-icon">R</span>
+                <span class="proof-label">Resilience</span>
+                <span class="proof-value proof-pass">PASS</span>
+            </div>
+            <div class="proof-line" style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 0.5rem; padding-top: 1rem;">
+                <span class="proof-icon" style="font-size:1.2rem;">&#9670;</span>
+                <span class="proof-label" style="font-weight:600; color: var(--text);">Sentinel Score</span>
+                <span class="proof-value proof-score">85 / 85</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chains -->
+    <section class="chains-section" id="chains">
+        <div class="section-header fade-up">
+            <div class="section-tag">Multichain</div>
+            <h2 class="section-title"><span class="gradient-text">9 Blockchains</span>. One Registry.</h2>
+        </div>
+        <div class="chain-grid fade-up">
+            <div class="chain-card">
+                <div class="chain-status status-live">MAINNET</div>
+                <div class="chain-name">Avalanche</div>
+                <div class="chain-detail">C-Chain (43114)</div>
+            </div>
+            <div class="chain-card">
+                <div class="chain-status status-live">MAINNET</div>
+                <div class="chain-name">Base</div>
+                <div class="chain-detail">Coinbase L2 (8453)</div>
+            </div>
+            <div class="chain-card">
+                <div class="chain-status status-live">MAINNET</div>
+                <div class="chain-name">Tempo</div>
+                <div class="chain-detail">Stripe L1 (4217)</div>
+            </div>
+            <div class="chain-card">
+                <div class="chain-status status-testnet">ZERO GAS</div>
+                <div class="chain-name">SKALE Europa</div>
+                <div class="chain-detail">sFUEL ($0.00)</div>
+            </div>
+            <div class="chain-card">
+                <div class="chain-status status-testnet">TESTNET</div>
+                <div class="chain-name">Avalanche Fuji</div>
+                <div class="chain-detail">Testnet (43113)</div>
+            </div>
+            <div class="chain-card">
+                <div class="chain-status status-testnet">TESTNET</div>
+                <div class="chain-name">Conflux</div>
+                <div class="chain-detail">eSpace (71)</div>
+            </div>
+            <div class="chain-card">
+                <div class="chain-status status-testnet">TESTNET</div>
+                <div class="chain-name">Polygon Amoy</div>
+                <div class="chain-detail">Testnet (80002)</div>
+            </div>
+            <div class="chain-card">
+                <div class="chain-status status-testnet">TESTNET</div>
+                <div class="chain-name">Base Sepolia</div>
+                <div class="chain-detail">Testnet (84532)</div>
+            </div>
+            <div class="chain-card">
+                <div class="chain-status status-planned">PLANNED</div>
+                <div class="chain-name">Ethereum</div>
+                <div class="chain-detail">Mainnet (1)</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- x402 Section -->
+    <section class="x402-section" id="x402">
+        <div class="section-header fade-up">
+            <div class="section-tag">Payments</div>
+            <h2 class="section-title">x402 Agent-to-Agent <span class="gradient-text">Micropayments</span></h2>
+            <p style="color: var(--text-dim); margin-top: 1rem; font-size: 1.1rem;">
+                Powered by Ultravioleta DAO. Gasless settlement via EIP-3009.
+            </p>
+        </div>
+        <div class="x402-flow fade-up">
+            <div class="flow-node">Agent Request</div>
+            <span class="flow-arrow">&rarr;</span>
+            <div class="flow-node flow-highlight">DOF Governance Gate</div>
+            <span class="flow-arrow">&rarr;</span>
+            <div class="flow-node">HTTP 402</div>
+            <span class="flow-arrow">&rarr;</span>
+            <div class="flow-node">EIP-3009 Sign</div>
+            <span class="flow-arrow">&rarr;</span>
+            <div class="flow-node flow-highlight">Settlement ($0.01)</div>
+        </div>
+        <p style="color: var(--text-dim); font-size: 0.95rem; max-width: 600px; margin: 0 auto;">
+            9,000+ transactions processed. 300+ unique payers.
+            Every payment passes through deterministic governance before settlement.
+            No LLM decides if your money moves.
+        </p>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="cta-box fade-up">
+            <h2 class="cta-title">Math, not promises.</h2>
+            <p class="cta-sub">
+                If your AI agent can act alone, you need mathematical proof it did the right thing.
+                DOF-MESH provides that proof.
+            </p>
+            <div class="hero-actions">
+                <a href="https://github.com/Cyberpaisa/DOF-MESH" class="btn btn-primary" target="_blank">
+                    Get Started
+                </a>
+                <a href="https://dof-governance.vercel.app/api/verify" class="btn btn-secondary" target="_blank">
+                    API Docs
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-text">
+            DOF-MESH &middot; Deterministic Observability Framework &middot; Enigma Group
+        </div>
+        <div class="footer-links">
+            <a href="https://github.com/Cyberpaisa/DOF-MESH" target="_blank">GitHub</a>
+            <a href="https://x.com/Cyber_paisa" target="_blank">Twitter</a>
+            <a href="https://dof-governance.vercel.app" target="_blank">API</a>
+        </div>
+    </footer>
+
+    <script>
+        // Intersection Observer for fade-up animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                document.querySelector(a.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
