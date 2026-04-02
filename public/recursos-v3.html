@@ -1316,7 +1316,16 @@
 
   <script>
     // ─── REGISTER PLUGINS ───────────────────────────────────────────────────
-    gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, ScrambleTextPlugin, Observer, Flip);
+    // Registrar solo los plugins que cargaron correctamente
+    var _plugins = [
+      typeof ScrollTrigger    !== 'undefined' && ScrollTrigger,
+      typeof ScrollSmoother   !== 'undefined' && ScrollSmoother,
+      typeof SplitText        !== 'undefined' && SplitText,
+      typeof ScrambleTextPlugin !== 'undefined' && ScrambleTextPlugin,
+      typeof Observer         !== 'undefined' && Observer,
+      typeof Flip             !== 'undefined' && Flip,
+    ].filter(Boolean);
+    if (_plugins.length) gsap.registerPlugin.apply(gsap, _plugins);
 
     // ── WEBGL DOMAIN-WARPED FBM SHADER ────────────────────────────────────────
     (function initShader() {
@@ -1549,6 +1558,7 @@
       } else {
         h1.innerHTML = 'Sovereign<br><em>Infrastructure</em>';
       }
+      if (typeof SplitText === 'undefined') return;
       if (heroSplit) { heroSplit.revert(); }
       heroSplit = new SplitText(h1, { type: 'lines', linesClass: 'line' });
       heroSplit.lines.forEach(function(line) {
@@ -1599,16 +1609,17 @@
 
       function scrambleNext() {
         if (wordIndex >= words.length) return;
-        gsap.to(scrambleEl, {
-          duration: 0.6,
-          scrambleText: { text: words[wordIndex], chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', speed: 0.5 },
-          onComplete: function() {
-            wordIndex++;
-            if (wordIndex < words.length) {
-              gsap.delayedCall(0.3, scrambleNext);
-            }
-          }
-        });
+        if (typeof ScrambleTextPlugin !== 'undefined') {
+          gsap.to(scrambleEl, {
+            duration: 0.6,
+            scrambleText: { text: words[wordIndex], chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', speed: 0.5 },
+            onComplete: function() { wordIndex++; if (wordIndex < words.length) gsap.delayedCall(0.3, scrambleNext); }
+          });
+        } else {
+          scrambleEl.textContent = words[wordIndex];
+          wordIndex++;
+          if (wordIndex < words.length) gsap.delayedCall(0.5, scrambleNext);
+        }
       }
       scrambleNext();
 
@@ -1653,20 +1664,22 @@
 
     // ─── MAIN INIT ────────────────────────────────────────────────────────────
     function initPage() {
-      // ScrollSmoother
-      var smoother = ScrollSmoother.create({
-        wrapper: '#smooth-wrapper',
-        content: '#smooth-content',
-        smooth: 1.6,
-        effects: true,
-        smoothTouch: 0.1,
-      });
+      // ScrollSmoother — solo si el plugin cargó
+      if (typeof ScrollSmoother !== 'undefined') {
+        ScrollSmoother.create({
+          wrapper: '#smooth-wrapper',
+          content: '#smooth-content',
+          smooth: 1.6,
+          effects: true,
+          smoothTouch: 0.1,
+        });
+      }
 
       // Nav progress bar tied to scroll
       ScrollTrigger.create({
         onUpdate: function(self) {
-          document.getElementById('nav-progress').style.transform =
-            'scaleX(' + self.progress + ')';
+          var np = document.getElementById('nav-progress');
+          if (np) np.style.transform = 'scaleX(' + self.progress + ')';
         }
       });
 
@@ -1674,39 +1687,29 @@
       buildHeadline('en');
       var h1 = document.getElementById('hero-h1');
       var lines = h1.querySelectorAll('.line > div');
-      gsap.from(lines, {
-        y: '110%',
-        duration: 1.1,
-        ease: 'power3.out',
-        stagger: 0.1,
-        delay: 0.1,
-      });
+      if (lines.length) {
+        gsap.from(lines, { y: '110%', duration: 1.1, ease: 'power3.out', stagger: 0.1, delay: 0.1 });
+      } else {
+        gsap.from(h1, { autoAlpha: 0, y: 40, duration: 1, ease: 'power3.out' });
+      }
 
       // Hero pill + tagline + ctas fade in
       gsap.from(['.hero-pill', '.hero-tagline', '.hero-stats', '.hero-ctas'], {
-        autoAlpha: 0,
-        y: 20,
-        duration: 0.9,
-        ease: 'power2.out',
-        stagger: 0.1,
-        delay: 0.5,
+        autoAlpha: 0, y: 20, duration: 0.9, ease: 'power2.out', stagger: 0.1, delay: 0.5,
       });
 
       // ── ABOUT headline SplitText ──────────────────────────────────────────
       var aboutH2 = document.getElementById('about-h2');
-      var aboutSplit = new SplitText(aboutH2, { type: 'words', wordsClass: 'word' });
-      gsap.from(aboutSplit.words, {
-        autoAlpha: 0,
-        y: 16,
-        duration: 0.7,
-        ease: 'power2.out',
-        stagger: 0.04,
-        scrollTrigger: {
-          trigger: aboutH2,
-          start: 'top 82%',
-          once: true,
-        }
-      });
+      if (typeof SplitText !== 'undefined' && aboutH2) {
+        var aboutSplit = new SplitText(aboutH2, { type: 'words', wordsClass: 'word' });
+        gsap.from(aboutSplit.words, {
+          autoAlpha: 0, y: 16, duration: 0.7, ease: 'power2.out', stagger: 0.04,
+          scrollTrigger: { trigger: aboutH2, start: 'top 82%', once: true }
+        });
+      } else if (aboutH2) {
+        gsap.from(aboutH2, { autoAlpha: 0, y: 24, duration: 0.7, ease: 'power2.out',
+          scrollTrigger: { trigger: aboutH2, start: 'top 82%', once: true } });
+      }
 
       // ── LAYERS — Horizontal pinned scroll ─────────────────────────────────
       var track = document.getElementById('layers-track');
@@ -1826,17 +1829,14 @@
           document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
           btn.classList.add('active');
           var filter = btn.dataset.filter;
-          var state = Flip.getState('.pc');
+          var state = typeof Flip !== 'undefined' ? Flip.getState('.pc') : null;
           document.querySelectorAll('.pc').forEach(function(card) {
             var show = filter === 'all' || card.dataset.cat === filter;
             card.style.display = show ? '' : 'none';
           });
-          Flip.from(state, {
-            duration: 0.5,
-            ease: 'power2.inOut',
-            stagger: 0.04,
-            absolute: true,
-          });
+          if (state && typeof Flip !== 'undefined') {
+            Flip.from(state, { duration: 0.5, ease: 'power2.inOut', stagger: 0.04, absolute: true });
+          }
         });
       });
 
