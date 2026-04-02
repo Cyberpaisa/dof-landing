@@ -55,8 +55,9 @@
     ::-webkit-scrollbar-thumb { background: rgba(109,40,217,0.5); border-radius: 2px; }
 
     /* ─── SMOOTH WRAPPER ─── */
-    #smooth-wrapper { overflow: hidden; position: fixed; inset: 0; width: 100%; height: 100%; }
-    #smooth-content { overflow: visible; will-change: transform; }
+    /* .smoother-active se agrega por JS solo si ScrollSmoother inicia OK */
+    #smooth-wrapper.smoother-active { overflow: hidden; position: fixed; inset: 0; width: 100%; height: 100%; }
+    #smooth-content { overflow: visible; }
 
     /* ─── LOADER ─── */
     #loader {
@@ -1666,13 +1667,16 @@
     function initPage() {
       // ScrollSmoother — solo si el plugin cargó
       if (typeof ScrollSmoother !== 'undefined') {
-        ScrollSmoother.create({
-          wrapper: '#smooth-wrapper',
-          content: '#smooth-content',
-          smooth: 1.6,
-          effects: true,
-          smoothTouch: 0.1,
-        });
+        try {
+          ScrollSmoother.create({
+            wrapper: '#smooth-wrapper',
+            content: '#smooth-content',
+            smooth: 1.6,
+            effects: true,
+            smoothTouch: 0.1,
+          });
+          document.getElementById('smooth-wrapper').classList.add('smoother-active');
+        } catch(e) { console.warn('ScrollSmoother failed:', e); }
       }
 
       // Nav progress bar tied to scroll
@@ -1695,7 +1699,7 @@
 
       // Hero pill + tagline + ctas fade in
       gsap.from(['.hero-pill', '.hero-tagline', '.hero-stats', '.hero-ctas'], {
-        autoAlpha: 0, y: 20, duration: 0.9, ease: 'power2.out', stagger: 0.1, delay: 0.5,
+        opacity: 0, y: 20, duration: 0.9, ease: 'power2.out', stagger: 0.1, delay: 0.5,
       });
 
       // ── ABOUT headline SplitText ──────────────────────────────────────────
@@ -1794,10 +1798,10 @@
         });
       });
 
-      // ── SECTION FADE-IN ───────────────────────────────────────────────────
+      // ── SECTION FADE-IN — usar opacity no autoAlpha para evitar visibility:hidden ──
       gsap.utils.toArray('#about, #stats, #projects, #creator').forEach(function(section) {
         gsap.from(section, {
-          autoAlpha: 0,
+          opacity: 0,
           y: 32,
           duration: 0.9,
           ease: 'power2.out',
@@ -1811,7 +1815,7 @@
 
       // ── PROJECT CARD STAGGER ──────────────────────────────────────────────
       gsap.from('.pc', {
-        autoAlpha: 0,
+        opacity: 0,
         y: 24,
         duration: 0.7,
         ease: 'power2.out',
