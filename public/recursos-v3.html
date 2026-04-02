@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DOF-MESH v3 — Sovereign Infrastructure</title>
+  <meta name="description" content="Deterministic governance for autonomous AI agents. 57K+ LOC, 7-layer governance, 5 chains." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <!-- GSAP + Plugins -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/SplitText.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrambleTextPlugin.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollSmoother.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/Observer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/Flip.min.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #000000;
+      --fg: #ffffff;
+      --violet: #6d28d9;
+      --violet-bright: #8b5cf6;
+      --violet-dim: rgba(109,40,217,0.2);
+      --cyan: #22d3ee;
+      --cyan-dim: rgba(34,211,238,0.12);
+      --border: rgba(255,255,255,0.06);
+      --border-h: rgba(255,255,255,0.15);
+      --muted: rgba(255,255,255,0.38);
+      --subdued: rgba(255,255,255,0.55);
+      --surface: #0a0a0a;
+      --surface2: #111111;
+    }
+
+    html { scroll-behavior: auto; }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Space Grotesk', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(109,40,217,0.5); border-radius: 2px; }
+
+    /* ─── SMOOTH WRAPPER ─── */
+    #smooth-wrapper { overflow: hidden; position: fixed; inset: 0; width: 100%; height: 100%; }
+    #smooth-content { overflow: visible; will-change: transform; }
+
+    /* ─── LOADER ─── */
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+    #loader-scramble {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--violet-bright);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      min-height: 1.2em;
+    }
+    #loader-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(6rem, 18vw, 12rem);
+      font-weight: 700;
+      line-height: 1;
+      color: var(--fg);
+      letter-spacing: -0.04em;
+    }
+    #loader-bar-wrap {
+      width: clamp(160px, 28vw, 300px);
+      height: 1px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 1px;
+      overflow: hidden;
+    }
+    #loader-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #6d28d9, #22d3ee);
+      border-radius: 1px;
+    }
+    #loader-version {
+      position: absolute;
+      bottom: 1.75rem;
+      right: 1.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 900;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(0,0,0,0.8);
+      border-bottom: 1px solid var(--border);
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+    }
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--fg);
+      text-decoration: none;
+    }
+    .nav-logo .dot { color: var(--violet-bright); }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+    .nav-live {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 500;
+      color: #4ade80;
+      letter-spacing: 0.1em;
+    }
+    .nav-live-dot {
+      width: 6px;
+      height: 6px;
+      background: #4ade80;
+      border-radius: 50%;
+      animation: pulse-live 2s ease-in-out infinite;
+    }
+    @keyframes pulse-live {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+    .nav-lang-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 500;
+      color: var(--muted);
+      background: none;
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+      letter-spacing: 0.1em;
+    }
+    .nav-lang-btn:hover { color: var(--fg); border-color: var(--border-h); }
+    .nav-vlinks {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .nav-vlinks a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      letter-spacing: 0.08em;
+    }
+    .nav-vlinks a:hover { color: var(--fg); }
+
+    /* ─── HERO ─── */
+    #hero {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    #bgvid {
+      position: absolute;
+      top: 0; left: 0;
+      width: 150%; height: 150%;
+      object-fit: cover;
+      opacity: 0.45;
+      filter: saturate(1.4) contrast(1.05);
+      z-index: 0;
+      pointer-events: none;
+    }
+    .hero-overlay-violet {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 10% 30%, rgba(109,40,217,0.3) 0%, transparent 55%);
+      z-index: 1;
+    }
+    .hero-overlay-cyan {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 90% 70%, rgba(34,211,238,0.12) 0%, transparent 45%);
+      z-index: 1;
+    }
+    .hero-overlay-top {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 35%);
+      z-index: 2;
+    }
+    .hero-overlay-bottom {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 50%);
+      z-index: 2;
+    }
+    .hero-grain {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      opacity: 0.035;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      max-width: 900px;
+      padding: 0 2rem;
+    }
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 6px 18px;
+      border-radius: 100px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+    .hero-h1 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(4.5rem, 11vw, 10rem);
+      line-height: 0.88;
+      letter-spacing: -0.02em;
+      color: var(--fg);
+      margin-bottom: 1.5rem;
+    }
+    .hero-h1 em {
+      font-style: italic;
+      color: var(--violet-bright);
+    }
+    .hero-h1 .line { overflow: hidden; }
+    .hero-h1 .line > div { display: block; }
+    .hero-tagline {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 300;
+      font-size: 1.1rem;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+    .hero-stats {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 2.5rem;
+    }
+    .hero-stats span { color: rgba(255,255,255,0.6); }
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--fg);
+      color: var(--bg);
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 0.88rem;
+      padding: 12px 28px;
+      border-radius: 100px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-primary:hover { background: rgba(255,255,255,0.88); }
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      color: var(--fg);
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 500;
+      font-size: 0.88rem;
+      padding: 11px 26px;
+      border-radius: 100px;
+      border: 1px solid var(--border-h);
+      text-decoration: none;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.04); }
+
+    /* ─── MARQUEE ─── */
+    #marquee {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .marquee-row {
+      display: flex;
+      align-items: center;
+      height: 40px;
+      white-space: nowrap;
+      border-bottom: 1px solid var(--border);
+    }
+    .marquee-row:last-child { border-bottom: none; }
+    .marquee-inner {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      will-change: transform;
+    }
+    .marquee-inner.fwd { animation: marquee-fwd 30s linear infinite; }
+    .marquee-inner.rev { animation: marquee-rev 25s linear infinite; }
+    .marquee-item {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0 2rem;
+      white-space: nowrap;
+    }
+    @keyframes marquee-fwd {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    @keyframes marquee-rev {
+      from { transform: translateX(-50%); }
+      to { transform: translateX(0); }
+    }
+
+    /* ─── ABOUT ─── */
+    #about {
+      padding: 8rem 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 500;
+      color: var(--violet-bright);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1.75rem;
+    }
+    .about-h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1.08;
+      letter-spacing: -0.025em;
+      max-width: 900px;
+      margin-bottom: 2rem;
+    }
+    .about-p {
+      font-size: 0.95rem;
+      color: var(--subdued);
+      max-width: 600px;
+      line-height: 1.75;
+    }
+
+    /* ─── LAYERS ─── */
+    #layers {
+      height: 100vh;
+      overflow: hidden;
+      background: var(--bg);
+      position: relative;
+    }
+    .layers-track {
+      display: flex;
+      height: 100vh;
+      width: max-content;
+      gap: 2px;
+    }
+    .layer-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 4rem 3rem;
+      min-width: min(85vw, 500px);
+      height: 100vh;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .layer-card:first-child { border-left: 1px solid var(--border); }
+    .layer-num {
+      position: absolute;
+      bottom: 2rem;
+      right: 2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(6rem, 15vw, 10rem);
+      font-weight: 700;
+      color: rgba(255,255,255,0.06);
+      line-height: 1;
+      user-select: none;
+    }
+    .layer-icon {
+      font-size: 2rem;
+      margin-bottom: 1.75rem;
+      display: block;
+    }
+    .layer-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: var(--fg);
+      margin-bottom: 0.75rem;
+    }
+    .layer-desc {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      max-width: 320px;
+      margin-bottom: 1.5rem;
+    }
+    .layer-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 500;
+      color: var(--violet-bright);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    .layers-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .layers-hint::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 1px;
+      background: var(--muted);
+    }
+    .layers-hint::after {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 1px;
+      background: var(--muted);
+    }
+
+    /* ─── STATS ─── */
+    #stats {
+      padding: 6rem 2rem;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .stat-cell {
+      padding: 3rem 2.5rem;
+      text-align: center;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .stat-cell:nth-child(3n) { border-right: none; }
+    .stat-cell:nth-child(4), .stat-cell:nth-child(5), .stat-cell:nth-child(6) { border-bottom: none; }
+    .stat-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: clamp(3.5rem, 8vw, 6rem);
+      line-height: 1;
+      letter-spacing: -0.04em;
+      display: block;
+      margin-bottom: 0.6rem;
+    }
+    .stat-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    /* ─── PROJECTS ─── */
+    #projects {
+      padding: 8rem 2rem;
+    }
+    .projects-header {
+      max-width: 1100px;
+      margin: 0 auto 3rem;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .projects-h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2rem, 5vw, 3rem);
+      letter-spacing: -0.025em;
+      line-height: 1.05;
+    }
+    .filter-btns {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: none;
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: color 0.2s, background 0.2s, border-color 0.2s;
+    }
+    .filter-btn:hover { color: var(--fg); border-color: var(--border-h); }
+    .filter-btn.active {
+      background: var(--violet-dim);
+      border-color: rgba(109,40,217,0.4);
+      color: var(--fg);
+    }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      max-width: 1100px;
+      margin: 0 auto;
+      background: var(--border);
+    }
+    .pc {
+      background: var(--surface);
+      padding: 1.75rem;
+      border: 1px solid transparent;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      cursor: pointer;
+    }
+    .pc:hover {
+      border-color: var(--violet-bright);
+      box-shadow: 0 0 0 1px var(--violet-bright), 0 0 40px rgba(109,40,217,0.15);
+      transform: translateY(-2px);
+      z-index: 1;
+      position: relative;
+    }
+    .pc-private { cursor: default; }
+    .pc-private:hover { border-color: var(--border); box-shadow: none; transform: none; }
+    .pc-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .pc-icon { font-size: 1.4rem; }
+    .pc-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 100px;
+    }
+    .badge-live { color: #4ade80; background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.2); }
+    .badge-mainnet { color: var(--cyan); background: var(--cyan-dim); border: 1px solid rgba(34,211,238,0.2); }
+    .badge-private { color: var(--muted); background: rgba(255,255,255,0.04); border: 1px solid var(--border); }
+    .pc-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+    .pc-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .pc-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .pc-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--muted);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    /* ─── CREATOR ─── */
+    #creator {
+      padding: 8rem 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .creator-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      position: relative;
+    }
+    .creator-year {
+      position: absolute;
+      top: -1rem;
+      right: -2rem;
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(5rem, 12vw, 9rem);
+      color: rgba(255,255,255,0.04);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+    .creator-name {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic;
+      font-size: clamp(3rem, 8vw, 6rem);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: var(--fg);
+      margin-bottom: 0.75rem;
+    }
+    .creator-role {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 300;
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+    .creator-socials {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .social-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border-h);
+      padding: 8px 18px;
+      border-radius: 100px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 500;
+      font-size: 0.82rem;
+      color: var(--fg);
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .social-pill:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.25); }
+    .creator-mini-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border: 1px solid var(--border);
+    }
+    .mini-stat {
+      padding: 1.75rem 1.5rem;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+      background: var(--surface);
+    }
+    .mini-stat:nth-child(2n) { border-right: none; }
+    .mini-stat:nth-child(3), .mini-stat:nth-child(4) { border-bottom: none; }
+    .mini-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 2.2rem;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+    .mini-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--fg); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .stat-cell:nth-child(3n) { border-right: 1px solid var(--border); }
+      .stat-cell:nth-child(2n) { border-right: none; }
+      .stat-cell:nth-child(4), .stat-cell:nth-child(5), .stat-cell:nth-child(6) { border-bottom: 1px solid var(--border); }
+      .stat-cell:nth-child(5), .stat-cell:nth-child(6) { border-bottom: none; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .creator-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .creator-year { display: none; }
+      nav { padding: 0 1.25rem; }
+      .nav-vlinks { display: none; }
+      .layer-card { padding: 2.5rem 2rem; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- LOADER (outside smooth wrapper) -->
+  <div id="loader">
+    <div id="loader-scramble">INITIALIZING</div>
+    <div id="loader-count">000</div>
+    <div id="loader-bar-wrap">
+      <div id="loader-bar"></div>
+    </div>
+    <div id="loader-version">DOF-MESH v3</div>
+  </div>
+
+  <!-- NAV (fixed, outside smooth wrapper) -->
+  <nav>
+    <a href="#" class="nav-logo">DOF<span class="dot">●</span>MESH</a>
+    <div class="nav-right">
+      <div class="nav-live"><div class="nav-live-dot"></div> LIVE</div>
+      <button class="nav-lang-btn" onclick="toggleLang()" id="lang-btn">ES</button>
+      <div class="nav-vlinks">
+        <a href="recursos.html">v1</a>
+        <a href="recursos-v2.html">v2</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- SMOOTH WRAPPER -->
+  <div id="smooth-wrapper">
+    <div id="smooth-content">
+
+      <!-- HERO -->
+      <section id="hero">
+        <!-- Background video placeholder (gradient fallback) -->
+        <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 40% 50%, rgba(109,40,217,0.18) 0%, transparent 65%), radial-gradient(ellipse at 80% 20%, rgba(34,211,238,0.06) 0%, transparent 50%);z-index:0;"></div>
+        <div class="hero-overlay-violet"></div>
+        <div class="hero-overlay-cyan"></div>
+        <div class="hero-overlay-top"></div>
+        <div class="hero-overlay-bottom"></div>
+        <div class="hero-grain"></div>
+
+        <div class="hero-content" data-speed="1">
+          <div class="hero-pill" data-i18n="hero.pill">⬡ ERC-8004 · MEDELLÍN · 2026</div>
+          <h1 class="hero-h1" id="hero-h1">Sovereign<br><em>Infrastructure</em></h1>
+          <p class="hero-tagline" data-i18n="hero.tagline">Deterministic governance for autonomous AI agents</p>
+          <p class="hero-stats">
+            <span>57K LOC</span> · <span>142 modules</span> · <span>5 chains</span>
+          </p>
+          <div class="hero-ctas">
+            <a href="#projects" class="btn-primary magnetic" data-i18n="hero.cta1">Explore Ecosystem</a>
+            <a href="https://github.com/Cyberpaisa/DOF-MESH" target="_blank" rel="noopener" class="btn-ghost magnetic">GitHub ↗</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- MARQUEE -->
+      <div id="marquee">
+        <div class="marquee-row">
+          <div class="marquee-inner fwd">
+            <span class="marquee-item">DOF-MESH</span>
+            <span class="marquee-item">·</span>
+            <span class="marquee-item">AVALANCHE</span>
+            <span class="marquee-item">·</span>
+            <span class="marquee-item">ERC-8004</span>
+            <span class="marquee-item">·</span>
+            <span class="marquee-item">GOVERNANCE</span>
+            <span class="marquee-item">·</span>
+            <span class="marquee-item">Z3 VERIFICATION</span>
+            <span class="marquee-item">·</span>
+            <span class="marquee-item">CREWAI</span>
+            <span class="marquee-item">·</span>
+            <span class="marquee-item">SNOWRAIL</span>
+            <span class="marquee-item">·</span>
+            <!-- duplicate -->
+            <span class="marquee-item">DOF-MESH</span>
+            <span class="marquee-item">·</span>
+            <span class="marquee-item">AVALANCHE</span>
+            <span class="marquee-item">·</span>
+            <span class="marquee-item">ERC-8004</span>
+            <span class="marquee-item">·</span>
+            <span class="marquee-item">GOVERNANCE</span>
+            <span class="marquee-item">·</span>
+            <span class="marquee-item">Z3 VERIFICATION</span>
+            <span class="marquee-item">·</span>
+            <span class="marquee-item">CREWAI</span>
+            <span class="marquee-item">·</span>
+            <span class="marquee-item">SNOWRAIL</span>
+            <span class="marquee-item">·</span>
+          </div>
+        </div>
+        <div class="marquee-row">
+          <div class="marquee-inner rev">
+            <span class="marquee-item">ENIGMA</span>
+            <span class="marquee-item">·</span>
+            <span class="marquee-item">BASE</span>
+            <span class="marquee-item">·</span>
+            <span class="marquee-item">ULTRAVIOLETA DAO</span>
+            <span class="marquee-item">·</span>
+            <span class="marquee-item">APEX</span>
+            <span class="marquee-item">·</span>
+            <span class="marquee-item">RUST GATE 7μs</span>
+            <span class="marquee-item">·</span>
+            <span class="marquee-item">MULTI-AGENT</span>
+            <span class="marquee-item">·</span>
+            <span class="marquee-item">ATTESTATION</span>
+            <span class="marquee-item">·</span>
+            <!-- duplicate -->
+            <span class="marquee-item">ENIGMA</span>
+            <span class="marquee-item">·</span>
+            <span class="marquee-item">BASE</span>
+            <span class="marquee-item">·</span>
+            <span class="marquee-item">ULTRAVIOLETA DAO</span>
+            <span class="marquee-item">·</span>
+            <span class="marquee-item">APEX</span>
+            <span class="marquee-item">·</span>
+            <span class="marquee-item">RUST GATE 7μs</span>
+            <span class="marquee-item">·</span>
+            <span class="marquee-item">MULTI-AGENT</span>
+            <span class="marquee-item">·</span>
+            <span class="marquee-item">ATTESTATION</span>
+            <span class="marquee-item">·</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ABOUT -->
+      <section id="about">
+        <div class="section-label" data-i18n="about.label">// ABOUT</div>
+        <h2 class="about-h2" id="about-h2" data-i18n="about.h2">Deterministic governance<br>for the autonomous web</h2>
+        <p class="about-p" data-i18n="about.p">DOF-MESH is a 57K+ LOC framework providing 7-layer governance for AI agents. From constitutional rules to Z3 formal verification and on-chain attestations — every decision is auditable, deterministic, and sovereign.</p>
+      </section>
+
+      <!-- LAYERS — Horizontal scroll -->
+      <section id="layers">
+        <div class="layers-track" id="layers-track">
+          <div class="layer-card">
+            <span class="layer-icon">⚖️</span>
+            <div class="layer-name" data-i18n="layer1.name">Constitution</div>
+            <p class="layer-desc" data-i18n="layer1.desc">Base rules and invariants. Defines what agents can and cannot do.</p>
+            <span class="layer-tag">LAYER_00</span>
+            <div class="layer-num">01</div>
+          </div>
+          <div class="layer-card">
+            <span class="layer-icon">🌳</span>
+            <div class="layer-name" data-i18n="layer2.name">AST</div>
+            <p class="layer-desc" data-i18n="layer2.desc">Abstract Syntax Tree validation. Every operation parsed before execution.</p>
+            <span class="layer-tag">LAYER_01</span>
+            <div class="layer-num">02</div>
+          </div>
+          <div class="layer-card">
+            <span class="layer-icon">👁️</span>
+            <div class="layer-name" data-i18n="layer3.name">Supervisor</div>
+            <p class="layer-desc" data-i18n="layer3.desc">Real-time oversight of agent actions and state transitions.</p>
+            <span class="layer-tag">LAYER_02</span>
+            <div class="layer-num">03</div>
+          </div>
+          <div class="layer-card">
+            <span class="layer-icon">⚔️</span>
+            <div class="layer-name" data-i18n="layer4.name">Adversarial</div>
+            <p class="layer-desc" data-i18n="layer4.desc">Red-team simulation. Probes for edge cases before deployment.</p>
+            <span class="layer-tag">LAYER_03</span>
+            <div class="layer-num">04</div>
+          </div>
+          <div class="layer-card">
+            <span class="layer-icon">🧠</span>
+            <div class="layer-name" data-i18n="layer5.name">Memory</div>
+            <p class="layer-desc" data-i18n="layer5.desc">Persistent context with cryptographic integrity guarantees.</p>
+            <span class="layer-tag">LAYER_04</span>
+            <div class="layer-num">05</div>
+          </div>
+          <div class="layer-card">
+            <span class="layer-icon">🔐</span>
+            <div class="layer-name" data-i18n="layer6.name">Z3 Formal</div>
+            <p class="layer-desc" data-i18n="layer6.desc">Mathematical verification using Microsoft Z3 solver.</p>
+            <span class="layer-tag">LAYER_05</span>
+            <div class="layer-num">06</div>
+          </div>
+          <div class="layer-card">
+            <span class="layer-icon">🔮</span>
+            <div class="layer-name" data-i18n="layer7.name">Oracle</div>
+            <p class="layer-desc" data-i18n="layer7.desc">On-chain attestation layer. Truth anchored to Avalanche + Base.</p>
+            <span class="layer-tag">LAYER_06</span>
+            <div class="layer-num">07</div>
+          </div>
+        </div>
+        <div class="layers-hint" data-i18n="layers.hint">SCROLL TO EXPLORE</div>
+      </section>
+
+      <!-- STATS -->
+      <section id="stats">
+        <div class="stats-grid">
+          <div class="stat-cell">
+            <span class="stat-num" style="color:var(--violet-bright)" data-count="57000">0</span>
+            <span class="stat-label" data-i18n="stat1.label">Lines of Code</span>
+          </div>
+          <div class="stat-cell">
+            <span class="stat-num" data-count="142">0</span>
+            <span class="stat-label" data-i18n="stat2.label">Core Modules</span>
+          </div>
+          <div class="stat-cell">
+            <span class="stat-num" data-count="170">0</span>
+            <span class="stat-label" data-i18n="stat3.label">Test Files</span>
+          </div>
+          <div class="stat-cell">
+            <span class="stat-num" style="color:var(--cyan)" data-count="7">0</span>
+            <span class="stat-label" data-i18n="stat4.label">Governance Layers</span>
+          </div>
+          <div class="stat-cell">
+            <span class="stat-num" data-count="11">0</span>
+            <span class="stat-label" data-i18n="stat5.label">CrewAI Crews</span>
+          </div>
+          <div class="stat-cell">
+            <span class="stat-num" style="color:var(--violet-bright)" data-count="5">0</span>
+            <span class="stat-label" data-i18n="stat6.label">Live Chains</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROJECTS -->
+      <section id="projects">
+        <div class="projects-header">
+          <div>
+            <div class="section-label" data-i18n="projects.label">// ECOSYSTEM</div>
+            <h2 class="projects-h2" data-i18n="projects.h2">Active Projects</h2>
+          </div>
+          <div class="filter-btns">
+            <button class="filter-btn active" data-filter="all" data-i18n="filter.all">ALL</button>
+            <button class="filter-btn" data-filter="live" data-i18n="filter.live">LIVE</button>
+            <button class="filter-btn" data-filter="private" data-i18n="filter.private">PRIVATE</button>
+          </div>
+        </div>
+
+        <div class="projects-grid" id="projects-grid">
+
+          <!-- LIVE projects -->
+          <a href="https://github.com/Cyberpaisa/DOF-MESH" target="_blank" rel="noopener" class="pc" data-cat="live">
+            <div class="pc-top">
+              <span class="pc-icon">🔮</span>
+              <span class="pc-badge badge-live" data-i18n="badge.live">LIVE</span>
+            </div>
+            <div class="pc-name">DOF-MESH</div>
+            <p class="pc-desc" data-i18n="proj.dof.desc">Deterministic Observability Framework. 7-layer governance, Z3 formal verification, CrewAI multi-agent system with full on-chain attestation.</p>
+            <div class="pc-tags">
+              <span class="pc-tag">Python</span>
+              <span class="pc-tag">CrewAI</span>
+              <span class="pc-tag">Z3</span>
+              <span class="pc-tag">57K LOC</span>
+            </div>
+          </a>
+
+          <a href="https://github.com/Cyberpaisa/Enigma-prod" target="_blank" rel="noopener" class="pc" data-cat="live">
+            <div class="pc-top">
+              <span class="pc-icon">🧬</span>
+              <span class="pc-badge badge-live" data-i18n="badge.live">LIVE</span>
+            </div>
+            <div class="pc-name">Enigma</div>
+            <p class="pc-desc" data-i18n="proj.enigma.desc">Trust Score Platform. TRACER engine, Sentinel 27 checks, 3 scoring engines (v1, TRACER, v2 Combined). ERC-8004 identity layer.</p>
+            <div class="pc-tags">
+              <span class="pc-tag">Next.js 14</span>
+              <span class="pc-tag">TypeScript</span>
+              <span class="pc-tag">Prisma</span>
+              <span class="pc-tag">Supabase</span>
+            </div>
+          </a>
+
+          <a href="https://apex-arbitrage-agent-production.up.railway.app" target="_blank" rel="noopener" class="pc" data-cat="live">
+            <div class="pc-top">
+              <span class="pc-icon">⚡</span>
+              <span class="pc-badge badge-mainnet" data-i18n="badge.mainnet">MAINNET</span>
+            </div>
+            <div class="pc-name">Apex Arbitrage Agent #1687</div>
+            <p class="pc-desc" data-i18n="proj.apex.desc">Bellman-Ford triangular arbitrage. x402 paywalled signals, whale monitor, new pair detection. Deployed on Railway.</p>
+            <div class="pc-tags">
+              <span class="pc-tag">Python 3.12</span>
+              <span class="pc-tag">FastAPI</span>
+              <span class="pc-tag">ethers.js</span>
+              <span class="pc-tag">Railway</span>
+            </div>
+          </a>
+
+          <a href="https://avariskscan-defi-production.up.railway.app" target="_blank" rel="noopener" class="pc" data-cat="live">
+            <div class="pc-top">
+              <span class="pc-icon">🛡️</span>
+              <span class="pc-badge badge-mainnet" data-i18n="badge.mainnet">MAINNET</span>
+            </div>
+            <div class="pc-name">AvaBuilder Agent #1686</div>
+            <p class="pc-desc" data-i18n="proj.ava.desc">Avalanche DeFi risk scanner. Node.js + Python hybrid. Real-time protocol risk scoring and builder tooling for the Avalanche ecosystem.</p>
+            <div class="pc-tags">
+              <span class="pc-tag">Node.js</span>
+              <span class="pc-tag">Python</span>
+              <span class="pc-tag">Avalanche</span>
+              <span class="pc-tag">Railway</span>
+            </div>
+          </a>
+
+          <a href="https://dof-governance.vercel.app" target="_blank" rel="noopener" class="pc" data-cat="live">
+            <div class="pc-top">
+              <span class="pc-icon">🏛️</span>
+              <span class="pc-badge badge-live" data-i18n="badge.live">LIVE</span>
+            </div>
+            <div class="pc-name">DOF Governance</div>
+            <p class="pc-desc" data-i18n="proj.gov.desc">On-chain governance frontend. ACP Evaluator, attestation explorer, proof registry across 5 chains. Deployed on Vercel.</p>
+            <div class="pc-tags">
+              <span class="pc-tag">ethers.js</span>
+              <span class="pc-tag">Node.js</span>
+              <span class="pc-tag">Vercel</span>
+              <span class="pc-tag">5 chains</span>
+            </div>
+          </a>
+
+          <a href="https://github.com/Cyberpaisa/snowrail-core" target="_blank" rel="noopener" class="pc" data-cat="live">
+            <div class="pc-top">
+              <span class="pc-icon">🛤️</span>
+              <span class="pc-badge badge-live" data-i18n="badge.live">LIVE</span>
+            </div>
+            <div class="pc-name">SnowRail Core</div>
+            <p class="pc-desc" data-i18n="proj.snow.desc">Payment orchestrator + Agent Marketplace. TypeScript monorepo with Express, Drizzle ORM, Hardhat contracts, x402 payment integration.</p>
+            <div class="pc-tags">
+              <span class="pc-tag">TypeScript</span>
+              <span class="pc-tag">pnpm</span>
+              <span class="pc-tag">Hardhat</span>
+              <span class="pc-tag">x402</span>
+            </div>
+          </a>
+
+          <a href="https://github.com/UltravioletaDAO" target="_blank" rel="noopener" class="pc" data-cat="live">
+            <div class="pc-top">
+              <span class="pc-icon">🌌</span>
+              <span class="pc-badge badge-mainnet" data-i18n="badge.mainnet">MAINNET</span>
+            </div>
+            <div class="pc-name">Ultravioleta DAO</div>
+            <p class="pc-desc" data-i18n="proj.uvd.desc">x402 payment facilitator. Gasless EIP-3009 transactions, 9K+ txs, $509+ volume. SKALE zero-gas layer, x402-rs SDK. Sovereign infrastructure.</p>
+            <div class="pc-tags">
+              <span class="pc-tag">x402</span>
+              <span class="pc-tag">Rust</span>
+              <span class="pc-tag">EIP-3009</span>
+              <span class="pc-tag">SKALE</span>
+            </div>
+          </a>
+
+          <a href="https://github.com/Cyberpaisa/tracer-protocol" target="_blank" rel="noopener" class="pc" data-cat="live">
+            <div class="pc-top">
+              <span class="pc-icon">🔍</span>
+              <span class="pc-badge badge-live" data-i18n="badge.live">LIVE</span>
+            </div>
+            <div class="pc-name">TRACER Protocol</div>
+            <p class="pc-desc" data-i18n="proj.tracer.desc">Trust scoring library. Monorepo npm + Turbo. Engagement(30%) + Service(25%) + Publisher(20%) + Compliance(15%) + Momentum(10%).</p>
+            <div class="pc-tags">
+              <span class="pc-tag">TypeScript</span>
+              <span class="pc-tag">Turbo</span>
+              <span class="pc-tag">npm</span>
+            </div>
+          </a>
+
+          <!-- PRIVATE projects -->
+          <div class="pc pc-private" data-cat="private">
+            <div class="pc-top">
+              <span class="pc-icon">🔒</span>
+              <span class="pc-badge badge-private" data-i18n="badge.private">PRIVATE</span>
+            </div>
+            <div class="pc-name">OpenViking</div>
+            <p class="pc-desc" data-i18n="proj.viking.desc">Rust + Python hybrid intelligence layer. Cargo.toml + pyproject.toml. Internal tooling for DOF-MESH performance critical paths.</p>
+            <div class="pc-tags">
+              <span class="pc-tag">Rust</span>
+              <span class="pc-tag">Python</span>
+            </div>
+          </div>
+
+          <div class="pc pc-private" data-cat="private">
+            <div class="pc-top">
+              <span class="pc-icon">🔒</span>
+              <span class="pc-badge badge-private" data-i18n="badge.private">PRIVATE</span>
+            </div>
+            <div class="pc-name">Super Sentinel</div>
+            <p class="pc-desc" data-i18n="proj.sentinel.desc">Extended Enigma platform. Next.js 14 + TypeScript + Prisma. Enhanced trust scoring pipeline with additional compliance engines.</p>
+            <div class="pc-tags">
+              <span class="pc-tag">Next.js 14</span>
+              <span class="pc-tag">TypeScript</span>
+              <span class="pc-tag">Prisma</span>
+            </div>
+          </div>
+
+          <div class="pc pc-private" data-cat="private">
+            <div class="pc-top">
+              <span class="pc-icon">🔒</span>
+              <span class="pc-badge badge-private" data-i18n="badge.private">PRIVATE</span>
+            </div>
+            <div class="pc-name">SnowRail Sentinel</div>
+            <p class="pc-desc" data-i18n="proj.ssentinel.desc">B2B validator. pnpm monorepo + Hardhat. Fuji testnet contracts, API + SDK packages. Enterprise-grade agent validation layer.</p>
+            <div class="pc-tags">
+              <span class="pc-tag">pnpm</span>
+              <span class="pc-tag">Hardhat</span>
+              <span class="pc-tag">Fuji</span>
+            </div>
+          </div>
+
+          <div class="pc pc-private" data-cat="private">
+            <div class="pc-top">
+              <span class="pc-icon">🔒</span>
+              <span class="pc-badge badge-private" data-i18n="badge.private">PRIVATE</span>
+            </div>
+            <div class="pc-name">ERC-8004 Builder Kit</div>
+            <p class="pc-desc" data-i18n="proj.builderkit.desc">Registration and validation scripts for ERC-8004 agent identities on Avalanche C-Chain. Bash scripts, zero dependencies.</p>
+            <div class="pc-tags">
+              <span class="pc-tag">Bash</span>
+              <span class="pc-tag">Avalanche</span>
+              <span class="pc-tag">ERC-8004</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- CREATOR -->
+      <section id="creator">
+        <div class="creator-inner">
+          <div class="creator-left">
+            <div class="section-label" data-i18n="creator.label">// CREATOR</div>
+            <div class="creator-name">Cyber Paisa</div>
+            <div class="creator-role" data-i18n="creator.role">Enigma Group · Medellín 🇨🇴</div>
+            <div class="creator-socials">
+              <a href="https://twitter.com/Cyber_paisa" target="_blank" rel="noopener" class="social-pill">𝕏 @Cyber_paisa</a>
+              <a href="https://github.com/Cyberpaisa" target="_blank" rel="noopener" class="social-pill">⌥ GitHub</a>
+            </div>
+          </div>
+          <div class="creator-right">
+            <div class="creator-mini-grid">
+              <div class="mini-stat">
+                <span class="mini-num" style="color:var(--violet-bright)">8</span>
+                <span class="mini-label" data-i18n="mini1.label">Agents</span>
+              </div>
+              <div class="mini-stat">
+                <span class="mini-num">11</span>
+                <span class="mini-label" data-i18n="mini2.label">Crews</span>
+              </div>
+              <div class="mini-stat">
+                <span class="mini-num" style="color:var(--cyan)">5</span>
+                <span class="mini-label" data-i18n="mini3.label">Chains</span>
+              </div>
+              <div class="mini-stat">
+                <span class="mini-num">9K+</span>
+                <span class="mini-label" data-i18n="mini4.label">Txs</span>
+              </div>
+            </div>
+          </div>
+          <div class="creator-year">2026</div>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer>
+        DOF-MESH · Enigma Group · Medellín, Colombia · 2026 ·
+        <a href="recursos.html">v1</a> ·
+        <a href="recursos-v2.html">v2</a>
+      </footer>
+
+    </div><!-- /#smooth-content -->
+  </div><!-- /#smooth-wrapper -->
+
+  <script>
+    // ─── REGISTER PLUGINS ───────────────────────────────────────────────────
+    gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, ScrambleTextPlugin, Observer, Flip);
+
+    // ─── I18N ────────────────────────────────────────────────────────────────
+    const translations = {
+      en: {
+        'hero.pill': '⬡ ERC-8004 · MEDELLÍN · 2026',
+        'hero.tagline': 'Deterministic governance for autonomous AI agents',
+        'hero.cta1': 'Explore Ecosystem',
+        'about.label': '// ABOUT',
+        'about.h2': 'Deterministic governance<br>for the autonomous web',
+        'about.p': 'DOF-MESH is a 57K+ LOC framework providing 7-layer governance for AI agents. From constitutional rules to Z3 formal verification and on-chain attestations — every decision is auditable, deterministic, and sovereign.',
+        'layer1.name': 'Constitution', 'layer1.desc': 'Base rules and invariants. Defines what agents can and cannot do.',
+        'layer2.name': 'AST', 'layer2.desc': 'Abstract Syntax Tree validation. Every operation parsed before execution.',
+        'layer3.name': 'Supervisor', 'layer3.desc': 'Real-time oversight of agent actions and state transitions.',
+        'layer4.name': 'Adversarial', 'layer4.desc': 'Red-team simulation. Probes for edge cases before deployment.',
+        'layer5.name': 'Memory', 'layer5.desc': 'Persistent context with cryptographic integrity guarantees.',
+        'layer6.name': 'Z3 Formal', 'layer6.desc': 'Mathematical verification using Microsoft Z3 solver.',
+        'layer7.name': 'Oracle', 'layer7.desc': 'On-chain attestation layer. Truth anchored to Avalanche + Base.',
+        'layers.hint': 'SCROLL TO EXPLORE',
+        'stat1.label': 'Lines of Code', 'stat2.label': 'Core Modules', 'stat3.label': 'Test Files',
+        'stat4.label': 'Governance Layers', 'stat5.label': 'CrewAI Crews', 'stat6.label': 'Live Chains',
+        'projects.label': '// ECOSYSTEM', 'projects.h2': 'Active Projects',
+        'filter.all': 'ALL', 'filter.live': 'LIVE', 'filter.private': 'PRIVATE',
+        'badge.live': 'LIVE', 'badge.mainnet': 'MAINNET', 'badge.private': 'PRIVATE',
+        'proj.dof.desc': 'Deterministic Observability Framework. 7-layer governance, Z3 formal verification, CrewAI multi-agent system with full on-chain attestation.',
+        'proj.enigma.desc': 'Trust Score Platform. TRACER engine, Sentinel 27 checks, 3 scoring engines (v1, TRACER, v2 Combined). ERC-8004 identity layer.',
+        'proj.apex.desc': 'Bellman-Ford triangular arbitrage. x402 paywalled signals, whale monitor, new pair detection. Deployed on Railway.',
+        'proj.ava.desc': 'Avalanche DeFi risk scanner. Node.js + Python hybrid. Real-time protocol risk scoring and builder tooling.',
+        'proj.gov.desc': 'On-chain governance frontend. ACP Evaluator, attestation explorer, proof registry across 5 chains.',
+        'proj.snow.desc': 'Payment orchestrator + Agent Marketplace. TypeScript monorepo with Express, Drizzle ORM, Hardhat contracts, x402.',
+        'proj.uvd.desc': 'x402 payment facilitator. Gasless EIP-3009 transactions, 9K+ txs, $509+ volume. SKALE zero-gas layer.',
+        'proj.tracer.desc': 'Trust scoring library. Monorepo npm + Turbo. Engagement(30%) + Service(25%) + Publisher(20%) + Compliance(15%) + Momentum(10%).',
+        'proj.viking.desc': 'Rust + Python hybrid intelligence layer. Internal tooling for DOF-MESH performance critical paths.',
+        'proj.sentinel.desc': 'Extended Enigma platform. Next.js 14 + TypeScript + Prisma. Enhanced trust scoring pipeline.',
+        'proj.ssentinel.desc': 'B2B validator. pnpm monorepo + Hardhat. Fuji testnet contracts, API + SDK packages.',
+        'proj.builderkit.desc': 'Registration and validation scripts for ERC-8004 agent identities on Avalanche C-Chain.',
+        'creator.label': '// CREATOR', 'creator.role': 'Enigma Group · Medellín 🇨🇴',
+        'mini1.label': 'Agents', 'mini2.label': 'Crews', 'mini3.label': 'Chains', 'mini4.label': 'Txs',
+      },
+      es: {
+        'hero.pill': '⬡ ERC-8004 · MEDELLÍN · 2026',
+        'hero.tagline': 'Gobernanza determinista para agentes de IA autónomos',
+        'hero.cta1': 'Explorar Ecosistema',
+        'about.label': '// ACERCA DE',
+        'about.h2': 'Gobernanza determinista<br>para la web autónoma',
+        'about.p': 'DOF-MESH es un framework de 57K+ LOC que provee gobernanza de 7 capas para agentes de IA. Desde reglas constitucionales hasta verificación formal Z3 y attestations on-chain — cada decisión es auditable, determinista y soberana.',
+        'layer1.name': 'Constitución', 'layer1.desc': 'Reglas base e invariantes. Define qué pueden y no pueden hacer los agentes.',
+        'layer2.name': 'AST', 'layer2.desc': 'Validación de Árbol de Sintaxis Abstracta. Cada operación se parsea antes de ejecutarse.',
+        'layer3.name': 'Supervisor', 'layer3.desc': 'Supervisión en tiempo real de acciones y transiciones de estado de agentes.',
+        'layer4.name': 'Adversarial', 'layer4.desc': 'Simulación red-team. Prueba casos extremos antes del despliegue.',
+        'layer5.name': 'Memoria', 'layer5.desc': 'Contexto persistente con garantías de integridad criptográfica.',
+        'layer6.name': 'Z3 Formal', 'layer6.desc': 'Verificación matemática usando el solver Microsoft Z3.',
+        'layer7.name': 'Oráculo', 'layer7.desc': 'Capa de attestation on-chain. Verdad anclada a Avalanche + Base.',
+        'layers.hint': 'DESPLAZA PARA EXPLORAR',
+        'stat1.label': 'Líneas de Código', 'stat2.label': 'Módulos Core', 'stat3.label': 'Archivos de Test',
+        'stat4.label': 'Capas de Gobernanza', 'stat5.label': 'Crews CrewAI', 'stat6.label': 'Chains Activas',
+        'projects.label': '// ECOSISTEMA', 'projects.h2': 'Proyectos Activos',
+        'filter.all': 'TODOS', 'filter.live': 'LIVE', 'filter.private': 'PRIVADOS',
+        'badge.live': 'LIVE', 'badge.mainnet': 'MAINNET', 'badge.private': 'PRIVADO',
+        'proj.dof.desc': 'Framework de Observabilidad Determinista. Gobernanza 7 capas, verificación formal Z3, sistema multi-agente CrewAI con attestation on-chain completa.',
+        'proj.enigma.desc': 'Plataforma de Trust Score. Motor TRACER, Sentinel 27 verificaciones, 3 motores de scoring (v1, TRACER, v2 Combinado). Capa de identidad ERC-8004.',
+        'proj.apex.desc': 'Arbitraje triangular Bellman-Ford. Señales x402 paywalled, monitor de ballenas, detección de nuevos pares. Desplegado en Railway.',
+        'proj.ava.desc': 'Escáner de riesgo DeFi en Avalanche. Híbrido Node.js + Python. Puntuación de riesgo de protocolos en tiempo real.',
+        'proj.gov.desc': 'Frontend de gobernanza on-chain. ACP Evaluator, explorador de attestations, registro de pruebas en 5 chains.',
+        'proj.snow.desc': 'Orquestador de pagos + Marketplace de Agentes. Monorepo TypeScript con Express, Drizzle ORM, contratos Hardhat, x402.',
+        'proj.uvd.desc': 'Facilitador de pagos x402. Transacciones gasless EIP-3009, 9K+ txs, $509+ en volumen. Capa zero-gas SKALE.',
+        'proj.tracer.desc': 'Librería de trust scoring. Monorepo npm + Turbo. Engagement(30%) + Servicio(25%) + Publisher(20%) + Compliance(15%) + Momentum(10%).',
+        'proj.viking.desc': 'Capa de inteligencia híbrida Rust + Python. Tooling interno para paths críticos de rendimiento de DOF-MESH.',
+        'proj.sentinel.desc': 'Plataforma Enigma extendida. Next.js 14 + TypeScript + Prisma. Pipeline de trust scoring mejorado.',
+        'proj.ssentinel.desc': 'Validador B2B. Monorepo pnpm + Hardhat. Contratos testnet Fuji, paquetes API + SDK.',
+        'proj.builderkit.desc': 'Scripts de registro y validación para identidades de agentes ERC-8004 en Avalanche C-Chain.',
+        'creator.label': '// CREADOR', 'creator.role': 'Enigma Group · Medellín 🇨🇴',
+        'mini1.label': 'Agentes', 'mini2.label': 'Crews', 'mini3.label': 'Chains', 'mini4.label': 'Txs',
+      }
+    };
+
+    let currentLang = 'en';
+
+    function applyLang(lang) {
+      currentLang = lang;
+      const t = translations[lang];
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (t[key] !== undefined) {
+          if (key === 'about.h2' || key === 'about.p') {
+            el.innerHTML = t[key];
+          } else {
+            el.textContent = t[key];
+          }
+        }
+      });
+      document.getElementById('lang-btn').textContent = lang === 'en' ? 'ES' : 'EN';
+      buildHeadline(lang);
+    }
+
+    function toggleLang() {
+      applyLang(currentLang === 'en' ? 'es' : 'en');
+    }
+
+    // ─── HEADLINE BUILDER (re-splits after lang change) ────────────────────
+    let heroSplit = null;
+
+    function buildHeadline(lang) {
+      const h1 = document.getElementById('hero-h1');
+      if (!h1) return;
+      if (lang === 'es') {
+        h1.innerHTML = 'Infraestructura<br><em>Soberana</em>';
+      } else {
+        h1.innerHTML = 'Sovereign<br><em>Infrastructure</em>';
+      }
+      if (heroSplit) { heroSplit.revert(); }
+      heroSplit = new SplitText(h1, { type: 'lines', linesClass: 'line' });
+      heroSplit.lines.forEach(line => {
+        const inner = document.createElement('div');
+        inner.innerHTML = line.innerHTML;
+        line.innerHTML = '';
+        line.appendChild(inner);
+      });
+    }
+
+    // ─── LOADER ──────────────────────────────────────────────────────────────
+    function runLoader(onDone) {
+      const scrambleEl = document.getElementById('loader-scramble');
+      const countEl = document.getElementById('loader-count');
+      const bar = document.getElementById('loader-bar');
+
+      const words = ['INITIALIZING', 'SOVEREIGN', 'DEPLOYING', 'VERIFYING', 'CONNECTED'];
+      let wordIndex = 0;
+
+      function scrambleNext() {
+        if (wordIndex >= words.length) return;
+        gsap.to(scrambleEl, {
+          duration: 0.6,
+          scrambleText: { text: words[wordIndex], chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', speed: 0.5 },
+          onComplete: () => {
+            wordIndex++;
+            if (wordIndex < words.length) {
+              gsap.delayedCall(0.3, scrambleNext);
+            }
+          }
+        });
+      }
+      scrambleNext();
+
+      // Counter 000 → 100
+      const obj = { v: 0 };
+      gsap.to(obj, {
+        v: 100,
+        duration: 2.2,
+        ease: 'power2.inOut',
+        onUpdate() {
+          countEl.textContent = String(Math.round(obj.v)).padStart(3, '0');
+        }
+      });
+
+      // Progress bar
+      gsap.to(bar, { width: '100%', duration: 2.4, ease: 'power2.inOut' });
+
+      // Fade out loader
+      gsap.to('#loader', {
+        autoAlpha: 0,
+        duration: 0.6,
+        delay: 2.6,
+        ease: 'power2.inOut',
+        onComplete: onDone
+      });
+    }
+
+    // ─── MAIN INIT ────────────────────────────────────────────────────────────
+    function initPage() {
+      // ScrollSmoother
+      const smoother = ScrollSmoother.create({
+        wrapper: '#smooth-wrapper',
+        content: '#smooth-content',
+        smooth: 1.6,
+        effects: true,
+        smoothTouch: 0.1,
+      });
+
+      // Build initial headline and animate
+      buildHeadline('en');
+      const h1 = document.getElementById('hero-h1');
+      const lines = h1.querySelectorAll('.line > div');
+      gsap.from(lines, {
+        y: '110%',
+        duration: 1.1,
+        ease: 'power3.out',
+        stagger: 0.1,
+        delay: 0.1,
+      });
+
+      // Hero pill + tagline + ctas fade in
+      gsap.from(['.hero-pill', '.hero-tagline', '.hero-stats', '.hero-ctas'], {
+        autoAlpha: 0,
+        y: 20,
+        duration: 0.9,
+        ease: 'power2.out',
+        stagger: 0.1,
+        delay: 0.5,
+      });
+
+      // ── ABOUT headline SplitText ──────────────────────────────────────────
+      const aboutH2 = document.getElementById('about-h2');
+      const aboutSplit = new SplitText(aboutH2, { type: 'words', wordsClass: 'word' });
+      gsap.from(aboutSplit.words, {
+        autoAlpha: 0,
+        y: 16,
+        duration: 0.7,
+        ease: 'power2.out',
+        stagger: 0.04,
+        scrollTrigger: {
+          trigger: aboutH2,
+          start: 'top 82%',
+          once: true,
+        }
+      });
+
+      // ── LAYERS — Horizontal pinned scroll ─────────────────────────────────
+      const track = document.getElementById('layers-track');
+
+      const layerAnim = gsap.to(track, {
+        x: () => -(track.scrollWidth - window.innerWidth + 40),
+        ease: 'none',
+      });
+
+      const layerST = ScrollTrigger.create({
+        trigger: '#layers',
+        start: 'top top',
+        end: () => '+=' + (track.scrollWidth - window.innerWidth + 40),
+        scrub: 1,
+        pin: true,
+        anticipatePin: 1,
+        animation: layerAnim,
+      });
+
+      gsap.utils.toArray('.layer-card').forEach((card) => {
+        gsap.from(card, {
+          autoAlpha: 0.3,
+          scale: 0.96,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: card,
+            containerAnimation: layerST,
+            start: 'left 85%',
+            end: 'left 30%',
+            scrub: true,
+          }
+        });
+      });
+
+      // ── STATS COUNTERS ────────────────────────────────────────────────────
+      document.querySelectorAll('[data-count]').forEach(el => {
+        el.textContent = '0';
+        const target = parseFloat(el.dataset.count);
+        const obj2 = { v: 0 };
+        gsap.to(obj2, {
+          v: target,
+          duration: 2.2,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+          onUpdate() {
+            el.textContent = target >= 1000
+              ? Math.round(obj2.v).toLocaleString()
+              : Math.round(obj2.v);
+          }
+        });
+      });
+
+      // ── SECTION FADE-IN ───────────────────────────────────────────────────
+      gsap.utils.toArray('#about, #stats, #projects, #creator').forEach(section => {
+        gsap.from(section, {
+          autoAlpha: 0,
+          y: 32,
+          duration: 0.9,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 88%',
+            once: true,
+          }
+        });
+      });
+
+      // ── PROJECT CARD STAGGER ──────────────────────────────────────────────
+      gsap.from('.pc', {
+        autoAlpha: 0,
+        y: 24,
+        duration: 0.7,
+        ease: 'power2.out',
+        stagger: 0.06,
+        scrollTrigger: {
+          trigger: '#projects-grid',
+          start: 'top 85%',
+          once: true,
+        }
+      });
+
+      // ── FLIP FILTER ───────────────────────────────────────────────────────
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const filter = btn.dataset.filter;
+          const state = Flip.getState('.pc');
+          document.querySelectorAll('.pc').forEach(card => {
+            const show = filter === 'all' || card.dataset.cat === filter;
+            card.style.display = show ? '' : 'none';
+          });
+          Flip.from(state, {
+            duration: 0.5,
+            ease: 'power2.inOut',
+            stagger: 0.04,
+            absolute: true,
+          });
+        });
+      });
+
+      // ── MAGNETIC BUTTONS ──────────────────────────────────────────────────
+      document.querySelectorAll('.magnetic').forEach(btn => {
+        Observer.create({
+          target: btn,
+          type: 'pointer',
+          onMove: self => {
+            const r = btn.getBoundingClientRect();
+            gsap.to(btn, {
+              x: (self.x - r.left - r.width / 2) * 0.35,
+              y: (self.y - r.top - r.height / 2) * 0.35,
+              duration: 0.4,
+              ease: 'power2.out',
+            });
+          },
+          onLeave: () => gsap.to(btn, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1,0.3)' })
+        });
+      });
+
+      // ── LAYER CARD 3D TILT ────────────────────────────────────────────────
+      document.querySelectorAll('.layer-card').forEach(card => {
+        card.addEventListener('mousemove', e => {
+          const r = card.getBoundingClientRect();
+          const cx = r.left + r.width / 2;
+          const cy = r.top + r.height / 2;
+          const rx = ((e.clientY - cy) / r.height) * -6;
+          const ry = ((e.clientX - cx) / r.width) * 6;
+          gsap.to(card, { rotateX: rx, rotateY: ry, duration: 0.4, ease: 'power2.out', transformPerspective: 800 });
+        });
+        card.addEventListener('mouseleave', () => {
+          gsap.to(card, { rotateX: 0, rotateY: 0, duration: 0.7, ease: 'elastic.out(1,0.4)' });
+        });
+      });
+    }
+
+    // ── REDUCED MOTION ────────────────────────────────────────────────────────
+    gsap.matchMedia().add('(prefers-reduced-motion: reduce)', () => {
+      gsap.globalTimeline.timeScale(0);
+    });
+
+    // ── BOOT ──────────────────────────────────────────────────────────────────
+    window.addEventListener('load', () => {
+      runLoader(initPage);
+    });
+  </script>
+</body>
+</html>
