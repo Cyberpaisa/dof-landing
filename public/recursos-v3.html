@@ -199,11 +199,15 @@
       justify-content: center;
       overflow: hidden;
     }
+    .vid-wrap {
+      position: absolute; inset: 0; z-index: 0; overflow: hidden;
+    }
     #bgvid {
       position: absolute;
       top: 0; left: 0;
       width: 150%; height: 150%;
       object-fit: cover;
+      transform-origin: top left;
       opacity: 0.45;
       filter: saturate(1.4) contrast(1.05);
       z-index: 0;
@@ -817,8 +821,10 @@
 
       <!-- HERO -->
       <section id="hero">
-        <!-- Background video placeholder (gradient fallback) -->
-        <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 40% 50%, rgba(109,40,217,0.18) 0%, transparent 65%), radial-gradient(ellipse at 80% 20%, rgba(34,211,238,0.06) 0%, transparent 50%);z-index:0;"></div>
+        <!-- Background video -->
+        <div class="vid-wrap">
+          <video id="bgvid" autoplay muted loop playsinline data-speed="0.6"></video>
+        </div>
         <div class="hero-overlay-violet"></div>
         <div class="hero-overlay-cyan"></div>
         <div class="hero-overlay-top"></div>
@@ -1413,6 +1419,19 @@
       });
     }
 
+    // ─── HLS VIDEO ───────────────────────────────────────────────────────────
+    const HLS_URL = 'https://stream.mux.com/NcU3HlHeF7CUL86azTTzpy3Tlb00d6iF3BmCdFslMJYM.m3u8';
+    const vid = document.getElementById('bgvid');
+    if (vid) {
+      if (Hls.isSupported()) {
+        const hls = new Hls({ autoStartLoad: true });
+        hls.loadSource(HLS_URL);
+        hls.attachMedia(vid);
+      } else if (vid.canPlayType('application/vnd.apple.mpegurl')) {
+        vid.src = HLS_URL;
+      }
+    }
+
     // ─── MAIN INIT ────────────────────────────────────────────────────────────
     function initPage() {
       // ScrollSmoother
@@ -1598,7 +1617,7 @@
 
     // ── REDUCED MOTION ────────────────────────────────────────────────────────
     gsap.matchMedia().add('(prefers-reduced-motion: reduce)', () => {
-      gsap.globalTimeline.timeScale(0);
+      gsap.globalTimeline.timeScale(20);
     });
 
     // ── BOOT ──────────────────────────────────────────────────────────────────
