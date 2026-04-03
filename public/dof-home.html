@@ -854,8 +854,8 @@ footer {
       </div>
       <div class="proof-body" id="proof-lines"></div>
       <div class="proof-actions">
-        <a id="blockchain-btn" class="proof-btn proof-btn-primary" href="https://basescan.org/address/0x4e54634d0E12f2Fa585B6523fB21C7d8AaFC881D" target="_blank" style="opacity:.35;pointer-events:none;text-decoration:none;">Ver en blockchain →</a>
-        <button class="proof-btn proof-btn-secondary" onclick="document.getElementById('install').scrollIntoView({behavior:'smooth'})">Ver proof completo</button>
+        <a id="blockchain-btn" class="proof-btn proof-btn-primary" data-t="proof_btn_chain" href="https://basescan.org/address/0x4e54634d0E12f2Fa585B6523fB21C7d8AaFC881D" target="_blank" style="opacity:.35;pointer-events:none;text-decoration:none;">Ver en blockchain →</a>
+        <button class="proof-btn proof-btn-secondary" data-t="proof_btn_full" onclick="document.getElementById('install').scrollIntoView({behavior:'smooth'})">Ver proof completo</button>
       </div>
     </div>
   </div>
@@ -1356,7 +1356,7 @@ result = verifier.verify_action(
       <a href="https://dofmesh.com/#proof" class="btn btn-outline" target="_blank" data-t="cta_gov">Ver la demostración on-chain</a>
     </div>
     <p style="margin-top:2.5rem;font-size:.72rem;color:var(--text-muted2);" data-t="cta_credit">Construido por Cyber Paisa, Enigma Group, Medellín.</p>
-    <p class="cta-closing">Matemáticas, no promesas.</p>
+    <p class="cta-closing" data-t="cta_closing">Matemáticas, no promesas.</p>
   </div>
 </section>
 
@@ -1694,6 +1694,9 @@ const LANG={
     vs_bad1:'Logs escritos por la misma IA',vs_bad2:'El vigilante alucina o es manipulado',vs_bad3:'Archivos editables internamente',vs_bad4:'Consume tokens LLM por decisión',
     vs_good1:'✓ Prueba matemática inmutable',vs_good2:'✓ Inmunidad matemática (100% determinista)',vs_good3:'✓ Registro público en blockchain independiente',vs_good4:'✓ 0 tokens LLM · decisión en &lt;30ms',
     phase_label:'Phase 4 Soberanía Absoluta',
+    cta_closing:'Matemáticas, no promesas.',
+    proof_btn_chain:'Ver en blockchain →',
+    proof_btn_full:'Ver proof completo',
   },
   en:{
     nav_why:'Why DOF',nav_proj:'Projects',nav_metrics:'Metrics',nav_chains:'Chains',nav_gh:'GitHub →',
@@ -1749,6 +1752,9 @@ const LANG={
     vs_bad1:'Evidence from logs written by the AI itself',vs_bad2:'The watchdog can hallucinate or be manipulated',vs_bad3:'Internally editable files',vs_bad4:'Consumes LLM tokens per decision',
     vs_good1:'✓ Immutable mathematical proof',vs_good2:'✓ Mathematical immunity (100% deterministic)',vs_good3:'✓ Public record on independent blockchain',vs_good4:'✓ 0 LLM tokens · decision in &lt;30ms',
     phase_label:'Phase 4 Absolute Sovereignty',
+    cta_closing:'Mathematics, not promises.',
+    proof_btn_chain:'View on blockchain →',
+    proof_btn_full:'View full proof',
   }
 };
 let curLang='es';
