@@ -865,11 +865,11 @@ footer {
 <section class="section section-muted" id="winston">
   <div class="section-inner">
     <div class="section-center">
-      <p class="section-eyebrow">Validación Externa · Winston Experiment</p>
-      <h2 class="section-h2 reveal" style="max-width:700px;margin:0 auto;">
+      <p class="section-eyebrow" data-t="winston_eyebrow">Validación Externa · Winston Experiment</p>
+      <h2 class="section-h2 reveal" data-t="winston_h2" style="max-width:700px;margin:0 auto;">
         Probamos 10 modelos frontier.<br>Ninguno pudo gobernarse solo.
       </h2>
-      <p class="section-p reveal delay-1" style="max-width:560px;">
+      <p class="section-p reveal delay-1" data-t="winston_sub" style="max-width:560px;">
         Con DOF activo: mejora promedio de +26.1%. Scorer determinístico,
         0 LLMs. Validado externamente en Adaline (200M+ llamadas API/día).
       </p>
@@ -927,7 +927,7 @@ footer {
     </div>
 
     <p class="winston-note">
-      ✦ Incluyendo este modelo. Datos completos en
+      <span data-t="winston_note_text">✦ Incluyendo este modelo. Datos completos en</span>
       <a href="https://github.com/Cyberpaisa/DOF-MESH/tree/main/experiments/winston_vs_baseline"
          target="_blank" style="color:var(--text-muted);text-decoration:underline;">
         experiments/winston_vs_baseline/
@@ -1051,35 +1051,35 @@ footer {
 <!-- ─── VS TABLE ─── -->
 <section class="section section-muted" id="vs">
   <div class="section-inner section-center">
-    <p class="section-eyebrow">El Estándar DOF-MESH</p>
-    <h2 class="section-h2 reveal">Testimonio vs Prueba.</h2>
-    <p class="section-p reveal delay-1">La diferencia no es de calidad. Es de categoría.</p>
+    <p class="section-eyebrow" data-t="vs_eyebrow">El Estándar DOF-MESH</p>
+    <h2 class="section-h2 reveal" data-t="vs_h2">Testimonio vs Prueba.</h2>
+    <p class="section-p reveal delay-1" data-t="vs_sub">La diferencia no es de calidad. Es de categoría.</p>
 
     <div class="vs-table reveal delay-2">
       <div class="vs-header">
-        <span class="vs-col-dim">Dimensión</span>
-        <span class="vs-col-bad">Estándar Actual<br><small>IA vigilando IA</small></span>
-        <span class="vs-col-good">DOF-MESH</span>
+        <span class="vs-col-dim" data-t="vs_col_dim_label">Dimensión</span>
+        <span class="vs-col-bad" data-t="vs_col_bad_label">Estándar Actual<br><small>IA vigilando IA</small></span>
+        <span class="vs-col-good" data-t="vs_col_good_label">DOF-MESH</span>
       </div>
       <div class="vs-row">
-        <span class="vs-dim">Evidencia</span>
-        <span class="vs-bad">Logs escritos por la misma IA</span>
-        <span class="vs-good">✓ Prueba matemática inmutable</span>
+        <span class="vs-dim" data-t="vs_dim1">Evidencia</span>
+        <span class="vs-bad" data-t="vs_bad1">Logs escritos por la misma IA</span>
+        <span class="vs-good" data-t="vs_good1">✓ Prueba matemática inmutable</span>
       </div>
       <div class="vs-row">
-        <span class="vs-dim">Vulnerabilidad</span>
-        <span class="vs-bad">El vigilante alucina o es manipulado</span>
-        <span class="vs-good">✓ Inmunidad matemática (100% determinista)</span>
+        <span class="vs-dim" data-t="vs_dim2">Vulnerabilidad</span>
+        <span class="vs-bad" data-t="vs_bad2">El vigilante alucina o es manipulado</span>
+        <span class="vs-good" data-t="vs_good2">✓ Inmunidad matemática (100% determinista)</span>
       </div>
       <div class="vs-row">
-        <span class="vs-dim">Auditoría</span>
-        <span class="vs-bad">Archivos editables internamente</span>
-        <span class="vs-good">✓ Registro público en blockchain independiente</span>
+        <span class="vs-dim" data-t="vs_dim3">Auditoría</span>
+        <span class="vs-bad" data-t="vs_bad3">Archivos editables internamente</span>
+        <span class="vs-good" data-t="vs_good3">✓ Registro público en blockchain independiente</span>
       </div>
       <div class="vs-row" style="border-bottom:none;">
-        <span class="vs-dim">Eficiencia</span>
-        <span class="vs-bad">Consume tokens LLM por decisión</span>
-        <span class="vs-good">✓ 0 tokens LLM · decisión en &lt;30ms</span>
+        <span class="vs-dim" data-t="vs_dim4">Eficiencia</span>
+        <span class="vs-bad" data-t="vs_bad4">Consume tokens LLM por decisión</span>
+        <span class="vs-good" data-t="vs_good4">✓ 0 tokens LLM · decisión en &lt;30ms</span>
       </div>
     </div>
   </div>
@@ -1402,7 +1402,7 @@ result = verifier.verify_action(
     </div>
     <div class="foot-bottom">
       <span class="foot-copy">© 2026 Enigma Group, Cyber Paisa, Medellín.</span>
-      <span class="foot-mono">DOF-MESH v0.5.0 · Phase 4 Soberanía Absoluta</span>
+      <span class="foot-mono">DOF-MESH v0.5.0 · <span data-t="phase_label">Phase 4 Soberanía Absoluta</span></span>
     </div>
   </div>
 </footer>
@@ -1684,6 +1684,16 @@ const LANG={
     cta_credit:'Construido por Cyber Paisa, Enigma Group, Medellín.',
     foot_desc:'Deterministic Observability Framework. Infraestructura soberana para agentes autónomos. Enigma Group, Medellín.',
     foot_eco:'Ecosistema',foot_ag:'Agentes',
+    winston_eyebrow:'Validación Externa · Winston Experiment',
+    winston_h2:'Probamos 10 modelos frontier.<br>Ninguno pudo gobernarse solo.',
+    winston_sub:'Con DOF activo: mejora promedio de +26.1%. Scorer determinístico, 0 LLMs. Validado externamente en Adaline (200M+ llamadas API/día).',
+    winston_note_text:'✦ Incluyendo este modelo. Datos completos en',
+    vs_eyebrow:'El Estándar DOF-MESH',vs_h2:'Testimonio vs Prueba.',vs_sub:'La diferencia no es de calidad. Es de categoría.',
+    vs_col_dim_label:'Dimensión',vs_col_bad_label:'Estándar Actual<br><small>IA vigilando IA</small>',vs_col_good_label:'DOF-MESH',
+    vs_dim1:'Evidencia',vs_dim2:'Vulnerabilidad',vs_dim3:'Auditoría',vs_dim4:'Eficiencia',
+    vs_bad1:'Logs escritos por la misma IA',vs_bad2:'El vigilante alucina o es manipulado',vs_bad3:'Archivos editables internamente',vs_bad4:'Consume tokens LLM por decisión',
+    vs_good1:'✓ Prueba matemática inmutable',vs_good2:'✓ Inmunidad matemática (100% determinista)',vs_good3:'✓ Registro público en blockchain independiente',vs_good4:'✓ 0 tokens LLM · decisión en &lt;30ms',
+    phase_label:'Phase 4 Soberanía Absoluta',
   },
   en:{
     nav_why:'Why DOF',nav_proj:'Projects',nav_metrics:'Metrics',nav_chains:'Chains',nav_gh:'GitHub →',
@@ -1729,6 +1739,16 @@ const LANG={
     cta_credit:'Built by Cyber Paisa, Enigma Group, Medellín.',
     foot_desc:'Deterministic Observability Framework. Sovereign infrastructure for autonomous agents. Enigma Group, Medellín.',
     foot_eco:'Ecosystem',foot_ag:'Agents',
+    winston_eyebrow:'External Validation · Winston Experiment',
+    winston_h2:'We tested 10 frontier models.<br>None could govern itself.',
+    winston_sub:'With DOF active: average improvement +26.1%. Deterministic scorer, 0 LLMs. Externally validated on Adaline (200M+ API calls/day).',
+    winston_note_text:'✦ Including this model. Full data at',
+    vs_eyebrow:'The DOF-MESH Standard',vs_h2:'Testimony vs Proof.',vs_sub:'The difference is not quality. It is category.',
+    vs_col_dim_label:'Dimension',vs_col_bad_label:'Current Standard<br><small>AI watching AI</small>',vs_col_good_label:'DOF-MESH',
+    vs_dim1:'Evidence',vs_dim2:'Vulnerability',vs_dim3:'Audit',vs_dim4:'Efficiency',
+    vs_bad1:'Evidence from logs written by the AI itself',vs_bad2:'The watchdog can hallucinate or be manipulated',vs_bad3:'Internally editable files',vs_bad4:'Consumes LLM tokens per decision',
+    vs_good1:'✓ Immutable mathematical proof',vs_good2:'✓ Mathematical immunity (100% deterministic)',vs_good3:'✓ Public record on independent blockchain',vs_good4:'✓ 0 LLM tokens · decision in &lt;30ms',
+    phase_label:'Phase 4 Absolute Sovereignty',
   }
 };
 let curLang='es';
@@ -1798,18 +1818,24 @@ function runProofAnimation(){
   }
   function gap(delay){ t+=delay; const d=t; setTimeout(()=>{ const g=document.createElement('span'); g.className='pl pl-gap'; container.appendChild(g); }, d); }
 
+  const terminalTexts={
+    es:{step1:'Recibiendo decisión del agente...',step2:'Aplicando reglas de gobernanza...',step3:'Verificando invariantes formales...'},
+    en:{step1:'Receiving agent decision...',step2:'Applying governance rules...',step3:'Verifying formal invariants...'}
+  };
+  const tt=terminalTexts[curLang]||terminalTexts.es;
+
   // Fase 1: input
-  line('<span class="p-dim">▶</span> <span class="p-wait">Recibiendo decisión del agente...</span>', 300);
+  line(`<span class="p-dim">▶</span> <span class="p-wait">${tt.step1}</span>`, 300);
   gap(250);
   line('<span class="p-key">agent_id</span>  <span class="p-dim">:</span> <span class="p-val">apex-1687</span>', 200);
   line('<span class="p-key">action   </span> <span class="p-dim">:</span> <span class="p-val">transfer</span>', 150);
   line('<span class="p-key">params   </span> <span class="p-dim">:</span> <span class="p-val">{ amount: 500, token: USDC }</span>', 150);
   gap(100);
   // Fase 2: governance
-  line('<span class="p-dim">▶</span> <span class="p-wait">Aplicando reglas de gobernanza...</span>', 350);
+  line(`<span class="p-dim">▶</span> <span class="p-wait">${tt.step2}</span>`, 350);
   gap(250);
   // Fase 3: Z3
-  line('<span class="p-dim">▶</span> <span class="p-wait">Verificando invariantes formales...</span>', 400);
+  line(`<span class="p-dim">▶</span> <span class="p-wait">${tt.step3}</span>`, 400);
   const waitBase=t+500;
 
   // Llamada API real
