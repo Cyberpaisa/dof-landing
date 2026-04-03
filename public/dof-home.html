@@ -82,6 +82,7 @@ body.cur-hover #cur2 { width:36px; height:36px; border-color:rgba(128,128,128,.5
 /* ─── NAV ─── */
 nav {
   position:fixed; top:0; left:0; right:0; z-index:100;
+  /* nav-links se centra absolutamente dentro del nav-inner */
   background:var(--bg);
   border-bottom: 1px solid transparent;
   transition: border-color .3s, box-shadow .3s, background .2s;
@@ -93,12 +94,12 @@ nav.scrolled {
 .nav-inner {
   max-width:1280px; margin:0 auto;
   display:flex; align-items:center; justify-content:space-between;
-  height:64px; padding:0 1.5rem;
+  height:64px; padding:0 1.5rem; position:relative;
 }
 .nav-logo {
   display:flex; align-items:center; gap:.6rem;
   font-size:.9rem; font-weight:700; letter-spacing:-.01em;
-  flex-shrink:0; font-family:'Plus Jakarta Sans',sans-serif;
+  flex:1; font-family:'Plus Jakarta Sans',sans-serif;
 }
 .nav-logo-box {
   width:28px; height:28px;
@@ -108,6 +109,7 @@ nav.scrolled {
 .nav-logo-box svg { fill:none; stroke:var(--bg); }
 .nav-links {
   display:flex; align-items:center; gap:1.5rem;
+  position:absolute; left:50%; transform:translateX(-50%);
 }
 .nav-links a {
   font-size:.875rem; font-weight:500; color:var(--text-muted);
@@ -116,6 +118,7 @@ nav.scrolled {
 .nav-links a:hover { color:var(--text); }
 .nav-right {
   display:flex; align-items:center; gap:.5rem;
+  flex:1; justify-content:flex-end;
 }
 .nav-btn {
   display:inline-flex; align-items:center; justify-content:center;
