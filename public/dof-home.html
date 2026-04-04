@@ -972,6 +972,7 @@ footer {
         <div class="term-dot" style="background:#febc2e;"></div>
         <div class="term-dot" style="background:#28c840;"></div>
         <div class="proof-title">DOF · Verification Engine · live</div>
+        <button id="proof-replay-btn" style="background:none;border:none;color:rgba(255,255,255,.35);font-size:.65rem;font-family:'JetBrains Mono',monospace;cursor:pointer;padding:.15rem .5rem;border-radius:3px;letter-spacing:.05em;transition:color .15s;" onmouseover="this.style.color='rgba(255,255,255,.85)'" onmouseout="this.style.color='rgba(255,255,255,.35)'">▶ run</button>
       </div>
       <div class="proof-body" id="proof-lines"></div>
       <div class="proof-actions">
@@ -2183,17 +2184,37 @@ function runProofAnimation(){
   });
 }
 
-// CTAs — siempre resetean y reproducen la animación
+// ─── PROOF TERMINAL REPLAY ───
+function resetAndRunTerminal(){
+  proofPlayed=false;
+  const chainBtn=document.getElementById('blockchain-btn');
+  if(chainBtn){ chainBtn.style.opacity='.35'; chainBtn.style.pointerEvents='none'; }
+  runProofAnimation();
+}
+
+// CTAs del hero — ambos scrollan a #proof y relaunzan
 document.getElementById('cta-primary').addEventListener('click',function(e){
   e.preventDefault();
-  proofPlayed=false;
   document.getElementById('proof').scrollIntoView({behavior:'smooth',block:'start'});
-  setTimeout(runProofAnimation,650);
+  setTimeout(resetAndRunTerminal,650);
 });
 document.getElementById('cta-secondary').addEventListener('click',function(e){
   e.preventDefault();
-  document.getElementById('por-que').scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('proof').scrollIntoView({behavior:'smooth',block:'start'});
+  setTimeout(resetAndRunTerminal,650);
 });
+
+// Botón ▶ run en la barra del terminal
+document.getElementById('proof-replay-btn').addEventListener('click',function(e){
+  e.stopPropagation();
+  resetAndRunTerminal();
+});
+
+// Click en el cuerpo del terminal también relanza
+const proofBody=document.getElementById('proof-lines');
+proofBody.style.cursor='pointer';
+proofBody.addEventListener('click',resetAndRunTerminal);
+
 // autoplay al entrar viewport — solo si aún no se ha reproducido
 ScrollTrigger.create({trigger:'#proof-demo',start:'top 75%',onEnter:()=>{ if(!proofPlayed) runProofAnimation(); }});
 
