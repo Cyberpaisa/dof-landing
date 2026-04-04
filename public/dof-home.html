@@ -652,7 +652,29 @@ footer {
 .foot-mono {
   font-family:'JetBrains Mono',monospace; font-size:.65rem; color:var(--text-muted2);
 }
-#visit-count { opacity:.5; font-size:.75rem; }
+.visit-counter {
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:11px; color:rgba(255,255,255,0.35); letter-spacing:.04em;
+}
+[data-theme="light"] .visit-counter { color:rgba(0,0,0,0.38); }
+.visit-dot { position:relative; width:6px; height:6px; flex-shrink:0; }
+.visit-dot-inner {
+  width:6px; height:6px; border-radius:50%; background:#00cc55;
+  position:absolute; top:0; left:0;
+  animation:dot-breathe 2.8s ease-in-out infinite;
+}
+.visit-dot-ring {
+  width:6px; height:6px; border-radius:50%; border:1px solid #00cc55;
+  position:absolute; top:0; left:0;
+  animation:dot-ring 2.8s ease-in-out infinite; opacity:0;
+}
+@keyframes dot-breathe { 0%,100%{opacity:.5;transform:scale(1)} 50%{opacity:1;transform:scale(1.15)} }
+@keyframes dot-ring    { 0%{opacity:0;transform:scale(1)} 40%{opacity:.4;transform:scale(2.2)} 100%{opacity:0;transform:scale(3)} }
+.visit-count {
+  font-family:'IBM Plex Mono','JetBrains Mono',monospace;
+  font-size:13px; font-weight:600; color:rgba(255,255,255,0.85);
+}
+[data-theme="light"] .visit-count { color:rgba(0,0,0,0.75); }
 .foot-social { display:flex; gap:.6rem; }
 .foot-social a {
   width:30px; height:30px; border-radius:7px;
@@ -1605,7 +1627,15 @@ result = verifier.verify_action(
     </div>
     <div class="foot-bottom">
       <span class="foot-copy">© 2026 Enigma Group, Cyber Paisa, Medellín.</span>
-      <span class="foot-mono">DOF-MESH v0.5.1 · <span data-t="phase_label">Phase 4 Soberanía Absoluta</span><span id="visit-count"></span></span>
+      <span class="foot-mono">DOF-MESH v0.5.1 · <span data-t="phase_label">Phase 4 Soberanía Absoluta</span></span>
+      <span class="visit-counter">
+        <span class="visit-dot">
+          <span class="visit-dot-inner"></span>
+          <span class="visit-dot-ring"></span>
+        </span>
+        <span class="visit-count" id="visit-number">—</span>
+        <span>visits</span>
+      </span>
     </div>
   </div>
 </footer>
@@ -2179,8 +2209,8 @@ fetch('/api/visit')
   .then(r=>r.json())
   .then(d=>{
     if(!d.total) return;
-    const el=document.getElementById('visit-count');
-    if(el) el.textContent=' · '+d.total.toLocaleString()+' visits';
+    const el=document.getElementById('visit-number');
+    if(el) el.textContent=d.total.toLocaleString();
   })
   .catch(()=>{});
 
