@@ -1,18 +1,18 @@
 <div align="center">
 
-<img src="public/brand/dof-mesh-wordmark-cube-dark.svg" alt="DOF-MESH" height="40" />
+<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <polygon points="8,7 42,46 42,54 8,93 8,72 29,54 29,46 8,28" fill="currentColor"/>
+  <polygon points="92,7 58,46 58,54 92,93 92,72 71,54 71,46 92,28" fill="currentColor"/>
+</svg>
 
-# dof-landing
+# DOF-MESH
 
 **Mathematics, not promises.**
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/cyberpaisa/dof-landing)
 [![Website](https://img.shields.io/website?url=https%3A%2F%2Fwww.dofmesh.com&label=dofmesh.com&style=flat-square)](https://www.dofmesh.com)
-
-[![Vercel](https://img.shields.io/badge/vercel-deployed-black?logo=vercel&logoColor=white)](https://www.dofmesh.com)
-[![Version](https://img.shields.io/badge/brand%20kit-v2.2-0052FF)](public/brand/dof-mesh-brand-book-v2.2.html)
-[![SDK](https://img.shields.io/badge/dof--sdk-v0.5.1-00CC55)](https://pypi.org/project/dof-sdk/)
-[![License](https://img.shields.io/badge/license-proprietary-red)](https://www.dofmesh.com)
+[![Version](https://img.shields.io/badge/version-v0.5.1-black?style=flat-square)](https://pypi.org/project/dof-sdk/)
+[![License](https://img.shields.io/badge/license-MIT-black?style=flat-square)](LICENSE)
 
 </div>
 
@@ -22,15 +22,9 @@
 
 Landing page for **[dofmesh.com](https://www.dofmesh.com)** — the public face of DOF-MESH (Deterministic Observability Framework), a formal governance layer for autonomous AI agents.
 
-DOF-MESH intercepts every agent decision *before* execution, verifies it against Z3 formal constraints, and registers an immutable keccak256 hash on-chain. No logs. No interpretations. Mathematical proof.
+DOF-MESH intercepts every agent decision before execution, verifies it against Z3 formal constraints, and registers an immutable keccak256 hash on-chain. No logs. No interpretations. Mathematical proof.
 
 **Stack:** HTML · CSS · Vanilla JS · Vercel · Upstash Redis
-
----
-
-## Live
-
-**→ [dofmesh.com](https://www.dofmesh.com)**
 
 ---
 
@@ -47,7 +41,7 @@ dof-landing/
 │   │   ├── dof-mesh-og-1200x630.png
 │   │   ├── dof-agent-chat-icon.svg
 │   │   └── dof-mesh-brand-book-v2.2.html
-│   └── api/ (Vercel serverless)
+│   └── api/                   ← Vercel serverless functions
 │       ├── visit.js           ← unique visitor counter (Upstash Redis)
 │       └── chat.js            ← DOF Agent chatbot proxy (DeepSeek)
 ├── docs/
@@ -62,20 +56,22 @@ dof-landing/
 
 ## Deploy
 
-Auto-deploy activo: cada `git push` a `main` dispara un deploy automático en Vercel.
+Auto-deploy active: every `git push` to `main` triggers a Vercel production deploy.
 
-| Branch | Ambiente | URL |
-|--------|----------|-----|
-| `main` | Production | [www.dofmesh.com](https://www.dofmesh.com) |
-| PR/branch | Preview | URL temporal de Vercel |
+| Branch | Environment | URL |
+|--------|-------------|-----|
+| `main` | Production | https://www.dofmesh.com |
+| PR / branch | Preview | Temporary Vercel URL |
 
-**Dominio:** dofmesh.com → Namecheap DNS → Vercel
-**SSL:** automático vía Vercel
+**Domain:** dofmesh.com → Namecheap DNS → Vercel
+**SSL:** automatic via Vercel
+~~Manual deploy~~ no longer needed.
 
-~~Manual deploy~~ ya no es necesario.
+### Environment variables
 
-**Environment variables** (set in Vercel dashboard):
-```
+Set in the Vercel dashboard:
+
+```bash
 DEEPSEEK_API_KEY      # DOF Agent chatbot
 KV_REST_API_URL       # Upstash Redis
 KV_REST_API_TOKEN     # Upstash Redis
@@ -85,7 +81,7 @@ KV_REST_API_TOKEN     # Upstash Redis
 
 ## Brand Kit v2.2
 
-All brand assets live in `public/brand/`. Served directly at `dofmesh.com/brand/`.
+All brand assets live in `public/brand/` and are served at `dofmesh.com/brand/`.
 
 | Asset | File |
 |-------|------|
@@ -96,9 +92,9 @@ All brand assets live in `public/brand/`. Served directly at `dofmesh.com/brand/
 | Icon PNG (16 → 512px) | `dof-mesh-icon-cube-dark-{size}.png` |
 | OG image 1200×630 | `dof-mesh-og-1200x630.png` |
 | Chat icon robot SVG | `dof-agent-chat-icon.svg` |
-| Brand Book | [`dof-mesh-brand-book-v2.2.html`](public/brand/dof-mesh-brand-book-v2.2.html) |
+| Brand Book (HTML) | `dof-mesh-brand-book-v2.2.html` |
 
-Design specs: IBM Plex Sans · DOF weight 600 · -MESH weight 300 at 65% opacity · Cube icon with Fibonacci proportions.
+**Design specs:** IBM Plex Sans · DOF weight 600 · -MESH weight 300 at 65% opacity · Cube icon with Fibonacci proportions · #0052FF accent · #00CC55 online state.
 
 ---
 
@@ -110,8 +106,8 @@ Format: `YYYY-MM-DD-session-NN.md` — each file records what changed, commit ha
 
 | Date | Duration | Score | Summary |
 |------|----------|-------|---------|
-| [2026-04-03](docs/sessions/2026-04-03-session-01.md) | ~12h | 60→85/100 | Domain, Mintlify, landing +15pts, skills |
-| [2026-04-04](docs/sessions/2026-04-04-session-02.md) | ~6h | 85→38/38 QA | Brand Kit v2.2, chat icon, CI green |
+| [2026-04-03](docs/sessions/2026-04-03-session-01.md) | ~12h | 60 → 85/100 | Domain, Mintlify audit, landing +15pts, 29 skills |
+| [2026-04-04](docs/sessions/2026-04-04-session-02.md) | ~6h | 85 → 38/38 QA | Brand Kit v2.2, chat icon, orbit diagram, CI green |
 
 ---
 
@@ -129,6 +125,8 @@ Format: `YYYY-MM-DD-session-NN.md` — each file records what changed, commit ha
 
 <div align="center">
 
-Built by [@Cyber_paisa](https://twitter.com/Cyber_paisa) · Enigma Group · Medellín, Colombia
+Built by **[@Cyber_paisa](https://github.com/Cyberpaisa)** · Enigma Group · Medellín, Colombia
+
+*If you can't prove it, you can't defend it.*
 
 </div>
