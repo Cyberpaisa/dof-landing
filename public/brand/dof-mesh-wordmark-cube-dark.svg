@@ -1,9 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 40" width="300" height="40">
+  <title>DOF-MESH Wordmark Cube — Dark v2.1</title>
+  <desc>Fix: font-size 30px, -MESH opacity 0.50, texto alineado al alto del cubo. © 2026 @Cyber_paisa</desc>
   <rect x="0" y="0" width="40" height="40" rx="4" fill="#000000" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
   <g transform="translate(3.4,3.4) scale(0.33)">
     <polygon points="8,7 42,46 42,54 8,93 8,72 29,54 29,46 8,28" fill="#FFFFFF"/>
     <polygon points="92,7 58,46 58,54 92,93 92,72 71,54 71,46 92,28" fill="#FFFFFF"/>
   </g>
-  <text x="52" y="30" font-family="IBM Plex Sans,Helvetica Neue,Arial,sans-serif" font-size="30" font-weight="600" letter-spacing="0.5" fill="#FFFFFF">DOF</text>
-  <text x="122" y="30" font-family="IBM Plex Sans,Helvetica Neue,Arial,sans-serif" font-size="30" font-weight="300" letter-spacing="0.5" fill="rgba(255,255,255,0.50)">-MESH</text>
+  <text x="52" y="30"
+    font-family="'IBM Plex Sans','Helvetica Neue',Arial,sans-serif"
+    font-size="30" font-weight="600" letter-spacing="0.5"
+    fill="#FFFFFF">DOF</text>
+  <text x="122" y="30"
+    font-family="'IBM Plex Sans','Helvetica Neue',Arial,sans-serif"
+    font-size="30" font-weight="300" letter-spacing="0.5"
+    fill="rgba(255,255,255,0.50)">-MESH</text>
 </svg>
