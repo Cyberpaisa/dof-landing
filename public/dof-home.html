@@ -844,9 +844,9 @@ footer {
   .foot-top { grid-template-columns:1fr; }
   .foot-top > :first-child { grid-column:1; }
   .section { padding:4rem 1rem; }
-  #dof-chat-panel { width:calc(100vw - 32px) !important; right:16px !important; left:16px !important; bottom:80px !important; max-height:65vh !important; height:65vh !important; border-radius:16px !important; }
-  #dof-chat-panel .chat-messages { flex:1 !important; overflow-y:auto !important; min-height:0 !important; }
-  #dof-chat-panel .chat-footer { position:sticky !important; bottom:0 !important; background:var(--bg) !important; flex-shrink:0 !important; }
+  #dof-chat-panel { position:fixed !important; width:calc(100vw - 32px) !important; left:16px !important; right:16px !important; bottom:80px !important; max-height:60dvh !important; height:60dvh !important; display:flex !important; flex-direction:column !important; border-radius:16px !important; overflow:hidden !important; }
+  #dof-chat-panel .chat-messages { flex:1 1 auto !important; overflow-y:auto !important; min-height:0 !important; }
+  #dof-chat-panel .chat-footer { flex-shrink:0 !important; position:relative !important; z-index:10 !important; }
   #chat-fab { right:12px; bottom:14px; }
 }
 
@@ -2502,6 +2502,21 @@ INFORMACIÓN CLAVE DE DOF-MESH:
     input.style.height = '';
     input.style.height = Math.min(input.scrollHeight, 90) + 'px';
   });
+
+  // ── keyboard pushes panel on mobile ──
+  if(panel && input){
+    input.addEventListener('focus', ()=>{
+      if(window.innerWidth > 640) return;
+      panel.style.maxHeight = '40dvh';
+      panel.style.height = '40dvh';
+      setTimeout(()=>{ messagesEl.scrollTop = messagesEl.scrollHeight; }, 100);
+    });
+    input.addEventListener('blur', ()=>{
+      if(window.innerWidth > 640) return;
+      panel.style.maxHeight = '';
+      panel.style.height = '';
+    });
+  }
 
 })();
 }); // DOMContentLoaded
