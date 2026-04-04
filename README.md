@@ -6,6 +6,9 @@
 
 **Mathematics, not promises.**
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/cyberpaisa/dof-landing)
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fwww.dofmesh.com&label=dofmesh.com&style=flat-square)](https://www.dofmesh.com)
+
 [![Vercel](https://img.shields.io/badge/vercel-deployed-black?logo=vercel&logoColor=white)](https://www.dofmesh.com)
 [![Version](https://img.shields.io/badge/brand%20kit-v2.2-0052FF)](public/brand/dof-mesh-brand-book-v2.2.html)
 [![SDK](https://img.shields.io/badge/dof--sdk-v0.5.1-00CC55)](https://pypi.org/project/dof-sdk/)
@@ -59,18 +62,17 @@ dof-landing/
 
 ## Deploy
 
-Every push to `main` triggers automatic deployment to Vercel production.
+Auto-deploy activo: cada `git push` a `main` dispara un deploy automático en Vercel.
 
-| Environment | URL |
-|-------------|-----|
-| Production  | [www.dofmesh.com](https://www.dofmesh.com) |
+| Branch | Ambiente | URL |
+|--------|----------|-----|
+| `main` | Production | [www.dofmesh.com](https://www.dofmesh.com) |
+| PR/branch | Preview | URL temporal de Vercel |
 
-**DNS:** Namecheap → Vercel (A + CNAME records)
+**Dominio:** dofmesh.com → Namecheap DNS → Vercel
+**SSL:** automático vía Vercel
 
-**Manual deploy** (if needed):
-```bash
-npx vercel --prod
-```
+~~Manual deploy~~ ya no es necesario.
 
 **Environment variables** (set in Vercel dashboard):
 ```
