@@ -1944,6 +1944,7 @@ const LANG={
     proof_btn_chain:'Ver en blockchain →',
     proof_btn_full:'Ver proof completo',
     chat_label:'¿Necesitas ayuda?',
+    chat_hover:'Agente DOF en línea',
   },
   en:{
     nav_why:'Why DOF',nav_proj:'Projects',nav_metrics:'Metrics',nav_chains:'Chains',nav_docs:'Docs',nav_gh:'GitHub →',
@@ -2016,6 +2017,7 @@ const LANG={
     proof_btn_chain:'View on blockchain →',
     proof_btn_full:'View full proof',
     chat_label:'Need help?',
+    chat_hover:'DOF Agent online',
   }
 };
 let curLang='es';
@@ -2428,17 +2430,48 @@ FORMATO DE RESPUESTAS:
 
 // ─── CHAT LABEL ANIMATION ───
 (function(){
-  function animateLabel(){
-    const label=document.getElementById('chat-label');
+  const label=document.getElementById('chat-label');
+  const btn=document.getElementById('dof-chat-bubble');
+  let labelTimer=null;
+  let hovered=false;
+
+  function show(text){
     if(!label)return;
+    label.textContent=text;
     label.style.opacity='1';
     label.style.transform='translateX(0)';
-    setTimeout(()=>{
-      label.style.opacity='0';
-      label.style.transform='translateX(8px)';
-      setTimeout(animateLabel,10000);
+  }
+  function hide(restoreText){
+    if(!label)return;
+    label.style.opacity='0';
+    label.style.transform='translateX(8px)';
+    if(restoreText) setTimeout(()=>{ if(!hovered&&label) label.textContent=LANG[curLang].chat_label; },500);
+  }
+
+  function animateLabel(){
+    clearTimeout(labelTimer);
+    if(hovered)return;
+    show(LANG[curLang].chat_label);
+    labelTimer=setTimeout(()=>{
+      if(hovered)return;
+      hide(false);
+      labelTimer=setTimeout(()=>{ if(!hovered) animateLabel(); },10000);
     },2000);
   }
+
+  if(btn){
+    btn.addEventListener('mouseenter',()=>{
+      hovered=true;
+      clearTimeout(labelTimer);
+      show(LANG[curLang].chat_hover);
+    });
+    btn.addEventListener('mouseleave',()=>{
+      hovered=false;
+      hide(true);
+      labelTimer=setTimeout(animateLabel,10000);
+    });
+  }
+
   setTimeout(animateLabel,3000);
 })();
 </script>
