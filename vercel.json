@@ -1,5 +1,17 @@
 {
   "buildCommand": "",
   "outputDirectory": "public",
-  "framework": null
+  "framework": null,
+  "redirects": [
+    { "source": "/", "destination": "/dof-home.html", "permanent": false }
+  ],
+  "headers": [
+    {
+      "source": "/(.*\\.html)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
+        { "key": "Pragma", "value": "no-cache" }
+      ]
+    }
+  ]
 }
