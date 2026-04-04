@@ -1727,6 +1727,7 @@ window.addEventListener('scroll',()=>mainNav.classList.toggle('scrolled',scrollY
   });
   menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
   document.addEventListener('click',e=>{ if(!mainNav.contains(e.target)) close(); });
+  window.addEventListener('scroll',()=>{ if(window.innerWidth<=768&&btn.classList.contains('open')) close(); },{passive:true});
 })();
 
 /* ─── WAVE CANVAS ─── */
