@@ -2429,7 +2429,7 @@ FORMATO DE RESPUESTAS:
 }); // DOMContentLoaded
 
 // ─── CHAT LABEL ANIMATION ───
-(function(){
+document.addEventListener('DOMContentLoaded',function(){
   const label=document.getElementById('chat-label');
   const btn=document.getElementById('dof-chat-bubble');
   let labelTimer=null;
@@ -2473,7 +2473,7 @@ FORMATO DE RESPUESTAS:
   }
 
   setTimeout(animateLabel,3000);
-})();
+});
 </script>
 
 <!-- ─── DOF CHATBOT WIDGET ─── -->
