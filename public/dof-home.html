@@ -844,7 +844,9 @@ footer {
   .foot-top { grid-template-columns:1fr; }
   .foot-top > :first-child { grid-column:1; }
   .section { padding:4rem 1rem; }
-  #dof-chat-panel { width:calc(100vw - 16px) !important; right:8px !important; left:8px !important; bottom:80px !important; max-height:75vh !important; border-radius:16px !important; }
+  #dof-chat-panel { width:calc(100vw - 32px) !important; right:16px !important; left:16px !important; bottom:80px !important; max-height:65vh !important; height:65vh !important; border-radius:16px !important; }
+  #dof-chat-panel .chat-messages { flex:1 !important; overflow-y:auto !important; min-height:0 !important; }
+  #dof-chat-panel .chat-footer { position:sticky !important; bottom:0 !important; background:var(--bg) !important; flex-shrink:0 !important; }
   #chat-fab { right:12px; bottom:14px; }
 }
 
