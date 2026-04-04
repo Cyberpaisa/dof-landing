@@ -1249,35 +1249,17 @@ footer {
             <circle class="orbit-ring-o" cx="260" cy="260" r="220" fill="none"
               stroke="rgba(255,255,255,0.40)" stroke-width="1.2" stroke-dasharray="4 8"
               style="animation:ringpulse 3.5s ease-in-out infinite 0.9s"/>
-            <!-- Mainnet spokes -->
-            <line class="orbit-spoke-m" x1="260" y1="190" x2="260" y2="156" stroke="rgba(255,255,255,0.60)" stroke-width="1.4" stroke-dasharray="4 4" style="animation:dashflow 1.2s linear infinite"/>
-            <line class="orbit-spoke-m" x1="330" y1="260" x2="377" y2="260" stroke="rgba(255,255,255,0.60)" stroke-width="1.4" stroke-dasharray="4 4" style="animation:dashflow 1.5s linear infinite"/>
-            <line class="orbit-spoke-m" x1="260" y1="330" x2="260" y2="377" stroke="rgba(255,255,255,0.60)" stroke-width="1.4" stroke-dasharray="4 4" style="animation:dashflow 1.7s linear infinite"/>
-            <line class="orbit-spoke-tempo" x1="190" y1="260" x2="143" y2="260" stroke="rgba(255,255,255,0.60)" stroke-width="1.4" stroke-dasharray="4 4" style="animation:dashflow2 1.3s linear infinite"/>
             <!-- Testnet spokes -->
             <line class="orbit-spoke-t" x1="260" y1="190" x2="260" y2="77"  stroke="rgba(255,255,255,0.30)" stroke-width="0.9" stroke-dasharray="3 6" style="animation:dashflow 2s linear infinite"/>
             <line class="orbit-spoke-t" x1="321" y1="230" x2="440" y2="208" stroke="rgba(255,255,255,0.30)" stroke-width="0.9" stroke-dasharray="3 6" style="animation:dashflow 2.2s linear infinite"/>
             <line class="orbit-spoke-t" x1="315" y1="320" x2="372" y2="408" stroke="rgba(255,255,255,0.30)" stroke-width="0.9" stroke-dasharray="3 6" style="animation:dashflow 1.9s linear infinite"/>
             <line class="orbit-spoke-t" x1="205" y1="320" x2="148" y2="408" stroke="rgba(255,255,255,0.30)" stroke-width="0.9" stroke-dasharray="3 6" style="animation:dashflow2 2.1s linear infinite"/>
             <line class="orbit-spoke-t" x1="199" y1="230" x2="80"  y2="208" stroke="rgba(255,255,255,0.30)" stroke-width="0.9" stroke-dasharray="3 6" style="animation:dashflow2 2.4s linear infinite"/>
-            <!-- Mainnet nodes -->
-            <g class="orbit-mn node-main" id="node-avax">
-              <circle cx="260" cy="118" r="38" fill="#1a1a1a" stroke="#fff" stroke-width="2"/>
-              <text x="260" y="123" text-anchor="middle" font-size="13" font-weight="600" fill="#fff" style="pointer-events:none">Avax</text>
-            </g>
-            <g class="orbit-mn node-main" id="node-base">
-              <circle cx="415" cy="260" r="38" fill="#1a1a1a" stroke="#fff" stroke-width="2"/>
-              <text x="415" y="265" text-anchor="middle" font-size="13" font-weight="600" fill="#fff" style="pointer-events:none">Base</text>
-            </g>
-            <g class="orbit-mn node-main" id="node-celo">
-              <circle cx="260" cy="415" r="38" fill="#1a1a1a" stroke="#fff" stroke-width="2"/>
-              <text x="260" y="420" text-anchor="middle" font-size="13" font-weight="600" fill="#fff" style="pointer-events:none">Celo</text>
-            </g>
-            <g class="orbit-mn orbit-tempo-node node-tempo" id="node-tempo">
-              <title>Tempo · Chain 4217 · Stripe+Paradigm L1</title>
-              <circle cx="105" cy="260" r="38" fill="#1a1a1a" stroke="rgba(255,255,255,0.38)" stroke-width="2"/>
-              <text x="105" y="265" text-anchor="middle" font-size="12" font-weight="600" fill="#fff" style="pointer-events:none">Tempo</text>
-            </g>
+            <!-- Mainnet spokes -->
+            <line class="orbit-spoke-m" x1="260" y1="190" x2="260" y2="156" stroke="rgba(255,255,255,0.60)" stroke-width="1.4" stroke-dasharray="4 4" style="animation:dashflow 1.2s linear infinite"/>
+            <line class="orbit-spoke-m" x1="330" y1="260" x2="377" y2="260" stroke="rgba(255,255,255,0.60)" stroke-width="1.4" stroke-dasharray="4 4" style="animation:dashflow 1.5s linear infinite"/>
+            <line class="orbit-spoke-m" x1="260" y1="330" x2="260" y2="377" stroke="rgba(255,255,255,0.60)" stroke-width="1.4" stroke-dasharray="4 4" style="animation:dashflow 1.7s linear infinite"/>
+            <line class="orbit-spoke-tempo" x1="190" y1="260" x2="143" y2="260" stroke="rgba(255,255,255,0.60)" stroke-width="1.4" stroke-dasharray="4 4" style="animation:dashflow2 1.3s linear infinite"/>
             <!-- Testnet nodes -->
             <g class="orbit-tn" id="node-fuji">
               <circle cx="260" cy="50" r="27" fill="none" stroke="rgba(255,255,255,0.50)" stroke-width="1.5" stroke-dasharray="5 3"/>
@@ -1302,6 +1284,24 @@ footer {
               <circle cx="54" cy="196" r="27" fill="none" stroke="rgba(255,255,255,0.50)" stroke-width="1.5" stroke-dasharray="5 3"/>
               <text x="54" y="192" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.75)" style="pointer-events:none">SKALE</text>
               <text x="54" y="204" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.75)" style="pointer-events:none">Sep.</text>
+            </g>
+            <!-- Mainnet nodes -->
+            <g class="orbit-mn node-main" id="node-avax">
+              <circle cx="260" cy="118" r="38" fill="#2a2a2a" stroke="#ffffff" stroke-width="2"/>
+              <text x="260" y="123" text-anchor="middle" font-size="13" font-weight="600" fill="#fff" style="pointer-events:none">Avax</text>
+            </g>
+            <g class="orbit-mn node-main" id="node-base">
+              <circle cx="415" cy="260" r="38" fill="#2a2a2a" stroke="#ffffff" stroke-width="2"/>
+              <text x="415" y="265" text-anchor="middle" font-size="13" font-weight="600" fill="#fff" style="pointer-events:none">Base</text>
+            </g>
+            <g class="orbit-mn node-main" id="node-celo">
+              <circle cx="260" cy="415" r="38" fill="#2a2a2a" stroke="#ffffff" stroke-width="2"/>
+              <text x="260" y="420" text-anchor="middle" font-size="13" font-weight="600" fill="#fff" style="pointer-events:none">Celo</text>
+            </g>
+            <g class="orbit-mn orbit-tempo-node node-tempo" id="node-tempo">
+              <title>Tempo · Chain 4217 · Stripe+Paradigm L1</title>
+              <circle cx="105" cy="260" r="38" fill="#2a2a2a" stroke="rgba(255,255,255,0.38)" stroke-width="2"/>
+              <text x="105" y="265" text-anchor="middle" font-size="12" font-weight="600" fill="#fff" style="pointer-events:none">Tempo</text>
             </g>
             <!-- Center -->
             <circle cx="260" cy="260" r="70" fill="#fff"/>
