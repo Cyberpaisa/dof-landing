@@ -1,11 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 40" width="260" height="40">
-  <title>DOF-MESH Wordmark Cube — Light</title>
-  <desc>Cubo: #000 sin borde (contraste max sobre claro). Mark: light-mode polys gap+2u. Text: IBM Plex Sans. © 2026 @Cyber_paisa</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 40" width="300" height="40">
+  <title>DOF-MESH Wordmark Cube — Light v2.1</title>
+  <desc>Fix: font-size 30px, -MESH opacity 0.50, texto alineado al alto del cubo. © 2026 @Cyber_paisa</desc>
   <rect x="0" y="0" width="40" height="40" rx="4" fill="#000000"/>
   <g transform="translate(3.4,3.4) scale(0.33)">
     <polygon points="8,7 43,47 43,53 8,93 8,72 30,53 30,47 8,28" fill="#FFFFFF"/>
     <polygon points="92,7 57,47 57,53 92,93 92,72 70,53 70,47 92,28" fill="#FFFFFF"/>
   </g>
-  <text x="52" y="27" font-family="'IBM Plex Sans','Helvetica Neue',Arial,sans-serif" font-size="22" font-weight="600" letter-spacing="0.8" fill="#000000">DOF</text>
-  <text x="106" y="27" font-family="'IBM Plex Sans','Helvetica Neue',Arial,sans-serif" font-size="22" font-weight="300" letter-spacing="0.8" fill="rgba(0,0,0,0.32)">-MESH</text>
+  <text x="52" y="30"
+    font-family="'IBM Plex Sans','Helvetica Neue',Arial,sans-serif"
+    font-size="30" font-weight="600" letter-spacing="0.5"
+    fill="#000000">DOF</text>
+  <text x="122" y="30"
+    font-family="'IBM Plex Sans','Helvetica Neue',Arial,sans-serif"
+    font-size="30" font-weight="300" letter-spacing="0.5"
+    fill="rgba(0,0,0,0.50)">-MESH</text>
 </svg>
