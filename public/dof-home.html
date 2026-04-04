@@ -844,9 +844,10 @@ footer {
   .foot-top { grid-template-columns:1fr; }
   .foot-top > :first-child { grid-column:1; }
   .section { padding:4rem 1rem; }
-  #dof-chat-panel { position:fixed !important; width:calc(100vw - 32px) !important; left:16px !important; right:16px !important; bottom:80px !important; max-height:60dvh !important; height:60dvh !important; display:flex !important; flex-direction:column !important; border-radius:16px !important; overflow:hidden !important; }
+  #dof-chat-panel { position:fixed !important; width:calc(100% - 32px) !important; left:16px !important; right:16px !important; bottom:80px !important; max-height:55dvh !important; height:auto !important; display:flex !important; flex-direction:column !important; overflow:hidden !important; border-radius:16px !important; }
   #dof-chat-panel .chat-messages { flex:1 1 auto !important; overflow-y:auto !important; min-height:0 !important; }
   #dof-chat-panel .chat-footer { flex-shrink:0 !important; position:relative !important; z-index:10 !important; }
+  #dof-chat-panel input, #dof-chat-panel textarea { font-size:16px !important; }
   #chat-fab { right:12px; bottom:14px; }
 }
 
@@ -2503,18 +2504,26 @@ INFORMACIÓN CLAVE DE DOF-MESH:
     input.style.height = Math.min(input.scrollHeight, 90) + 'px';
   });
 
-  // ── keyboard pushes panel on mobile ──
-  if(panel && input){
+  // ── iOS Safari visualViewport keyboard fix ──
+  if(window.visualViewport && panel){
+    function onVVResize(){
+      if(window.innerWidth > 640) return;
+      const vv = window.visualViewport;
+      const panelHeight = Math.min(vv.height * 0.55, 400);
+      const bottomOffset = window.innerHeight - vv.height - vv.offsetTop + 80;
+      panel.style.bottom = bottomOffset + 'px';
+      panel.style.maxHeight = panelHeight + 'px';
+      if(messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+    function onVVScroll(){ onVVResize(); }
+    window.visualViewport.addEventListener('resize', onVVResize);
+    window.visualViewport.addEventListener('scroll', onVVScroll);
+  }
+  if(input){
     input.addEventListener('focus', ()=>{
-      if(window.innerWidth > 640) return;
-      panel.style.maxHeight = '40dvh';
-      panel.style.height = '40dvh';
-      setTimeout(()=>{ messagesEl.scrollTop = messagesEl.scrollHeight; }, 100);
-    });
-    input.addEventListener('blur', ()=>{
-      if(window.innerWidth > 640) return;
-      panel.style.maxHeight = '';
-      panel.style.height = '';
+      setTimeout(()=>{
+        input.scrollIntoView({ behavior:'smooth', block:'center' });
+      }, 300);
     });
   }
 
