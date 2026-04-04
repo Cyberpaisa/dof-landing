@@ -1,19 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 80" width="340" height="80">
   <title>DOF-MESH — Wordmark Horizontal Dark</title>
-  <desc>Horizontal lockup. Dark mode. © 2026 Juan Carlos Quiceno @Cyber_paisa</desc>
-  <rect width="340" height="80" fill="#000000"/>
-  <!-- Icon 60x60 centered at y=10 -->
+  <desc>Horizontal lockup. Dark mode. Transparent bg. © 2026 Juan Carlos Quiceno @Cyber_paisa</desc>
+  <!-- No background rect — transparent, usable over any dark surface -->
+  <!-- Icon 60x60 centered at y=10 — Fibonacci F6→F9, φ=1.618 -->
   <g transform="translate(10,10) scale(0.6)">
     <polygon points="8,7 42,46 42,54 8,93 8,72 29,54 29,46 8,28" fill="#FFFFFF"/>
     <polygon points="92,7 58,46 58,54 92,93 92,72 71,54 71,46 92,28" fill="#FFFFFF"/>
   </g>
-  <!-- Text: baseline at y=52, icon ends at x=70 -->
+  <!-- Wordmark: single text with tspan — no hardcoded x offset, kerning tracks perfectly -->
   <text x="82" y="52"
     font-family="'IBM Plex Sans','Helvetica Neue',Arial,sans-serif"
-    font-size="30" font-weight="600" letter-spacing="1"
-    fill="#FFFFFF">DOF</text>
-  <text x="155" y="52"
-    font-family="'IBM Plex Sans','Helvetica Neue',Arial,sans-serif"
-    font-size="30" font-weight="300" letter-spacing="1"
-    fill="rgba(255,255,255,0.28)">-MESH</text>
+    font-size="30">
+    <tspan font-weight="600" letter-spacing="0.9" fill="#FFFFFF">DOF</tspan><tspan font-weight="300" letter-spacing="0.9" fill="rgba(255,255,255,0.28)">-MESH</tspan>
+  </text>
 </svg>

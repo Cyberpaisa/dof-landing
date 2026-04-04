@@ -1,17 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 80" width="340" height="80">
   <title>DOF-MESH — Wordmark Horizontal Light</title>
-  <desc>Horizontal lockup. Light mode. © 2026 Juan Carlos Quiceno @Cyber_paisa</desc>
-  <rect width="340" height="80" fill="#F3F2EF"/>
+  <desc>Horizontal lockup. Light mode. Transparent bg. © 2026 Juan Carlos Quiceno @Cyber_paisa</desc>
+  <!-- No background rect — transparent, usable over any light surface -->
+  <!-- Icon 60x60 — light mode correction: gap -2u por irradiación negra inversa -->
   <g transform="translate(10,10) scale(0.6)">
     <polygon points="8,7 43,47 43,53 8,93 8,72 30,53 30,47 8,28" fill="#0A0A0A"/>
     <polygon points="92,7 57,47 57,53 92,93 92,72 70,53 70,47 92,28" fill="#0A0A0A"/>
   </g>
+  <!-- Wordmark: single text with tspan — no hardcoded x offset -->
   <text x="82" y="52"
     font-family="'IBM Plex Sans','Helvetica Neue',Arial,sans-serif"
-    font-size="30" font-weight="600" letter-spacing="1"
-    fill="#0A0A0A">DOF</text>
-  <text x="155" y="52"
-    font-family="'IBM Plex Sans','Helvetica Neue',Arial,sans-serif"
-    font-size="30" font-weight="300" letter-spacing="1"
-    fill="rgba(10,10,10,0.30)">-MESH</text>
+    font-size="30">
+    <tspan font-weight="600" letter-spacing="0.9" fill="#0A0A0A">DOF</tspan><tspan font-weight="300" letter-spacing="0.9" fill="rgba(10,10,10,0.30)">-MESH</tspan>
+  </text>
 </svg>

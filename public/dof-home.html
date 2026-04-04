@@ -7,7 +7,7 @@
 <meta name="description" content="DOF-MESH: Deterministic Observability Framework. Governance en 7 capas, Z3 verifier, Rust gate 7µs, activo en 8 chains.">
 <link rel="canonical" href="https://www.dofmesh.com">
 <meta property="og:url" content="https://www.dofmesh.com">
-<meta property="og:title" content="DOF-MESH — Gobernanza IA con seguridad de reactores nucleares">
+<meta property="og:title" content="DOF-MESH — Mathematics, not promises.">
 <meta property="og:description" content="Verificación formal Z3 + attestations on-chain para agentes autónomos. Matemáticas, no promesas.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://www.dofmesh.com/brand/dof-mesh-og-1200x630.png">
@@ -17,9 +17,9 @@
 <meta name="twitter:title" content="DOF-MESH — AI Governance. Mathematics, not promises.">
 <meta name="twitter:description" content="Z3 formal verification + on-chain attestations for autonomous agents. 8 chains. 4,157 tests.">
 <meta name="twitter:image" content="https://www.dofmesh.com/brand/dof-mesh-og-1200x630.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/brand/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/brand/favicon-16x16.png">
-<link rel="apple-touch-icon" href="/brand/apple-touch-icon-128x128.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/brand/dof-mesh-icon-cube-dark-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/brand/dof-mesh-icon-cube-dark-16x16.png">
+<link rel="apple-touch-icon" sizes="128x128" href="/brand/dof-mesh-icon-cube-dark-128x128.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -35,7 +35,7 @@
   --accent: #0a0a08;
   --accent-inv: #ffffff;
   --ring: rgba(10,10,8,0.15);
-  --green: #16a34a;
+  --green: #00cc55;
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
   --shadow: 0 1px 3px rgba(0,0,0,0.06),0 4px 12px rgba(0,0,0,0.04);
   --shadow-md: 0 4px 6px rgba(0,0,0,0.06),0 10px 30px rgba(0,0,0,0.06);
@@ -45,18 +45,18 @@
   --surface: var(--bg-muted2);
 }
 [data-theme="dark"] {
-  --bg: #0c0c0a;
-  --bg-muted: #121210;
-  --bg-muted2: #181816;
-  --card: #161614;
+  --bg: #000000;
+  --bg-muted: #0a0a0a;
+  --bg-muted2: #141414;
+  --card: #0d0d0d;
   --border: #2a2a28;
-  --text: #f0f0ee;
-  --text-muted: #7a7a78;
-  --text-muted2: #4a4a48;
-  --accent: #f0f0ee;
-  --accent-inv: #0c0c0a;
-  --ring: rgba(240,240,238,0.15);
-  --green: #22c55e;
+  --text: #ffffff;
+  --text-muted: rgba(255,255,255,0.50);
+  --text-muted2: rgba(255,255,255,0.25);
+  --accent: #ffffff;
+  --accent-inv: #000000;
+  --ring: rgba(255,255,255,0.15);
+  --green: #00cc55;
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
   --shadow: 0 1px 3px rgba(0,0,0,0.3),0 4px 12px rgba(0,0,0,0.2);
   --shadow-md: 0 4px 6px rgba(0,0,0,0.3),0 10px 30px rgba(0,0,0,0.3);
@@ -69,6 +69,7 @@ html { scroll-behavior:smooth; font-size:16px; }
 body {
   font-family:'DM Sans',sans-serif;
   background:var(--bg); color:var(--text);
+  line-height:1.65;
   overflow-x:hidden; cursor:none;
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
@@ -95,6 +96,13 @@ button { font-family:'DM Sans',sans-serif; cursor:none; }
 }
 body.cur-hover #cur { width:4px; height:4px; opacity:.5; }
 body.cur-hover #cur2 { width:36px; height:36px; border-color:rgba(128,128,128,.55); }
+
+/* ─── WORDMARK THEME SWITCHING ─── */
+/* Default: light mode → show light wordmark */
+.logo-dark  { display: none;  }
+.logo-light { display: block; }
+[data-theme="dark"] .logo-dark  { display: block; }
+[data-theme="dark"] .logo-light { display: none;  }
 
 /* ─── NAV ─── */
 nav {
@@ -251,8 +259,8 @@ nav.scrolled {
 .section-inner { max-width:1280px; margin:0 auto; }
 .section-center { text-align:center; }
 .section-eyebrow {
-  font-size:.7rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
-  color:var(--text-muted2); margin-bottom:.75rem;
+  font-size:.72rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--text-muted); margin-bottom:.85rem;
 }
 .section-h2 {
   font-size:clamp(1.8rem,4vw,2.8rem);
@@ -860,10 +868,10 @@ footer {
 <nav id="main-nav">
   <div class="nav-inner">
     <div class="nav-logo">
-      <img src="/brand/dof-mesh-wordmark-dark.svg"
-           alt="DOF-MESH"
-           height="28"
-           style="display:block;" />
+      <a href="/" style="display:flex;align-items:center;text-decoration:none;">
+        <img src="/brand/dof-mesh-wordmark-cube-dark.svg"  alt="DOF-MESH" height="28" class="logo-dark"  style="display:block;width:auto;" loading="eager">
+        <img src="/brand/dof-mesh-wordmark-cube-light.svg" alt="DOF-MESH" height="28" class="logo-light" style="display:block;width:auto;" loading="eager">
+      </a>
     </div>
     <div class="nav-links">
       <a href="#por-que" data-t="nav_why">Por qué DOF</a>
