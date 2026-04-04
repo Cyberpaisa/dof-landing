@@ -70,32 +70,18 @@ body {
   font-family:'DM Sans',sans-serif;
   background:var(--bg); color:var(--text);
   line-height:1.65;
-  overflow-x:hidden; cursor:none;
+  overflow-x:hidden; cursor:default;
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
 }
 *, *::before, *::after {
   transition: background-color .2s, border-color .2s, color .15s;
 }
-a { color:inherit; text-decoration:none; cursor:none; }
-button { font-family:'DM Sans',sans-serif; cursor:none; }
+a { color:inherit; text-decoration:none; cursor:pointer; }
+button { font-family:'DM Sans',sans-serif; cursor:pointer; }
 
-/* ─── CURSOR ─── */
-#cur {
-  position:fixed; z-index:9999; pointer-events:none;
-  width:6px; height:6px; border-radius:50%;
-  background:var(--text); transform:translate(-50%,-50%);
-  transition:width .15s, height .15s, opacity .2s;
-}
-#cur2 {
-  position:fixed; z-index:9998; pointer-events:none;
-  width:22px; height:22px; border-radius:50%;
-  border:1px solid rgba(128,128,128,.35);
-  transform:translate(-50%,-50%);
-  transition:width .2s, height .2s, border-color .2s, transform .2s;
-}
-body.cur-hover #cur { width:4px; height:4px; opacity:.5; }
-body.cur-hover #cur2 { width:36px; height:36px; border-color:rgba(128,128,128,.55); }
+/* ─── CURSOR (custom dot desactivado — usando cursor nativo) ─── */
+#cur, #cur2 { display:none; }
 
 /* ─── WORDMARK THEME SWITCHING ─── */
 /* Default (dark): logo-dark visible, logo-light hidden via inline style */
