@@ -1628,7 +1628,7 @@ window.addEventListener('scroll',()=>mainNav.classList.toggle('scrolled',scrollY
     const t=i/(NUM-1); // 0=top, 1=bottom
     return {
       phase:(i/NUM)*Math.PI*2.5,
-      speed:0.77+i*0.0385,
+      speed:0.77+i*0.008,
       // opacity: fades from nearly 0 at top to visible at bottom
       opacity: 0.009 + t*t*0.198,
       // thickness: thin at top, thick at bottom
