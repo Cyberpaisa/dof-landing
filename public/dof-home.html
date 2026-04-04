@@ -801,6 +801,18 @@ footer {
   border-top:1px solid rgba(255,255,255,.1); padding-top:2rem;
 }
 
+/* ─── NAV HAMBURGER ─── */
+.nav-hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:1px solid var(--border);cursor:pointer;padding:7px;border-radius:var(--r);flex-shrink:0;}
+.nav-hamburger span{display:block;width:100%;height:1.5px;background:var(--text);border-radius:2px;transition:transform .25s,opacity .2s;}
+.nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+.nav-hamburger.open span:nth-child(2){opacity:0;}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+.nav-mobile{position:absolute;top:64px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);padding:.5rem 1.5rem 1rem;flex-direction:column;gap:0;transform:translateY(-6px);opacity:0;pointer-events:none;transition:transform .22s ease,opacity .22s ease;display:none;}
+.nav-mobile.open{transform:translateY(0);opacity:1;pointer-events:all;}
+.nav-mobile a{font-size:.92rem;font-weight:500;color:var(--text-muted);padding:.7rem 0;border-bottom:1px solid var(--border);display:block;transition:color .15s;}
+.nav-mobile a:last-child{border-bottom:none;}
+.nav-mobile a:hover{color:var(--text);}
+
 /* ─── RESPONSIVE ─── */
 @media(max-width:900px) {
   .feat-split { grid-template-columns:1fr; gap:2.5rem; }
@@ -811,14 +823,25 @@ footer {
   .foot-top { grid-template-columns:1fr 1fr; }
   .foot-top > :first-child { grid-column:1/-1; }
 }
+@media(max-width:768px) {
+  .nav-hamburger { display:flex; }
+  .nav-links { display:none !important; }
+  .nav-mobile { display:flex; }
+  .chain-orbit { width:min(86vw,340px); height:min(86vw,340px); }
+  .winston-table { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  #dof-chat-panel { width:calc(100vw - 32px); right:16px; }
+  #chat-fab { right:16px; }
+}
 @media(max-width:640px) {
-  .nav-links { display:none; }
-  .hero-h1 { font-size:2.6rem; }
+  .hero-h1 { font-size:2.4rem; line-height:1.15; }
+  .hero { padding-top:4.5rem; }
   .projects-grid { grid-template-columns:1fr; }
   .stats-grid { grid-template-columns:repeat(2,1fr); gap:1rem; }
   .foot-top { grid-template-columns:1fr; }
   .foot-top > :first-child { grid-column:1; }
   .section { padding:4rem 1rem; }
+  #dof-chat-panel { width:calc(100vw - 24px); right:12px; bottom:76px; }
+  #chat-fab { right:12px; bottom:14px; }
 }
 
 /* ─── DOF CHATBOT ─── */
@@ -899,7 +922,17 @@ footer {
         <svg id="moon-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       </button>
       <a href="https://github.com/Cyberpaisa/DOF-MESH" class="nav-btn nav-btn-primary" target="_blank" rel="noopener noreferrer" data-t="nav_gh">GitHub →</a>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="#por-que" data-t="nav_why">Por qué DOF</a>
+    <a href="#proyectos" data-t="nav_proj">Proyectos</a>
+    <a href="#metricas" data-t="nav_metrics">Métricas</a>
+    <a href="#chains" data-t="nav_chains">Chains</a>
+    <a href="https://cyberpaisa-dof-mesh-40-27.mintlify.app/" target="_blank" rel="noopener noreferrer" data-t="nav_docs">Docs</a>
   </div>
 </nav>
 
@@ -1339,7 +1372,7 @@ footer {
           <span class="install-code-lang" id="code-lang-label">python</span>
           <button class="install-copy" onclick="copyCode(this)">copiar</button>
         </div>
-        <pre class="install-block active" id="tab-sdk"><span class="cmd">$ pip install dof-sdk</span>
+        <pre class="install-block active" id="tab-sdk"><span class="cmd" id="install-cmd">$ pip install dof-sdk</span>
 
 <span class="kw">from</span> dof <span class="kw">import</span> DOFVerifier
 
@@ -1674,6 +1707,21 @@ document.querySelectorAll('a,button').forEach(el=>{
 const mainNav=document.getElementById('main-nav');
 window.addEventListener('scroll',()=>mainNav.classList.toggle('scrolled',scrollY>10),{passive:true});
 
+/* ─── NAV HAMBURGER ─── */
+(function(){
+  const btn=document.getElementById('nav-hamburger');
+  const menu=document.getElementById('nav-mobile');
+  if(!btn||!menu) return;
+  function close(){ btn.classList.remove('open'); menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+  btn.addEventListener('click',()=>{
+    const open=btn.classList.toggle('open');
+    menu.classList.toggle('open',open);
+    btn.setAttribute('aria-expanded',open);
+  });
+  menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
+  document.addEventListener('click',e=>{ if(!mainNav.contains(e.target)) close(); });
+})();
+
 /* ─── WAVE CANVAS ─── */
 (function(){
   const canvas=document.getElementById('wave-canvas');
@@ -1706,6 +1754,7 @@ window.addEventListener('scroll',()=>mainNav.classList.toggle('scrolled',scrollY
 
   let t=0;
   function draw(){
+    if(!waveRunning) return;
     ctx.clearRect(0,0,W,H);
     const dark=document.documentElement.getAttribute('data-theme')==='dark';
     const rgb=dark?'255,255,255':'0,0,0';
@@ -1733,9 +1782,17 @@ window.addEventListener('scroll',()=>mainNav.classList.toggle('scrolled',scrollY
       ctx.stroke();
     });
 
-    requestAnimationFrame(draw);
+    rafId=requestAnimationFrame(draw);
   }
+  let rafId=null;
+  let waveRunning=true;
   draw();
+  new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){if(!waveRunning){waveRunning=true;draw();}}
+      else{waveRunning=false;if(rafId){cancelAnimationFrame(rafId);rafId=null;}}
+    });
+  },{threshold:0.1}).observe(canvas);
 })();
 
 /* ─── HERO TIMELINE ─── */
@@ -2510,6 +2567,26 @@ document.addEventListener('DOMContentLoaded',function(){
 
   setTimeout(animateLabel,3000);
 });
+
+/* ─── TERMINAL TYPING ANIMATION ─── */
+(function(){
+  const el=document.getElementById('install-cmd');
+  const container=document.getElementById('tab-sdk');
+  if(!el||!container) return;
+  const text='$ pip install dof-sdk';
+  let started=false;
+  function typeText(){
+    el.textContent='';
+    let i=0;
+    const timer=setInterval(()=>{
+      el.textContent+=text[i]; i++;
+      if(i>=text.length){ clearInterval(timer); setTimeout(typeText,3000); }
+    },60);
+  }
+  new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting&&!started){ started=true; typeText(); } });
+  },{threshold:0.5}).observe(container);
+})();
 </script>
 
 <!-- ─── DOF CHATBOT WIDGET ─── -->
