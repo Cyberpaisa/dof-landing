@@ -325,26 +325,30 @@ nav.scrolled {
   text-transform:uppercase; padding:.15rem .5rem; border-radius:4px;
 }
 /* Chain orbit visual */
-.chain-orbit {
-  width:520px; height:520px; margin:0 auto; flex-shrink:0;
-}
-.orbit-diagram { display:block; }
-.orbit-mainnet,.orbit-testnet { cursor:pointer; }
-.orbit-mainnet circle { transition:all 0.35s cubic-bezier(.4,0,.2,1); }
-.orbit-mainnet text  { transition:fill 0.35s; }
-.orbit-mainnet:hover circle { fill:#0052FF; stroke:#0052FF; filter:drop-shadow(0 0 14px rgba(0,82,255,0.65)); }
-.orbit-mainnet:hover text   { fill:#ffffff; }
-.orbit-tempo circle { stroke:rgba(255,255,255,0.38) !important; }
-.orbit-testnet { opacity:0.55; transition:opacity 0.35s; }
-.orbit-testnet circle { transition:all 0.35s; }
-.orbit-testnet text  { transition:fill 0.35s; }
-.orbit-testnet:hover { opacity:1; }
-.orbit-testnet:hover circle { fill:rgba(0,82,255,0.12); stroke:#0052FF; }
-.orbit-testnet:hover text   { fill:#ffffff; }
-.center-halo { animation:glow-pulse 3s ease-in-out infinite; }
-@keyframes orbit-cw  { from{transform:rotate(0deg)}  to{transform:rotate(360deg)} }
-@keyframes orbit-ccw { from{transform:rotate(0deg)}  to{transform:rotate(-360deg)} }
-@keyframes glow-pulse { 0%,100%{opacity:.12} 50%{opacity:.22} }
+.chain-orbit { width:520px; height:520px; margin:0 auto; flex-shrink:0; overflow:visible; }
+.orbit-diagram { display:block; overflow:visible; }
+.orbit-mn { cursor:pointer; }
+.orbit-mn circle { transition:all .3s; }
+.orbit-mn:not(.orbit-tempo-node):hover circle { fill:#0052FF; stroke:#0052FF; }
+.orbit-tempo-node:hover circle { fill:#003acc; stroke:#003acc; }
+.orbit-tn { cursor:pointer; }
+.orbit-tn circle { opacity:.75; transition:all .3s; }
+.orbit-tn:hover circle { opacity:1; stroke:#0052FF; }
+[data-theme="light"] .orbit-ring-i { stroke:rgba(0,0,0,0.30); }
+[data-theme="light"] .orbit-ring-o { stroke:rgba(0,0,0,0.20); }
+[data-theme="light"] .orbit-spoke-m { stroke:rgba(0,0,0,0.50); }
+[data-theme="light"] .orbit-spoke-tempo { stroke:rgba(0,82,255,0.65); }
+[data-theme="light"] .orbit-spoke-t { stroke:rgba(0,0,0,0.22); }
+[data-theme="light"] .orbit-mn circle { fill:#000; stroke:#000; stroke-width:1.5; }
+[data-theme="light"] .orbit-tempo-node circle { fill:#0052FF; stroke:#0052FF; }
+[data-theme="light"] .orbit-mn:not(.orbit-tempo-node):hover circle { fill:#0052FF; stroke:#0052FF; }
+[data-theme="light"] .orbit-tn circle { stroke:rgba(0,0,0,0.40); fill:rgba(0,0,0,0.03); }
+[data-theme="light"] .orbit-tn text { fill:rgba(0,0,0,0.65); }
+[data-theme="light"] .orbit-tn:hover circle { stroke:#0052FF; opacity:1; }
+[data-theme="light"] .orbit-center-ring { stroke:rgba(0,0,0,0.12); stroke-width:1.5; }
+@keyframes dashflow  { to{stroke-dashoffset:-24} }
+@keyframes dashflow2 { to{stroke-dashoffset:24}  }
+@keyframes ringpulse { 0%,100%{opacity:.7} 50%{opacity:1} }
 
 /* ─── STATS ─── */
 .stats-grid {
@@ -1207,87 +1211,72 @@ footer {
         <div class="chain-orbit">
           <svg class="orbit-diagram" viewBox="0 0 520 520" xmlns="http://www.w3.org/2000/svg">
             <!-- Guide rings -->
-            <circle cx="260" cy="260" r="155" fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="1" stroke-dasharray="3 8"/>
-            <circle cx="260" cy="260" r="220" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-dasharray="3 8"/>
-            <!-- Testnet spokes r=70→node -->
-            <line x1="260" y1="190" x2="260" y2="40"  stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-dasharray="2 6"/>
-            <line x1="327" y1="238" x2="469" y2="192" stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-dasharray="2 6"/>
-            <line x1="301" y1="317" x2="389" y2="438" stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-dasharray="2 6"/>
-            <line x1="219" y1="317" x2="131" y2="438" stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-dasharray="2 6"/>
-            <line x1="193" y1="238" x2="51"  y2="192" stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-dasharray="2 6"/>
-            <!-- Mainnet spokes r=70→node (on top) -->
-            <line x1="260" y1="190" x2="260" y2="105" stroke="rgba(255,255,255,0.12)" stroke-width="1" stroke-dasharray="3 5"/>
-            <line x1="330" y1="260" x2="415" y2="260" stroke="rgba(255,255,255,0.12)" stroke-width="1" stroke-dasharray="3 5"/>
-            <line x1="260" y1="330" x2="260" y2="415" stroke="rgba(255,255,255,0.12)" stroke-width="1" stroke-dasharray="3 5"/>
-            <line x1="190" y1="260" x2="105" y2="260" stroke="rgba(255,255,255,0.12)" stroke-width="1" stroke-dasharray="3 5"/>
-            <!-- Animated dots: group 1 white CW r=220 18s -->
-            <g style="transform-origin:260px 260px;animation:orbit-cw 18s linear infinite;">
-              <circle cx="480" cy="260" r="2.5" fill="rgba(255,255,255,0.8)"/>
-              <circle cx="260" cy="40"  r="2.5" fill="rgba(255,255,255,0.8)"/>
-              <circle cx="40"  cy="260" r="2.5" fill="rgba(255,255,255,0.8)"/>
-              <circle cx="260" cy="480" r="2.5" fill="rgba(255,255,255,0.8)"/>
+            <circle class="orbit-ring-i" cx="260" cy="260" r="155" fill="none"
+              stroke="rgba(255,255,255,0.55)" stroke-width="1.5" stroke-dasharray="5 7"
+              style="animation:ringpulse 3.5s ease-in-out infinite"/>
+            <circle class="orbit-ring-o" cx="260" cy="260" r="220" fill="none"
+              stroke="rgba(255,255,255,0.40)" stroke-width="1.2" stroke-dasharray="4 8"
+              style="animation:ringpulse 3.5s ease-in-out infinite 0.9s"/>
+            <!-- Mainnet spokes -->
+            <line class="orbit-spoke-m" x1="260" y1="190" x2="260" y2="118" stroke="rgba(255,255,255,0.60)" stroke-width="1.4" stroke-dasharray="4 4" style="animation:dashflow 1.2s linear infinite"/>
+            <line class="orbit-spoke-m" x1="330" y1="260" x2="414" y2="260" stroke="rgba(255,255,255,0.60)" stroke-width="1.4" stroke-dasharray="4 4" style="animation:dashflow 1.5s linear infinite"/>
+            <line class="orbit-spoke-m" x1="260" y1="330" x2="260" y2="414" stroke="rgba(255,255,255,0.60)" stroke-width="1.4" stroke-dasharray="4 4" style="animation:dashflow 1.7s linear infinite"/>
+            <line class="orbit-spoke-tempo" x1="190" y1="260" x2="106" y2="260" stroke="rgba(0,140,255,0.80)" stroke-width="1.4" stroke-dasharray="4 4" style="animation:dashflow2 1.3s linear infinite"/>
+            <!-- Testnet spokes -->
+            <line class="orbit-spoke-t" x1="260" y1="190" x2="260" y2="50"  stroke="rgba(255,255,255,0.30)" stroke-width="0.9" stroke-dasharray="3 6" style="animation:dashflow 2s linear infinite"/>
+            <line class="orbit-spoke-t" x1="305" y1="232" x2="465" y2="196" stroke="rgba(255,255,255,0.30)" stroke-width="0.9" stroke-dasharray="3 6" style="animation:dashflow 2.2s linear infinite"/>
+            <line class="orbit-spoke-t" x1="294" y1="306" x2="388" y2="434" stroke="rgba(255,255,255,0.30)" stroke-width="0.9" stroke-dasharray="3 6" style="animation:dashflow 1.9s linear infinite"/>
+            <line class="orbit-spoke-t" x1="226" y1="306" x2="132" y2="434" stroke="rgba(255,255,255,0.30)" stroke-width="0.9" stroke-dasharray="3 6" style="animation:dashflow2 2.1s linear infinite"/>
+            <line class="orbit-spoke-t" x1="215" y1="232" x2="55"  y2="196" stroke="rgba(255,255,255,0.30)" stroke-width="0.9" stroke-dasharray="3 6" style="animation:dashflow2 2.4s linear infinite"/>
+            <!-- Mainnet nodes -->
+            <g class="orbit-mn" id="node-avax">
+              <circle cx="260" cy="118" r="38" fill="#1a1a1a" stroke="#fff" stroke-width="2"/>
+              <text x="260" y="123" text-anchor="middle" font-size="13" font-weight="600" fill="#fff" style="pointer-events:none">Avax</text>
             </g>
-            <!-- Animated dots: group 2 blue CCW r=220 28s -->
-            <g style="transform-origin:260px 260px;animation:orbit-ccw 28s linear infinite;">
-              <circle cx="415.6" cy="415.6" r="2" fill="#0052FF"/>
-              <circle cx="104.4" cy="415.6" r="2" fill="#0052FF"/>
-              <circle cx="104.4" cy="104.4" r="2" fill="#0052FF"/>
-              <circle cx="415.6" cy="104.4" r="2" fill="#0052FF"/>
+            <g class="orbit-mn" id="node-base">
+              <circle cx="415" cy="260" r="38" fill="#1a1a1a" stroke="#fff" stroke-width="2"/>
+              <text x="415" y="265" text-anchor="middle" font-size="13" font-weight="600" fill="#fff" style="pointer-events:none">Base</text>
             </g>
-            <!-- Animated dots: group 3 white CW r=155 12s -->
-            <g style="transform-origin:260px 260px;animation:orbit-cw 12s linear infinite;">
-              <circle cx="415"   cy="260"   r="1.8" fill="rgba(255,255,255,0.6)"/>
-              <circle cx="182.5" cy="394.2" r="1.8" fill="rgba(255,255,255,0.6)"/>
-              <circle cx="182.5" cy="125.8" r="1.8" fill="rgba(255,255,255,0.6)"/>
+            <g class="orbit-mn" id="node-celo">
+              <circle cx="260" cy="415" r="38" fill="#1a1a1a" stroke="#fff" stroke-width="2"/>
+              <text x="260" y="420" text-anchor="middle" font-size="13" font-weight="600" fill="#fff" style="pointer-events:none">Celo</text>
             </g>
-            <!-- Center: halo + core + text -->
-            <circle class="center-halo" cx="260" cy="260" r="78" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-            <circle cx="260" cy="260" r="68" fill="white"/>
-            <text x="260" y="250" text-anchor="middle" dominant-baseline="central" font-family="'IBM Plex Sans','Helvetica Neue',sans-serif" font-size="15" font-weight="600" fill="#000" letter-spacing=".08em">DOF</text>
-            <text x="260" y="268" text-anchor="middle" dominant-baseline="central" font-family="'IBM Plex Sans','Helvetica Neue',sans-serif" font-size="15" font-weight="600" fill="#000" letter-spacing=".08em">PROOF</text>
-            <text x="260" y="283" text-anchor="middle" dominant-baseline="central" font-family="'IBM Plex Sans','Helvetica Neue',sans-serif" font-size="9" font-weight="400" fill="rgba(0,0,0,0.35)">+6 planned</text>
-            <!-- Mainnet nodes (inner ring r=155) -->
-            <g class="orbit-mainnet" id="node-avax">
-              <circle cx="260" cy="105" r="36" fill="#0a0a0a" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
-              <text x="260" y="105" text-anchor="middle" dominant-baseline="central" font-family="'IBM Plex Sans','Helvetica Neue',sans-serif" font-size="12" font-weight="500" fill="rgba(255,255,255,0.85)">Avax</text>
-            </g>
-            <g class="orbit-mainnet" id="node-base">
-              <circle cx="415" cy="260" r="36" fill="#0a0a0a" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
-              <text x="415" y="260" text-anchor="middle" dominant-baseline="central" font-family="'IBM Plex Sans','Helvetica Neue',sans-serif" font-size="12" font-weight="500" fill="rgba(255,255,255,0.85)">Base</text>
-            </g>
-            <g class="orbit-mainnet" id="node-celo">
-              <circle cx="260" cy="415" r="36" fill="#0a0a0a" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
-              <text x="260" y="415" text-anchor="middle" dominant-baseline="central" font-family="'IBM Plex Sans','Helvetica Neue',sans-serif" font-size="12" font-weight="500" fill="rgba(255,255,255,0.85)">Celo</text>
-            </g>
-            <g class="orbit-mainnet orbit-tempo" id="node-tempo">
+            <g class="orbit-mn orbit-tempo-node" id="node-tempo">
               <title>Tempo · Chain 4217 · Stripe+Paradigm L1</title>
-              <circle cx="105" cy="260" r="36" fill="#0a0a0a" stroke-width="1.5"/>
-              <text x="105" y="260" text-anchor="middle" dominant-baseline="central" font-family="'IBM Plex Sans','Helvetica Neue',sans-serif" font-size="12" font-weight="500" fill="rgba(255,255,255,0.85)">Tempo</text>
+              <circle cx="105" cy="260" r="38" fill="#0052FF" stroke="#7aabff" stroke-width="2"/>
+              <text x="105" y="265" text-anchor="middle" font-size="12" font-weight="600" fill="#fff" style="pointer-events:none">Tempo</text>
             </g>
-            <!-- Testnet nodes (outer ring r=220) -->
-            <g class="orbit-testnet" id="node-fuji">
-              <circle cx="260" cy="40" r="28" fill="transparent" stroke="rgba(255,255,255,0.20)" stroke-width="1" stroke-dasharray="4 4"/>
-              <text x="260" y="40" text-anchor="middle" dominant-baseline="central" font-family="'IBM Plex Sans','Helvetica Neue',sans-serif" font-size="11" font-weight="400" fill="rgba(255,255,255,0.50)">Fuji</text>
+            <!-- Testnet nodes -->
+            <g class="orbit-tn" id="node-fuji">
+              <circle cx="260" cy="50" r="27" fill="none" stroke="rgba(255,255,255,0.50)" stroke-width="1.5" stroke-dasharray="5 3"/>
+              <text x="260" y="54" text-anchor="middle" font-size="11" font-weight="500" fill="rgba(255,255,255,0.75)" style="pointer-events:none">Fuji</text>
             </g>
-            <g class="orbit-testnet" id="node-basesep">
-              <circle cx="469" cy="192" r="28" fill="transparent" stroke="rgba(255,255,255,0.20)" stroke-width="1" stroke-dasharray="4 4"/>
-              <text x="469" y="185" text-anchor="middle" dominant-baseline="central" font-family="'IBM Plex Sans','Helvetica Neue',sans-serif" font-size="11" font-weight="400" fill="rgba(255,255,255,0.50)">Base</text>
-              <text x="469" y="199" text-anchor="middle" dominant-baseline="central" font-family="'IBM Plex Sans','Helvetica Neue',sans-serif" font-size="11" font-weight="400" fill="rgba(255,255,255,0.50)">Sep.</text>
+            <g class="orbit-tn" id="node-basesep">
+              <circle cx="466" cy="196" r="27" fill="none" stroke="rgba(255,255,255,0.50)" stroke-width="1.5" stroke-dasharray="5 3"/>
+              <text x="466" y="192" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.75)" style="pointer-events:none">Base</text>
+              <text x="466" y="204" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.75)" style="pointer-events:none">Sep.</text>
             </g>
-            <g class="orbit-testnet" id="node-polyamoy">
-              <circle cx="389" cy="438" r="28" fill="transparent" stroke="rgba(255,255,255,0.20)" stroke-width="1" stroke-dasharray="4 4"/>
-              <text x="389" y="431" text-anchor="middle" dominant-baseline="central" font-family="'IBM Plex Sans','Helvetica Neue',sans-serif" font-size="11" font-weight="400" fill="rgba(255,255,255,0.50)">Poly</text>
-              <text x="389" y="445" text-anchor="middle" dominant-baseline="central" font-family="'IBM Plex Sans','Helvetica Neue',sans-serif" font-size="11" font-weight="400" fill="rgba(255,255,255,0.50)">Amoy</text>
+            <g class="orbit-tn" id="node-polyamoy">
+              <circle cx="388" cy="434" r="27" fill="none" stroke="rgba(255,255,255,0.50)" stroke-width="1.5" stroke-dasharray="5 3"/>
+              <text x="388" y="430" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.75)" style="pointer-events:none">Poly</text>
+              <text x="388" y="442" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.75)" style="pointer-events:none">Amoy</text>
             </g>
-            <g class="orbit-testnet" id="node-conflux">
-              <circle cx="131" cy="438" r="28" fill="transparent" stroke="rgba(255,255,255,0.20)" stroke-width="1" stroke-dasharray="4 4"/>
-              <text x="131" y="438" text-anchor="middle" dominant-baseline="central" font-family="'IBM Plex Sans','Helvetica Neue',sans-serif" font-size="11" font-weight="400" fill="rgba(255,255,255,0.50)">Conflux</text>
+            <g class="orbit-tn" id="node-conflux">
+              <circle cx="132" cy="434" r="27" fill="none" stroke="rgba(255,255,255,0.50)" stroke-width="1.5" stroke-dasharray="5 3"/>
+              <text x="132" y="430" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.75)" style="pointer-events:none">Conflux</text>
+              <text x="132" y="442" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.75)" style="pointer-events:none">Test</text>
             </g>
-            <g class="orbit-testnet" id="node-skalesep">
-              <circle cx="51" cy="192" r="28" fill="transparent" stroke="rgba(255,255,255,0.20)" stroke-width="1" stroke-dasharray="4 4"/>
-              <text x="51" y="185" text-anchor="middle" dominant-baseline="central" font-family="'IBM Plex Sans','Helvetica Neue',sans-serif" font-size="11" font-weight="400" fill="rgba(255,255,255,0.50)">SKALE</text>
-              <text x="51" y="199" text-anchor="middle" dominant-baseline="central" font-family="'IBM Plex Sans','Helvetica Neue',sans-serif" font-size="11" font-weight="400" fill="rgba(255,255,255,0.50)">Sep.</text>
+            <g class="orbit-tn" id="node-skalesep">
+              <circle cx="54" cy="196" r="27" fill="none" stroke="rgba(255,255,255,0.50)" stroke-width="1.5" stroke-dasharray="5 3"/>
+              <text x="54" y="192" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.75)" style="pointer-events:none">SKALE</text>
+              <text x="54" y="204" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.75)" style="pointer-events:none">Sep.</text>
             </g>
+            <!-- Center -->
+            <circle cx="260" cy="260" r="70" fill="#fff"/>
+            <circle class="orbit-center-ring" cx="260" cy="260" r="70" fill="none" stroke="rgba(255,255,255,0.20)" stroke-width="2"/>
+            <text x="260" y="254" text-anchor="middle" font-size="15" font-weight="700" fill="#000" letter-spacing="2.5">DOF</text>
+            <text x="260" y="274" text-anchor="middle" font-size="15" font-weight="700" fill="#000" letter-spacing="2.5">PROOF</text>
+            <text x="260" y="290" text-anchor="middle" font-size="9" fill="rgba(0,0,0,0.38)">+6 planned</text>
           </svg>
         </div>
       </div>
