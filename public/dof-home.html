@@ -844,7 +844,7 @@ footer {
   .foot-top { grid-template-columns:1fr; }
   .foot-top > :first-child { grid-column:1; }
   .section { padding:4rem 1rem; }
-  #dof-chat-panel { width:calc(100vw - 24px); right:12px; bottom:76px; }
+  #dof-chat-panel { width:calc(100vw - 16px) !important; right:8px !important; left:8px !important; bottom:80px !important; max-height:75vh !important; border-radius:16px !important; }
   #chat-fab { right:12px; bottom:14px; }
 }
 
@@ -2388,6 +2388,7 @@ FORMATO DE RESPUESTAS:
   function openChat(){
     isOpen = true;
     panel.classList.add('chat-open');
+    if(window._dofLabelClear) window._dofLabelClear();
     gsap.to(panel, { opacity:1, y:0, scale:1, duration:.28, ease:'back.out(1.4)', clearProps:'scale' });
     gsap.to(bubble, { scale:.9, duration:.15, yoyo:true, repeat:1 });
     if(!welcomed){ welcomed=true; setTimeout(()=>addBotMsg(WELCOME), 320); }
@@ -2396,7 +2397,7 @@ FORMATO DE RESPUESTAS:
   function closeChat(){
     isOpen = false;
     gsap.to(panel, { opacity:0, y:16, scale:.97, duration:.2, ease:'power2.in',
-      onComplete:()=>panel.classList.remove('chat-open') });
+      onComplete:()=>{ panel.classList.remove('chat-open'); if(window._dofLabelResume) window._dofLabelResume(); } });
   }
 
   bubble.addEventListener('click', ()=> isOpen ? closeChat() : openChat());
@@ -2505,7 +2506,8 @@ FORMATO DE RESPUESTAS:
 
     } catch(err){
       removeTyping();
-      addBotMsg('Error de conexión. Verifica tu red e intenta de nuevo.');
+      console.error('Chat error:', err);
+      addBotMsg('Error: ' + (err.message || 'Error de conexión. Verifica tu red.'));
     }
 
     isSending = false;
@@ -2555,6 +2557,8 @@ document.addEventListener('DOMContentLoaded',function(){
       labelTimer=setTimeout(()=>{ if(!hovered) animateLabel(); },10000);
     },2000);
   }
+  window._dofLabelClear=function(){ clearTimeout(labelTimer); hide(false); };
+  window._dofLabelResume=function(){ setTimeout(animateLabel,2000); };
 
   if(btn){
     btn.addEventListener('mouseenter',()=>{
