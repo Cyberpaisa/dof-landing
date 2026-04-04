@@ -966,7 +966,7 @@ footer {
       <h2 class="section-h2 reveal" data-t="proof_h2">Una decisión. Una prueba verificable.</h2>
       <p class="section-p reveal delay-1" data-t="proof_sub">Cada acción es validada con constraints formales antes de ejecutarse.</p>
     </div>
-    <div class="proof-terminal reveal delay-2" id="proof-demo">
+    <div class="proof-terminal reveal delay-2" id="proof-demo" title="▶ Click para ejecutar de nuevo" style="cursor:pointer;">
       <div class="proof-bar">
         <div class="term-dot" style="background:#ff5f57;"></div>
         <div class="term-dot" style="background:#febc2e;"></div>
@@ -1128,9 +1128,6 @@ footer {
           </div>
         </div>
         <p class="section-p reveal delay-2" data-t="gov_punchline" style="margin-top:1.25rem;font-style:italic;opacity:.75;font-size:.95rem;">La mayoría de frameworks verifica lo que pasó. DOF verifica lo que está a punto de pasar.</p>
-        <div style="margin-top:1.75rem;">
-          <a href="#proof" class="btn btn-dark" data-t="gov_cta">Ver Framework →</a>
-        </div>
       </div>
       <div class="feat-visual reveal">
         <div class="layer-stack">
@@ -1588,7 +1585,7 @@ result = verifier.verify_action(
     <p class="section-p reveal delay-1" style="margin:1rem auto 0;" data-t="cta_p">Hoy nadie en tu industria puede responder esa pregunta. El primero que pueda no solo evita el problema. Lo convierte en ventaja.</p>
     <div class="hero-cta reveal delay-2" style="margin-top:2rem;">
       <a href="https://cyberpaisa-dof-mesh-40-27.mintlify.app/quickstart" class="btn btn-dark" target="_blank" rel="noopener noreferrer" data-t="cta_build">Quiero tener la respuesta</a>
-      <a href="#proof" class="btn btn-outline" data-t="cta_gov" onclick="document.getElementById('proof').scrollIntoView({behavior:'smooth'}); return false;">Ver la demostración on-chain</a>
+      <a href="#proof" class="btn btn-outline" data-t="cta_gov">Ver la demostración on-chain</a>
     </div>
     <p style="margin-top:2.5rem;font-size:.72rem;color:var(--text-muted2);" data-t="cta_credit">Construido por Cyber Paisa, Enigma Group, Medellín.</p>
     <p class="cta-closing" data-t="cta_closing">Matemáticas, no promesas.</p>
@@ -2187,21 +2184,29 @@ function runProofAnimation(){
 // ─── PROOF TERMINAL REPLAY ───
 function resetAndRunTerminal(){
   proofPlayed=false;
+  // Limpiar líneas visibles
+  const container=document.getElementById('proof-lines');
+  if(container) container.innerHTML='';
+  // Resetear botón blockchain
   const chainBtn=document.getElementById('blockchain-btn');
   if(chainBtn){ chainBtn.style.opacity='.35'; chainBtn.style.pointerEvents='none'; }
   runProofAnimation();
 }
 
-// CTAs del hero — ambos scrollan a #proof y relaunzan
-document.getElementById('cta-primary').addEventListener('click',function(e){
-  e.preventDefault();
-  document.getElementById('proof').scrollIntoView({behavior:'smooth',block:'start'});
-  setTimeout(resetAndRunTerminal,650);
-});
+// cta-secondary va a #por-que (sin replay)
 document.getElementById('cta-secondary').addEventListener('click',function(e){
   e.preventDefault();
-  document.getElementById('proof').scrollIntoView({behavior:'smooth',block:'start'});
-  setTimeout(resetAndRunTerminal,650);
+  document.getElementById('por-que').scrollIntoView({behavior:'smooth',block:'start'});
+});
+
+// Todos los a[href="#proof"] hacen scroll + replay
+document.querySelectorAll('a[href="#proof"]').forEach(function(btn){
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    e.preventDefault();
+    document.getElementById('proof').scrollIntoView({behavior:'smooth',block:'start'});
+    setTimeout(resetAndRunTerminal,650);
+  });
 });
 
 // Botón ▶ run en la barra del terminal
@@ -2210,10 +2215,8 @@ document.getElementById('proof-replay-btn').addEventListener('click',function(e)
   resetAndRunTerminal();
 });
 
-// Click en el cuerpo del terminal también relanza
-const proofBody=document.getElementById('proof-lines');
-proofBody.style.cursor='pointer';
-proofBody.addEventListener('click',resetAndRunTerminal);
+// Click en todo el terminal relanza
+document.getElementById('proof-demo').addEventListener('click',resetAndRunTerminal);
 
 // autoplay al entrar viewport — solo si aún no se ha reproducido
 ScrollTrigger.create({trigger:'#proof-demo',start:'top 75%',onEnter:()=>{ if(!proofPlayed) runProofAnimation(); }});
