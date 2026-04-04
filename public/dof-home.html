@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DOF-MESH — Infraestructura Soberana para Agentes</title>
-<meta name="description" content="DOF-MESH: Deterministic Observability Framework. Governance en 7 capas, Z3 verifier, Rust gate 7µs, activo en 8 chains.">
+<meta name="description" content="Gobernanza IA con verificación Z3 formal y attestations on-chain inmutables. Infraestructura soberana para agentes autónomos. Matemáticas, no promesas.">
 <link rel="canonical" href="https://www.dofmesh.com">
 <meta property="og:url" content="https://www.dofmesh.com">
 <meta property="og:title" content="DOF-MESH — Mathematics, not promises.">
@@ -15,7 +15,7 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="DOF-MESH — AI Governance. Mathematics, not promises.">
-<meta name="twitter:description" content="Z3 formal verification + on-chain attestations for autonomous agents. 8 chains. 4,157 tests.">
+<meta name="twitter:description" content="Z3 formal verification + on-chain attestations for autonomous agents. 9 chains. 4,157 tests.">
 <meta name="twitter:image" content="https://www.dofmesh.com/brand/dof-mesh-og-1200x630.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/brand/dof-mesh-icon-cube-dark-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/brand/dof-mesh-icon-cube-dark-16x16.png">
@@ -340,7 +340,7 @@ nav.scrolled {
 [data-theme="light"] .orbit-spoke-tempo { stroke:rgba(0,82,255,0.65); }
 [data-theme="light"] .orbit-spoke-t { stroke:rgba(0,0,0,0.22); }
 [data-theme="light"] .orbit-mn circle { fill:#000; stroke:#000; stroke-width:1.5; }
-[data-theme="light"] .orbit-tempo-node circle { fill:#0052FF; stroke:#0052FF; }
+[data-theme="light"] .orbit-tempo-node circle { fill:#000; stroke:#000; }
 [data-theme="light"] .orbit-mn:not(.orbit-tempo-node):hover circle { fill:#0052FF; stroke:#0052FF; }
 [data-theme="light"] .orbit-tn circle { stroke:rgba(0,0,0,0.40); fill:rgba(0,0,0,0.03); }
 [data-theme="light"] .orbit-tn text { fill:rgba(0,0,0,0.65); }
@@ -1535,7 +1535,7 @@ result = verifier.verify_action(
         <span class="proj-tag tag-live" data-t="t_live">● Live</span>
         <div class="proj-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
         <div class="proj-name">dof-governance</div>
-        <div class="proj-desc" data-t="p6">Frontend governance on-chain. ethers.js + Node.js. Visualización DOFProofRegistry en 8 chains. Vercel.</div>
+        <div class="proj-desc" data-t="p6">Frontend governance on-chain. ethers.js + Node.js. Visualización DOFProofRegistry en 9 chains. Vercel.</div>
         <div class="proj-footer">
           <div class="proj-techs"><span class="tech-tag">ethers.js</span><span class="tech-tag">Vercel</span></div>
           <a href="https://dof-governance.vercel.app" class="proj-link-btn" target="_blank" rel="noopener noreferrer">Live <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
@@ -1555,10 +1555,10 @@ result = verifier.verify_action(
       </div>
 
       <div class="proj-card reveal delay-2">
-        <span class="proj-tag tag-live" data-t="t_live">● 8 Chains</span>
+        <span class="proj-tag tag-live" data-t="t_live">● 9 Chains</span>
         <div class="proj-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.8" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
         <div class="proj-name">DOFProofRegistry</div>
-        <div class="proj-desc" data-t="p9">Registro de pruebas DOF en 8 chains. Cada ejecución genera hash inmutable. Attestations verificables on-chain.</div>
+        <div class="proj-desc" data-t="p9">Registro de pruebas DOF en 9 chains. Cada ejecución genera hash inmutable. Attestations verificables on-chain.</div>
         <div class="proj-footer">
           <div class="proj-techs"><span class="tech-tag">Solidity</span><span class="tech-tag">Multichain</span></div>
           <a href="https://dof-governance.vercel.app" class="proj-link-btn" target="_blank" rel="noopener noreferrer">Explorer <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
@@ -1906,10 +1906,10 @@ const LANG={
     p3:'Librería TypeScript/Python para integrar governance DOF en cualquier agente. ACP Evaluator incluido.',
     p4:'Agente Python. Arbitraje triangular Bellman-Ford en Avalanche. Whale monitor, new pair detection, señales x402.',
     p5:'Agente Node+Python. Análisis de riesgo DeFi en Avalanche. Registrado como AvaBuilder en ERC-8004.',
-    p6:'Frontend governance on-chain. ethers.js + Node.js. Visualización DOFProofRegistry en 8 chains.',
+    p6:'Frontend governance on-chain. ethers.js + Node.js. Visualización DOFProofRegistry en 9 chains.',
     p7:'Evaluador on-chain de calidad de ejecución de agentes. Scoring ACP verificado en cada run. Integrado con DOFProofRegistry.',
     p8:'Contrato on-chain para identidad de agentes. Avalanche C-Chain mainnet. Registro de metadata y reputación.',
-    p9:'Registro de pruebas DOF en 8 chains. Cada ejecución genera hash inmutable. 30+ attestations verificables on-chain.',
+    p9:'Registro de pruebas DOF en 9 chains. Cada ejecución genera hash inmutable. 30+ attestations verificables on-chain.',
     proof_eyebrow:'Prueba en Vivo',proof_h2:'Una decisión. Una prueba verificable.',proof_sub:'Cada acción es validada con constraints formales antes de ejecutarse.',
     how_eyebrow:'Tres pasos. Sin configuración.',how_h2:'Integra. Verifica. Atestigua.',
     how_s1_h:'Instala el SDK',how_s1_p:'pip install dof-sdk. Una línea. Sin dependencias adicionales.',
@@ -1977,10 +1977,10 @@ const LANG={
     p3:'TypeScript/Python library to integrate DOF governance into any external agent. ACP Evaluator included.',
     p4:'Python agent. Bellman-Ford triangular arbitrage on Avalanche. Whale monitor, new pair detection, x402 signals.',
     p5:'Node+Python agent. DeFi risk analysis on Avalanche. Registered as AvaBuilder on ERC-8004.',
-    p6:'On-chain governance frontend. ethers.js + Node.js. DOFProofRegistry visualization across 8 chains.',
+    p6:'On-chain governance frontend. ethers.js + Node.js. DOFProofRegistry visualization across 9 chains.',
     p7:'On-chain agent execution quality evaluator. ACP scoring verified on every run. Integrated with DOFProofRegistry.',
     p8:'On-chain identity contract for agents. Avalanche C-Chain mainnet. Metadata and reputation registry.',
-    p9:'DOF proof registry on 8 chains. Each execution generates an immutable hash. 30+ attestations publicly verifiable.',
+    p9:'DOF proof registry on 9 chains. Each execution generates an immutable hash. 30+ attestations publicly verifiable.',
     proof_eyebrow:'Live Proof',proof_h2:'One decision. One verifiable proof.',proof_sub:'Every action is validated with formal constraints before execution.',
     how_eyebrow:'Three steps. No configuration.',how_h2:'Integrate. Verify. Attest.',
     how_s1_h:'Install the SDK',how_s1_p:'pip install dof-sdk. One line. No additional dependencies.',
@@ -2251,7 +2251,7 @@ CONOCIMIENTO BASE:
 - DOF-MESH: capa de gobernanza determinista para agentes de IA
 - Usa Z3 Theorem Prover para verificación formal (mismo motor que certifica reactores nucleares y aviación aeroespacial)
 - Pipeline: agente propone acción → DOF intercepta ANTES de ejecutar → Z3 verifica constraints → si pasa: hash keccak256 on-chain → si falla: bloquea
-- 8 chains (3 mainnets + 5 testnets): Avalanche, Base, Celo, Polygon, SKALE, Conflux, Fuji testnet, Base Sepolia
+- 9 chains (4 mainnets + 5 testnets): Avalanche, Base, Celo, Tempo, Polygon, SKALE, Conflux, Fuji testnet, Base Sepolia
 - SDK: pip install dof-sdk
 - 4,157 tests automatizados
 - 238 ciclos autónomos sin incidentes
