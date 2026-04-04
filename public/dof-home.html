@@ -2509,60 +2509,58 @@ document.addEventListener('DOMContentLoaded',function(){
   const label=document.getElementById('chat-label');
   const btn=document.getElementById('dof-chat-bubble');
   let labelTimerRef=null;
-  let hovered=false;
   let chatIsOpen=false;
 
-  function show(text){
-    if(!label)return;
-    label.textContent=text;
-    label.style.opacity='1';
-    label.style.visibility='visible';
-    label.style.transform='translateX(0)';
-  }
-  function hide(){
-    if(!label)return;
+  function stopLabelCycle(){
+    clearTimeout(labelTimerRef);
+    labelTimerRef=null;
+    if(!label) return;
     label.style.opacity='0';
+    label.style.visibility='hidden';
     label.style.transform='translateX(8px)';
   }
 
-  function animateLabel(){
-    if(chatIsOpen) return;
-    clearTimeout(labelTimerRef);
-    if(hovered) return;
-    show(LANG[curLang].chat_label);
+  function startLabelCycle(){
+    stopLabelCycle();
+    if(chatIsOpen||!label) return;
+    label.textContent=LANG[curLang].chat_label;
+    label.style.visibility='visible';
+    label.style.opacity='1';
+    label.style.transform='translateX(0)';
     labelTimerRef=setTimeout(()=>{
-      if(hovered||chatIsOpen) return;
-      hide();
-      labelTimerRef=setTimeout(()=>{ if(!hovered&&!chatIsOpen) animateLabel(); },10000);
+      if(chatIsOpen) return;
+      stopLabelCycle();
+      labelTimerRef=setTimeout(()=>{ if(!chatIsOpen) startLabelCycle(); },10000);
     },2000);
   }
 
   window._dofLabelClear=function(){
     chatIsOpen=true;
-    clearTimeout(labelTimerRef);
-    labelTimerRef=null;
-    if(label){ label.style.opacity='0'; label.style.visibility='hidden'; }
+    stopLabelCycle();
   };
   window._dofLabelResume=function(){
     chatIsOpen=false;
-    if(label) label.style.visibility='';
-    labelTimerRef=setTimeout(()=>{ if(!chatIsOpen) animateLabel(); },2000);
+    labelTimerRef=setTimeout(()=>{ if(!chatIsOpen) startLabelCycle(); },2000);
   };
 
   if(btn){
     btn.addEventListener('mouseenter',()=>{
-      hovered=true;
-      clearTimeout(labelTimerRef);
-      show(LANG[curLang].chat_hover);
+      if(chatIsOpen) return;
+      stopLabelCycle();
+      if(!label) return;
+      label.textContent=LANG[curLang].chat_hover;
+      label.style.visibility='visible';
+      label.style.opacity='1';
+      label.style.transform='translateX(0)';
     });
     btn.addEventListener('mouseleave',()=>{
-      hovered=false;
-      hide();
-      if(!chatIsOpen) labelTimerRef=setTimeout(animateLabel,10000);
+      if(chatIsOpen) return;
+      stopLabelCycle();
+      labelTimerRef=setTimeout(startLabelCycle,10000);
     });
   }
 
-  setTimeout(animateLabel,3000);
+  setTimeout(startLabelCycle,3000);
 });
 
 /* ─── TERMINAL TYPING ANIMATION ─── */
