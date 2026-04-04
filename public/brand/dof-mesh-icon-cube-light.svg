@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40">
+  <title>DOF-MESH Icon Cube — Light</title>
+  <rect x="0" y="0" width="40" height="40" rx="4" fill="#000000"/>
+  <g transform="translate(3.4,3.4) scale(0.33)">
+    <polygon points="8,7 43,47 43,53 8,93 8,72 30,53 30,47 8,28" fill="#FFFFFF"/>
+    <polygon points="92,7 57,47 57,53 92,93 92,72 70,53 70,47 92,28" fill="#FFFFFF"/>
+  </g>
+</svg>

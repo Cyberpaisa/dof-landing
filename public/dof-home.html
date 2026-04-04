@@ -19,7 +19,7 @@
 <meta name="twitter:image" content="https://www.dofmesh.com/brand/dof-mesh-og-1200x630.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/brand/dof-mesh-icon-cube-dark-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/brand/dof-mesh-icon-cube-dark-16x16.png">
-<link rel="apple-touch-icon" sizes="128x128" href="/brand/dof-mesh-icon-cube-dark-128x128.png">
+<link rel="apple-touch-icon" href="/brand/dof-mesh-icon-cube-dark-128x128.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -98,11 +98,10 @@ body.cur-hover #cur { width:4px; height:4px; opacity:.5; }
 body.cur-hover #cur2 { width:36px; height:36px; border-color:rgba(128,128,128,.55); }
 
 /* ─── WORDMARK THEME SWITCHING ─── */
-/* Default: light mode → show light wordmark */
-.logo-dark  { display: none;  }
-.logo-light { display: block; }
-[data-theme="dark"] .logo-dark  { display: block; }
-[data-theme="dark"] .logo-light { display: none;  }
+/* Default (dark): logo-dark visible, logo-light hidden via inline style */
+/* Light mode override needs !important to beat inline display values */
+[data-theme="light"] .logo-dark  { display: none  !important; }
+[data-theme="light"] .logo-light { display: block !important; }
 
 /* ─── NAV ─── */
 nav {
@@ -869,8 +868,8 @@ footer {
   <div class="nav-inner">
     <div class="nav-logo">
       <a href="/" style="display:flex;align-items:center;text-decoration:none;">
-        <img src="/brand/dof-mesh-wordmark-cube-dark.svg"  alt="DOF-MESH" height="28" class="logo-dark"  style="width:auto;" loading="eager">
-        <img src="/brand/dof-mesh-wordmark-cube-light.svg" alt="DOF-MESH" height="28" class="logo-light" style="width:auto;" loading="eager">
+        <img class="logo-dark"  src="/brand/dof-mesh-wordmark-cube-dark.svg"  alt="DOF-MESH" height="28" style="display:block;width:auto;" loading="eager">
+        <img class="logo-light" src="/brand/dof-mesh-wordmark-cube-light.svg" alt="DOF-MESH" height="28" style="display:none;width:auto;"  loading="eager">
       </a>
     </div>
     <div class="nav-links">
@@ -1550,8 +1549,8 @@ result = verifier.verify_action(
       <div>
         <div class="foot-logo">
           <a href="/" style="display:flex;align-items:center;text-decoration:none;">
-            <img src="/brand/dof-mesh-wordmark-cube-dark.svg"  alt="DOF-MESH" height="24" class="logo-dark"  style="width:auto;">
-            <img src="/brand/dof-mesh-wordmark-cube-light.svg" alt="DOF-MESH" height="24" class="logo-light" style="width:auto;">
+            <img class="logo-dark"  src="/brand/dof-mesh-wordmark-cube-dark.svg"  alt="DOF-MESH" height="28" style="display:block;width:auto;">
+            <img class="logo-light" src="/brand/dof-mesh-wordmark-cube-light.svg" alt="DOF-MESH" height="28" style="display:none;width:auto;">
           </a>
         </div>
         <p class="foot-desc" data-t="foot_desc">Deterministic Observability Framework. Infraestructura soberana para agentes autónomos. Enigma Group, Medellín.</p>
