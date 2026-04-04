@@ -344,6 +344,10 @@ nav.scrolled {
 [data-theme="light"] .orbit-mn circle { fill:#000; stroke:#000; stroke-width:1.5; }
 [data-theme="light"] .orbit-tempo-node circle { fill:#000; stroke:#000; }
 [data-theme="light"] .orbit-mn:not(.orbit-tempo-node):hover circle { fill:#0052FF; stroke:#0052FF; }
+.node-tempo circle { transition:fill .35s,stroke .35s; }
+.node-tempo:hover circle { fill:#0052FF !important; stroke:#0052FF !important; filter:drop-shadow(0 0 14px rgba(0,82,255,0.65)); }
+[data-theme="light"] .node-tempo circle { fill:#000000; stroke:#000000; }
+[data-theme="light"] .node-tempo:hover circle { fill:#0052FF !important; stroke:#0052FF !important; filter:drop-shadow(0 0 14px rgba(0,82,255,0.65)); }
 [data-theme="light"] .orbit-tn circle { stroke:rgba(0,0,0,0.40); fill:rgba(0,0,0,0.03); }
 [data-theme="light"] .orbit-tn text { fill:rgba(0,0,0,0.65); }
 [data-theme="light"] .orbit-tn:hover circle { stroke:#0052FF; opacity:1; }
@@ -1252,10 +1256,10 @@ footer {
             <line class="orbit-spoke-tempo" x1="190" y1="260" x2="143" y2="260" stroke="rgba(255,255,255,0.60)" stroke-width="1.4" stroke-dasharray="4 4" style="animation:dashflow2 1.3s linear infinite"/>
             <!-- Testnet spokes -->
             <line class="orbit-spoke-t" x1="260" y1="190" x2="260" y2="77"  stroke="rgba(255,255,255,0.30)" stroke-width="0.9" stroke-dasharray="3 6" style="animation:dashflow 2s linear infinite"/>
-            <line class="orbit-spoke-t" x1="327" y1="239" x2="440" y2="204" stroke="rgba(255,255,255,0.30)" stroke-width="0.9" stroke-dasharray="3 6" style="animation:dashflow 2.2s linear infinite"/>
-            <line class="orbit-spoke-t" x1="302" y1="316" x2="372" y2="412" stroke="rgba(255,255,255,0.30)" stroke-width="0.9" stroke-dasharray="3 6" style="animation:dashflow 1.9s linear infinite"/>
-            <line class="orbit-spoke-t" x1="219" y1="316" x2="148" y2="412" stroke="rgba(255,255,255,0.30)" stroke-width="0.9" stroke-dasharray="3 6" style="animation:dashflow2 2.1s linear infinite"/>
-            <line class="orbit-spoke-t" x1="193" y1="239" x2="80"  y2="204" stroke="rgba(255,255,255,0.30)" stroke-width="0.9" stroke-dasharray="3 6" style="animation:dashflow2 2.4s linear infinite"/>
+            <line class="orbit-spoke-t" x1="321" y1="230" x2="440" y2="208" stroke="rgba(255,255,255,0.30)" stroke-width="0.9" stroke-dasharray="3 6" style="animation:dashflow 2.2s linear infinite"/>
+            <line class="orbit-spoke-t" x1="315" y1="320" x2="372" y2="408" stroke="rgba(255,255,255,0.30)" stroke-width="0.9" stroke-dasharray="3 6" style="animation:dashflow 1.9s linear infinite"/>
+            <line class="orbit-spoke-t" x1="205" y1="320" x2="148" y2="408" stroke="rgba(255,255,255,0.30)" stroke-width="0.9" stroke-dasharray="3 6" style="animation:dashflow2 2.1s linear infinite"/>
+            <line class="orbit-spoke-t" x1="199" y1="230" x2="80"  y2="208" stroke="rgba(255,255,255,0.30)" stroke-width="0.9" stroke-dasharray="3 6" style="animation:dashflow2 2.4s linear infinite"/>
             <!-- Mainnet nodes -->
             <g class="orbit-mn" id="node-avax">
               <circle cx="260" cy="118" r="38" fill="#1a1a1a" stroke="#fff" stroke-width="2"/>
@@ -1269,7 +1273,7 @@ footer {
               <circle cx="260" cy="415" r="38" fill="#1a1a1a" stroke="#fff" stroke-width="2"/>
               <text x="260" y="420" text-anchor="middle" font-size="13" font-weight="600" fill="#fff" style="pointer-events:none">Celo</text>
             </g>
-            <g class="orbit-mn orbit-tempo-node" id="node-tempo">
+            <g class="orbit-mn orbit-tempo-node node-tempo" id="node-tempo">
               <title>Tempo · Chain 4217 · Stripe+Paradigm L1</title>
               <circle cx="105" cy="260" r="38" fill="#1a1a1a" stroke="rgba(255,255,255,0.38)" stroke-width="2"/>
               <text x="105" y="265" text-anchor="middle" font-size="12" font-weight="600" fill="#fff" style="pointer-events:none">Tempo</text>
