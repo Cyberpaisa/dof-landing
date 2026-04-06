@@ -24,6 +24,12 @@ Stack: HTML + CSS + Vanilla JS + Vercel + Upstash Redis
 - `font-size` mínimo `16px` en inputs de móvil (iOS Safari autozoom se activa con <16px)
 - Auto-deploy activo: cada `git push → main` → Vercel → dofmesh.com
 - El chat solo responde sobre DOF-MESH — no es un LLM general
+- **REGLA SYNC:** Cada vez que se modifique `public/dof-home.html`, ejecutar inmediatamente:
+  ```bash
+  bash ~/dof-landing/scripts/sync-landing.sh
+  ```
+  Esto sincroniza `dof-home.html → index.html`, hace commit, push y deploy a producción.
+  `index.html` nunca se edita directamente — es siempre un espejo de `dof-home.html`.
 
 ---
 
