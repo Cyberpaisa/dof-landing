@@ -1,0 +1,11 @@
+.vercel
+.env
+.env.*
+.env*.local
+node_modules/
+package-lock.json
+.DS_Store
+*.log
+
+# OG preview artifacts
+public/og-preview-check.png
