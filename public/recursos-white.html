@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOF-MESH — Ecosistema Activo | Cyber Paisa</title>
+<meta name="description" content="Infraestructura soberana para agentes autónomos. DOF Mesh Legion por Cyber Paisa — Enigma Group, Medellín.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
+<style>
+/* ── LIGHT THEME (default) ── */
+:root, [data-theme="light"] {
+  --bg:      #f5f4f0;
+  --bg2:     #eeece6;
+  --bg3:     #e6e4dc;
+  --surface: #ffffff;
+  --border:  rgba(0,0,0,0.08);
+  --bh:      rgba(108,92,231,0.3);
+  --text:    #0c0b09;
+  --text2:   #56544c;
+  --text3:   #9e9c94;
+  --acc:     #6c5ce7;
+  --acc2:    #7c6ef0;
+  --glow:    rgba(108,92,231,0.12);
+  --green:   #059669;
+  --gg:      rgba(5,150,105,0.08);
+  --cyan:    #0891b2;
+  --cg:      rgba(8,145,178,0.08);
+  --gold:    #d97706;
+  --gdg:     rgba(217,119,6,0.08);
+  --orange:  #ea580c;
+  --pink:    #db2777;
+  --nav-bg:  rgba(245,244,240,0.85);
+  --foot-bg: #0c0b09;
+  --foot-text: #f5f4f0;
+  --r:12px;--rl:20px;--rxl:100px;
+  --grad: linear-gradient(135deg,#6c5ce7,#a29bfe);
+  --shadow: 0 1px 3px rgba(0,0,0,0.04),0 8px 32px rgba(0,0,0,0.06);
+  --shadow-h: 0 4px 12px rgba(0,0,0,0.06),0 20px 60px rgba(0,0,0,0.1);
+}
+/* ── DARK THEME ── */
+[data-theme="dark"] {
+  --bg:      #08080f;
+  --bg2:     #0e0e1b;
+  --bg3:     #131328;
+  --surface: rgba(14,14,27,0.92);
+  --border:  rgba(108,92,231,0.18);
+  --bh:      rgba(108,92,231,0.6);
+  --text:    #f0f0f8;
+  --text2:   #8888aa;
+  --text3:   #44445a;
+  --acc:     #a29bfe;
+  --acc2:    #6c5ce7;
+  --glow:    rgba(108,92,231,0.35);
+  --green:   #00e676;
+  --gg:      rgba(0,230,118,0.1);
+  --cyan:    #18ffff;
+  --cg:      rgba(24,255,255,0.1);
+  --gold:    #fbbf24;
+  --gdg:     rgba(251,191,36,0.1);
+  --orange:  #fb923c;
+  --pink:    #f472b6;
+  --nav-bg:  rgba(8,8,15,0.8);
+  --foot-bg: #0e0e1b;
+  --foot-text: #f0f0f8;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3),0 8px 32px rgba(0,0,0,0.5);
+  --shadow-h: 0 4px 12px rgba(0,0,0,0.4),0 20px 60px rgba(0,0,0,0.7);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);color:var(--text);
+  overflow-x:hidden;cursor:none;
+  transition:background .35s,color .35s;
+}
+h1,h2,h3,.hero-name,.sh-title,.creator-left h2,.ld-word,.ld-count{
+  font-family:'Space Grotesk',sans-serif;
+}
+.hero-name .acc{color:var(--acc);}
+.sh-title em,.creator-left h2 em{font-style:normal;color:var(--acc);}
+/* smooth theme transition */
+*{transition:background-color .25s,border-color .25s,color .15s;}
+a{color:inherit;text-decoration:none;cursor:none;}
+
+/* ─── CURSOR ─── */
+#cur{position:fixed;z-index:9999;pointer-events:none;
+  width:8px;height:8px;border-radius:50%;
+  background:var(--acc);transform:translate(-50%,-50%);}
+#cur2{position:fixed;z-index:9998;pointer-events:none;
+  width:28px;height:28px;border-radius:50%;
+  border:1.5px solid rgba(108,92,231,0.4);
+  transform:translate(-50%,-50%);transition:border-color .2s;}
+
+/* ─── LOADER ─── */
+#loader{
+  position:fixed;inset:0;z-index:10000;
+  background:var(--bg);
+  display:flex;flex-direction:column;
+  justify-content:space-between;
+  padding:2.5rem 3rem;overflow:hidden;
+}
+.ld-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.ld-label,.ld-author{
+  font-family:'JetBrains Mono',monospace;font-size:0.7rem;
+  color:var(--text3);letter-spacing:0.2em;text-transform:uppercase;
+  opacity:0;transform:translateY(-14px);
+}
+.ld-center{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:none;
+}
+.ld-word{
+  font-family:'Instrument Serif',serif;font-style:italic;
+  font-size:clamp(3rem,8vw,6.5rem);
+  color:rgba(12,11,9,0.12);
+  position:absolute;
+}
+.ld-bottom{display:flex;justify-content:space-between;align-items:flex-end;}
+.ld-count{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(4.5rem,12vw,9rem);
+  color:var(--text);line-height:1;
+  font-variant-numeric:tabular-nums;
+}
+.ld-bar-wrap{
+  width:100%;height:1px;background:var(--border);
+  position:absolute;bottom:0;left:0;overflow:hidden;
+}
+.ld-bar{
+  height:100%;background:var(--grad);
+  transform:scaleX(0);transform-origin:left;
+}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;justify-content:center;padding:1.2rem 2rem;
+}
+.nav-pill{
+  display:inline-flex;align-items:center;gap:0;
+  background:var(--nav-bg);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--border);
+  border-radius:var(--rxl);padding:0.35rem 0.35rem;
+  box-shadow:var(--shadow);
+  transition:box-shadow .3s;
+}
+.nav-pill.scrolled{box-shadow:0 4px 24px rgba(0,0,0,0.1);}
+.nav-logo-btn{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;cursor:none;
+  background:var(--text);transition:transform .2s;
+}
+.nav-logo-btn span{
+  font-family:'Instrument Serif',serif;font-style:italic;
+  font-size:0.85rem;color:var(--bg);
+}
+.nav-logo-btn:hover{transform:scale(1.1);}
+.nav-sep{width:1px;height:20px;background:var(--border);margin:0 4px;}
+.nav-link{
+  font-size:0.8rem;padding:0.4rem 1rem;border-radius:var(--rxl);
+  color:var(--text2);transition:all .2s;cursor:none;white-space:nowrap;
+}
+.nav-link:hover,.nav-link.active{color:var(--text);background:rgba(0,0,0,0.05);}
+.nav-hi{
+  font-size:0.8rem;padding:0.4rem 1rem;border-radius:var(--rxl);
+  color:var(--text2);cursor:none;transition:all .2s;
+}
+.nav-hi:hover{color:var(--acc);background:rgba(108,92,231,0.06);}
+
+/* ─── HERO ─── */
+.hero{
+  min-height:100vh;position:relative;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+/* White radial light emanating from center — el "efecto blanco" */
+.hero-bg{
+  position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 100% 80% at 50% 40%, #ffffff 0%, var(--bg) 55%, var(--bg2) 100%);
+}
+/* Grain noise texture */
+.hero-bg::after{
+  content:'';position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity:0.028;pointer-events:none;
+}
+/* Subtle accent halos */
+.hero-halo-l{
+  position:absolute;top:20%;left:-10%;width:55%;aspect-ratio:1;
+  background:radial-gradient(circle,rgba(108,92,231,0.07) 0%,transparent 70%);
+  z-index:0;
+}
+.hero-halo-r{
+  position:absolute;bottom:15%;right:-8%;width:45%;aspect-ratio:1;
+  background:radial-gradient(circle,rgba(8,145,178,0.06) 0%,transparent 70%);
+  z-index:0;
+}
+/* Subtle grid lines */
+.hero-grid{
+  position:absolute;inset:0;z-index:0;
+  background-image:
+    linear-gradient(var(--border) 1px,transparent 1px),
+    linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:80px 80px;
+  mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 0%,transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 0%,transparent 100%);
+}
+.hero-content{
+  position:relative;z-index:2;
+  text-align:center;max-width:900px;padding:0 2rem;
+}
+.hero-eyebrow{
+  font-family:'JetBrains Mono',monospace;font-size:0.7rem;
+  color:var(--text3);letter-spacing:0.22em;text-transform:uppercase;
+  display:block;margin-bottom:2rem;opacity:0;
+}
+.hero-name{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(3.5rem,9vw,8rem);
+  line-height:0.93;letter-spacing:-0.02em;
+  margin-bottom:1.5rem;color:var(--text);
+}
+.hero-name .line{display:block;overflow:hidden;}
+.hero-name .inner{display:block;transform:translateY(110%);}
+.hero-name .acc{color:var(--acc);}
+.hero-role-line{
+  font-size:1.05rem;color:var(--text2);
+  margin-bottom:1.2rem;opacity:0;
+}
+.hero-role-word{
+  font-family:'Instrument Serif',serif;font-style:italic;
+  color:var(--text);display:inline-block;transition:all .3s;
+}
+.hero-sub{
+  font-size:0.92rem;color:var(--text2);
+  max-width:480px;margin:0 auto 3rem;
+  line-height:1.75;opacity:0;
+}
+.hero-btns{
+  display:inline-flex;gap:1rem;opacity:0;flex-wrap:wrap;justify-content:center;
+}
+.btn-solid{
+  font-family:'Inter',sans-serif;font-weight:500;font-size:0.85rem;
+  padding:0.85rem 2.2rem;border-radius:var(--rxl);
+  background:var(--text);color:var(--bg);
+  transition:all .25s;cursor:none;
+  box-shadow:0 2px 16px rgba(0,0,0,0.12);
+}
+.btn-solid:hover{background:var(--acc);color:#fff;box-shadow:0 4px 24px rgba(108,92,231,0.3);}
+.btn-ghost{
+  font-family:'Inter',sans-serif;font-size:0.85rem;
+  padding:0.85rem 2.2rem;border-radius:var(--rxl);
+  border:1.5px solid var(--border);
+  color:var(--text2);background:var(--surface);
+  transition:all .25s;cursor:none;
+}
+.btn-ghost:hover{border-color:var(--acc);color:var(--acc);}
+.scroll-ind{
+  position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  font-family:'JetBrains Mono',monospace;font-size:0.6rem;
+  color:var(--text3);letter-spacing:0.18em;opacity:0;
+}
+.scroll-ind-line{width:1px;height:40px;position:relative;overflow:hidden;background:var(--border);}
+.scroll-ind-line::after{
+  content:'';position:absolute;top:-100%;left:0;right:0;height:100%;
+  background:var(--acc);animation:scroll-run 1.6s ease-in-out infinite;
+}
+@keyframes scroll-run{0%{top:-100%}100%{top:200%}}
+
+/* ─── MARQUEE ─── */
+.marquee-band{
+  overflow:hidden;
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  background:var(--surface);padding:1.1rem 0;
+}
+.marquee-track{display:flex;gap:0;white-space:nowrap;}
+.marquee-track .inner{
+  display:flex;gap:0;
+  animation:marquee 35s linear infinite;
+}
+.mi{
+  display:inline-flex;align-items:center;gap:0.8rem;
+  padding:0 2.5rem;border-right:1px solid var(--border);
+}
+.mi-val{
+  font-family:'Instrument Serif',serif;font-style:italic;
+  font-size:1.4rem;color:var(--text);
+}
+.mi-lbl{
+  font-family:'JetBrains Mono',monospace;font-size:0.6rem;
+  color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;
+}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
+
+/* ─── WRAPPER ─── */
+.wrap{max-width:1280px;margin:0 auto;padding:0 2.5rem;}
+
+/* ─── SECTION HEAD ─── */
+.sec-head{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  margin-bottom:2.5rem;padding-top:5rem;
+}
+.sh-eye{
+  font-family:'JetBrains Mono',monospace;font-size:0.66rem;
+  color:var(--acc);letter-spacing:0.15em;text-transform:uppercase;
+  margin-bottom:0.6rem;
+}
+.sh-title{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(2rem,4vw,3rem);line-height:1.1;color:var(--text);
+}
+.sh-title em{font-style:italic;color:var(--acc);}
+.sh-sub{
+  font-size:0.85rem;color:var(--text2);
+  max-width:380px;margin-top:0.7rem;line-height:1.65;
+}
+.sh-more{
+  font-family:'JetBrains Mono',monospace;font-size:0.73rem;
+  padding:0.55rem 1.3rem;border-radius:var(--rxl);
+  border:1.5px solid var(--border);color:var(--text2);
+  background:var(--surface);
+  transition:all .2s;cursor:none;white-space:nowrap;
+  align-self:flex-end;display:none;
+}
+@media(min-width:768px){.sh-more{display:inline-flex;align-items:center;gap:0.4rem;}}
+.sh-more:hover{border-color:var(--acc);color:var(--acc);}
+
+/* ─── FILTER BAR ─── */
+.filter-bar{display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:2rem;}
+.fb{
+  font-family:'JetBrains Mono',monospace;font-size:0.65rem;
+  padding:0.35rem 0.9rem;border-radius:var(--rxl);
+  border:1.5px solid var(--border);background:var(--surface);
+  color:var(--text2);cursor:none;
+  transition:all .2s;text-transform:uppercase;letter-spacing:0.06em;
+}
+.fb:hover,.fb.on{
+  background:var(--acc);border-color:var(--acc);color:#fff;
+}
+
+/* ─── UNIFORM 3-COL CARD GRID ─── */
+.cards-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:1.25rem;
+  margin-bottom:4rem;
+}
+@media(min-width:640px){
+  .cards-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(min-width:1024px){
+  .cards-grid{grid-template-columns:repeat(3,1fr);}
+}
+
+/* ─── FEATURED CARD — spans full row ─── */
+.card-featured{
+  grid-column:1/-1;
+}
+@media(min-width:1024px){
+  .card-featured{grid-column:span 3;}
+}
+
+/* ─── PROJECT CARD ─── */
+.pc{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--rl);
+  padding:1.75rem;
+  position:relative;overflow:hidden;
+  transition:border-color .3s,box-shadow .3s,transform .3s;
+  transform-style:preserve-3d;
+  cursor:none;
+  will-change:transform;
+  display:flex;flex-direction:column;
+  box-shadow:var(--shadow);
+  height:100%;
+}
+/* Top accent line per category */
+.pc[data-cat="core"]::before      {content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--acc),transparent);}
+.pc[data-cat="finance"]::before   {content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),transparent);}
+.pc[data-cat="identity"]::before  {content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent);}
+.pc[data-cat="agents"]::before    {content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),transparent);}
+.pc[data-cat="frontend"]::before  {content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--pink),transparent);}
+.pc[data-cat="contracts"]::before {content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--orange),transparent);}
+.pc[data-cat="lab"]::before       {content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--acc2),transparent);}
+/* Hover spotlight */
+.pc-glow{
+  position:absolute;inset:0;opacity:0;pointer-events:none;
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(108,92,231,0.06),transparent 60%);
+  transition:opacity .3s;border-radius:var(--rl);
+}
+.pc:hover{
+  border-color:rgba(108,92,231,0.2);
+  box-shadow:var(--shadow-h);
+  transform:translateY(-2px);
+}
+.pc:hover .pc-glow{opacity:1;}
+.pc.priv{background:var(--bg2);}
+.pc.priv:hover{box-shadow:var(--shadow);transform:none;border-color:var(--border);}
+
+.pc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.1rem;}
+.pc-icon{
+  width:2rem;height:2rem;color:var(--acc);flex-shrink:0;
+}
+.pc-icon svg{width:100%;height:100%;display:block;}
+.pc-status{
+  display:flex;align-items:center;gap:0.35rem;
+  font-family:'JetBrains Mono',monospace;font-size:0.6rem;
+  text-transform:uppercase;letter-spacing:0.08em;
+}
+.sd{width:5px;height:5px;border-radius:50%;}
+.sd.live{background:var(--green);animation:pulseA 2s infinite;}
+.sd.dev{background:var(--orange);}
+.sd.priv{background:var(--text3);}
+.slive{color:var(--green);}.sdev{color:var(--orange);}.spriv{color:var(--text3);}
+
+.pc-title{
+  font-family:'Instrument Serif',serif;
+  font-size:1.15rem;font-weight:400;
+  margin-bottom:0.5rem;letter-spacing:-0.01em;color:var(--text);
+}
+.pc-desc{
+  font-size:0.82rem;color:var(--text2);
+  line-height:1.65;margin-bottom:1rem;flex:1;
+}
+.pc-cmd{
+  font-family:'JetBrains Mono',monospace;font-size:0.68rem;
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:6px;padding:0.45rem 0.75rem;
+  color:var(--green);margin-bottom:1rem;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.pc-tags{display:flex;gap:0.3rem;flex-wrap:wrap;margin-bottom:1.1rem;}
+.tag{
+  font-family:'JetBrains Mono',monospace;font-size:0.58rem;
+  padding:0.18rem 0.5rem;border-radius:4px;
+  text-transform:uppercase;letter-spacing:0.05em;
+  background:rgba(108,92,231,0.07);
+  border:1px solid rgba(108,92,231,0.15);color:var(--acc);
+}
+.tag.g{background:var(--gg);border-color:rgba(5,150,105,0.2);color:var(--green);}
+.tag.c{background:var(--cg);border-color:rgba(8,145,178,0.2);color:var(--cyan);}
+.tag.go{background:var(--gdg);border-color:rgba(217,119,6,0.2);color:var(--gold);}
+.tag.o{background:rgba(234,88,12,0.07);border-color:rgba(234,88,12,0.18);color:var(--orange);}
+.tag.p{background:rgba(219,39,119,0.07);border-color:rgba(219,39,119,0.18);color:var(--pink);}
+
+.pc-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:1rem;border-top:1px solid var(--border);margin-top:auto;
+}
+.pc-meta{display:flex;gap:1.2rem;}
+.pm .val{font-family:'Instrument Serif',serif;font-size:1rem;line-height:1;color:var(--text);}
+.pm .lbl{font-family:'JetBrains Mono',monospace;font-size:0.56rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;}
+.pc-link{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  font-family:'JetBrains Mono',monospace;font-size:0.68rem;
+  padding:0.4rem 1rem;border-radius:var(--rxl);
+  border:1.5px solid var(--border);color:var(--text2);
+  background:var(--bg);cursor:none;transition:all .2s;
+}
+.pc-link:hover{border-color:var(--acc);color:var(--acc);background:rgba(108,92,231,0.05);}
+.pc-priv-badge{
+  font-family:'JetBrains Mono',monospace;font-size:0.6rem;
+  padding:0.28rem 0.7rem;border-radius:var(--rxl);
+  border:1px solid var(--border);color:var(--text3);background:var(--bg2);
+}
+
+/* ─── FEATURED CARD INNER ─── */
+.featured-inner{
+  display:grid;grid-template-columns:1fr;gap:2rem;
+}
+@media(min-width:768px){
+  .featured-inner{grid-template-columns:1.2fr 1fr;}
+}
+.featured-metrics{
+  display:flex;justify-content:space-between;
+  padding:0.9rem 1.2rem;
+  background:var(--bg);border-radius:10px;
+  border:1px solid var(--border);
+  margin-bottom:1rem;
+}
+
+/* ─── STATS BAND ─── */
+.stats-band{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);border-radius:var(--rl);
+  overflow:hidden;margin-bottom:6rem;
+  box-shadow:var(--shadow);
+}
+@media(min-width:640px){.stats-band{grid-template-columns:repeat(3,1fr);}}
+@media(min-width:1024px){.stats-band{grid-template-columns:repeat(6,1fr);}}
+.sc{
+  background:var(--surface);padding:2rem 1.5rem;text-align:center;
+}
+.sc .big{
+  font-family:'Instrument Serif',serif;
+  font-size:2.4rem;line-height:1;margin-bottom:0.4rem;
+}
+.sc .big.g{color:var(--green);}
+.sc .big.c{color:var(--cyan);}
+.sc .big.a{color:var(--acc);}
+.sc .big.go{color:var(--gold);}
+.sc .lbl{
+  font-family:'JetBrains Mono',monospace;font-size:0.6rem;
+  color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;
+}
+
+/* ─── CREATOR ─── */
+.creator-section{padding:5rem 0 6rem;border-top:1px solid var(--border);}
+.creator-inner{display:grid;grid-template-columns:1fr;gap:3rem;align-items:start;}
+@media(min-width:768px){.creator-inner{grid-template-columns:1fr 1fr;}}
+.creator-left .eyebrow{
+  font-family:'JetBrains Mono',monospace;font-size:0.66rem;
+  color:var(--acc);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1rem;
+}
+.creator-left h2{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(2.2rem,4vw,3.2rem);line-height:1.05;
+  margin-bottom:1rem;color:var(--text);
+}
+.creator-left h2 em{font-style:italic;color:var(--acc);}
+.creator-left p{
+  font-size:0.9rem;color:var(--text2);
+  line-height:1.75;margin-bottom:2rem;max-width:440px;
+}
+.creator-socials{display:flex;gap:0.8rem;flex-wrap:wrap;}
+.soc-btn{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  font-family:'JetBrains Mono',monospace;font-size:0.7rem;
+  padding:0.55rem 1.2rem;border-radius:var(--rxl);
+  border:1.5px solid var(--border);color:var(--text2);
+  background:var(--surface);cursor:none;
+  transition:all .25s;box-shadow:var(--shadow);
+}
+.soc-btn:hover{border-color:var(--acc);color:var(--acc);}
+.soc-btn svg{width:13px;height:13px;fill:currentColor;flex-shrink:0;}
+
+.creator-right{display:flex;flex-direction:column;gap:0.75rem;}
+.creator-stat{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 1.5rem;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);box-shadow:var(--shadow);
+}
+.creator-stat .cs-label{
+  font-family:'JetBrains Mono',monospace;font-size:0.65rem;
+  color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;
+}
+.creator-stat .cs-val{
+  font-family:'Instrument Serif',serif;font-size:1.2rem;color:var(--text);
+}
+.creator-stat .cs-val.g{color:var(--green);}
+
+/* ─── FOOTER ─── */
+footer{
+  background:var(--foot-bg);color:var(--foot-text);
+  padding:4rem 0 2.5rem;
+}
+.foot-inner{position:relative;z-index:2;}
+.foot-marquee{overflow:hidden;margin-bottom:3.5rem;}
+.foot-marquee-track{display:flex;gap:0;white-space:nowrap;}
+.fmt{display:inline-flex;animation:marquee2 55s linear infinite;}
+.fmt-item{
+  font-family:'Instrument Serif',serif;font-style:italic;
+  font-size:clamp(2rem,4vw,3.5rem);
+  color:rgba(162,155,254,0.07);padding:0 1.5rem;
+}
+@keyframes marquee2{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
+.foot-bottom{display:flex;flex-direction:column;align-items:center;gap:2rem;text-align:center;}
+.foot-cta{
+  font-family:'Instrument Serif',serif;font-style:italic;
+  font-size:clamp(1.8rem,3.5vw,2.6rem);
+  color:rgba(255,255,255,0.45);line-height:1.2;
+}
+.foot-cta em{color:var(--foot-text);}
+.foot-links{display:flex;align-items:center;gap:2rem;flex-wrap:wrap;justify-content:center;}
+.foot-soc{display:flex;gap:1.5rem;}
+.foot-soc a{
+  font-family:'JetBrains Mono',monospace;font-size:0.7rem;
+  color:rgba(255,255,255,0.35);transition:color .2s;cursor:none;
+}
+.foot-soc a:hover{color:var(--foot-text);}
+.foot-avail{
+  display:flex;align-items:center;gap:0.5rem;
+  font-family:'JetBrains Mono',monospace;font-size:0.68rem;
+  color:rgba(255,255,255,0.35);
+}
+.foot-avail-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--green);box-shadow:0 0 6px var(--green);
+  animation:pulseA 2s infinite;
+}
+.foot-copy{
+  font-family:'JetBrains Mono',monospace;font-size:0.63rem;
+  color:rgba(255,255,255,0.22);
+}
+.foot-copy span{color:rgba(255,255,255,0.55);}
+
+/* ─── ANIMATIONS ─── */
+@keyframes pulseA{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:640px){
+  .wrap{padding:0 1.2rem;}
+  .sec-head{flex-direction:column;gap:1rem;}
+  .hero-btns{flex-direction:column;width:100%;align-items:center;}
+  .btn-solid,.btn-ghost{width:280px;text-align:center;}
+  #cur,#cur2{display:none;}body{cursor:auto;}a{cursor:auto;}
+  .fb,.pc,.soc-btn{cursor:pointer;}
+  .nav-sep{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur2"></div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="ld-top">
+    <div class="ld-label" id="ld-l">Ecosistema DOF</div>
+    <div class="ld-author" id="ld-a">by Cyber Paisa</div>
+  </div>
+  <div class="ld-center">
+    <div class="ld-word" id="ld-word">Construyendo</div>
+  </div>
+  <div class="ld-bottom">
+    <div style="width:1px;"></div>
+    <div class="ld-count" id="ld-count">000</div>
+  </div>
+  <div class="ld-bar-wrap"><div class="ld-bar" id="ld-bar"></div></div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-pill" id="navpill">
+    <a href="/" class="nav-logo-btn"><span>CP</span></a>
+    <div class="nav-sep"></div>
+    <a href="/" class="nav-link">Home</a>
+    <a href="#proyectos" class="nav-link">Proyectos</a>
+    <a href="#creator" class="nav-link">Creador</a>
+    <div class="nav-sep"></div>
+    <a href="https://twitter.com/Cyber_paisa" target="_blank" class="nav-hi">Contacto ↗</a>
+    <div class="nav-sep"></div>
+    <button id="lang-btn" class="fb" style="border:none;cursor:none;font-size:0.7rem;padding:0.35rem 0.8rem;">EN</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-bg"></div>
+  <div class="hero-halo-l"></div>
+  <div class="hero-halo-r"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <span class="hero-eyebrow" id="hey">DOF Mesh Legion — Ecosistema 2026</span>
+    <h1 class="hero-name" id="htitle">
+      <span class="line"><span class="inner">Infraestructura</span></span>
+      <span class="line"><span class="inner acc">Soberana</span></span>
+    </h1>
+    <div class="hero-role-line" id="hrole">
+      Un sistema <span class="hero-role-word" id="hword">Gobernado</span> por matemáticas.
+    </div>
+    <p class="hero-sub" id="hsub">
+      Las reglas que mantienen a los agentes de IA honestos — cada decisión registrada y verificable por cualquiera. Construido por <strong>Cyber Paisa</strong> — Enigma Group, Medellín.
+    </p>
+    <div class="hero-btns" id="hbtns">
+      <a href="#proyectos" class="btn-solid">Ver Proyectos</a>
+      <a href="https://github.com/Cyberpaisa/DOF-MESH" target="_blank" class="btn-ghost">GitHub ↗</a>
+    </div>
+  </div>
+  <div class="scroll-ind" id="scind">
+    <span>SCROLL</span>
+    <div class="scroll-ind-line"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-band">
+  <div class="marquee-track">
+    <div class="inner" id="mtrack"></div>
+    <div class="inner" id="mtrack2"></div>
+  </div>
+</div>
+
+<!-- PROYECTOS -->
+<section id="proyectos">
+<div class="wrap">
+
+  <div class="sec-head" id="sh1">
+    <div class="sh-left">
+      <div class="sh-eye">// Repositorios, agentes, contratos, UIs</div>
+      <h2 class="sh-title">Proyectos <em>Activos</em></h2>
+      <p class="sh-sub">Cada proyecto con enlace directo a su versión pública — GitHub, live URL, on-chain o PyPI.</p>
+    </div>
+    <a href="https://github.com/Cyberpaisa" target="_blank" class="sh-more">Ver GitHub ↗</a>
+  </div>
+
+  <div class="filter-bar" id="fbar">
+    <button class="fb on" data-f="all">Todos</button>
+    <button class="fb" data-f="core">Core</button>
+    <button class="fb" data-f="finance">Finanzas</button>
+    <button class="fb" data-f="identity">Identidad</button>
+    <button class="fb" data-f="agents">Agentes</button>
+    <button class="fb" data-f="frontend">Frontend</button>
+    <button class="fb" data-f="contracts">Contratos</button>
+    <button class="fb" data-f="lab">Lab</button>
+  </div>
+
+  <div class="cards-grid" id="pgrid">
+
+    <!-- DOF-MESH featured -->
+    <div class="card-featured" data-cat="core" data-wrap>
+    <div class="pc" data-cat="core">
+      <div class="pc-glow"></div>
+      <div class="pc-top">
+        <span class="pc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5"/><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="8.5" x2="22" y2="8.5"/><line x1="2" y1="15.5" x2="22" y2="15.5"/></svg></span>
+        <div class="pc-status"><span class="sd live"></span><span class="slive">GITHUB PÚBLICO</span></div>
+      </div>
+      <div class="featured-inner">
+        <div>
+          <h3 class="pc-title">DOF-MESH</h3>
+          <p class="pc-desc">Deterministic Observability Framework. El núcleo del ecosistema. Governance 7 capas: Constitution → AST → Supervisor → Adversarial → Memory → Z3 → Oracle. Verificación matemática del comportamiento de agentes autónomos sin LLMs en el path crítico.</p>
+          <div class="pc-cmd">pip install dof-sdk  # v0.5.0 en PyPI</div>
+          <div class="pc-tags">
+            <span class="tag">Python</span><span class="tag">CrewAI</span>
+            <span class="tag g">Avalanche</span><span class="tag g">Base</span>
+            <span class="tag">Z3</span><span class="tag">Docker</span>
+          </div>
+        </div>
+        <div>
+          <div class="featured-metrics">
+            <div class="pm"><div class="val">142</div><div class="lbl">Módulos</div></div>
+            <div class="pm"><div class="val">4,229</div><div class="lbl">Tests ✓</div></div>
+            <div class="pm"><div class="val">57K+</div><div class="lbl">LOC</div></div>
+          </div>
+          <div style="display:flex;gap:0.7rem;">
+            <a href="https://github.com/Cyberpaisa/DOF-MESH" target="_blank" class="pc-link" style="flex:1;justify-content:center;">GitHub →</a>
+            <a href="https://pypi.org/project/dof-sdk/" target="_blank" class="pc-link" style="flex:1;justify-content:center;">PyPI →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <!-- equipo-de-agentes -->
+    <div data-cat="core" data-wrap>
+    <div class="pc priv" data-cat="core">
+      <div class="pc-top">
+        <span class="pc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></span>
+        <div class="pc-status"><span class="sd priv"></span><span class="spriv">PRIVADO</span></div>
+      </div>
+      <h3 class="pc-title">equipo-de-agentes</h3>
+      <p class="pc-desc">DOF Mesh Legion. 9 agentes CrewAI con SOUL.md, A2A Server JSON-RPC, Docker Citadel, 15 tools MCP. 11 crews activos.</p>
+      <div class="pc-tags"><span class="tag">Python</span><span class="tag">CrewAI</span><span class="tag c">Docker</span><span class="tag">A2A</span></div>
+      <div class="pc-foot">
+        <div class="pc-meta">
+          <div class="pm"><div class="val">9</div><div class="lbl">agentes</div></div>
+          <div class="pm"><div class="val">11</div><div class="lbl">crews</div></div>
+        </div>
+        <span class="pc-priv-badge">Repo Privado</span>
+      </div>
+    </div>
+    </div>
+
+    <!-- dof-sdk -->
+    <div data-cat="core" data-wrap>
+    <div class="pc" data-cat="core">
+      <div class="pc-glow"></div>
+      <div class="pc-top">
+        <span class="pc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
+        <div class="pc-status"><span class="sd live"></span><span class="slive">PYPI PÚBLICO</span></div>
+      </div>
+      <h3 class="pc-title">dof-sdk</h3>
+      <p class="pc-desc">SDK publicado en PyPI. API pública para integrar DOF governance en cualquier agente. Constitution, AST verifier, Z3 gate incluidos.</p>
+      <div class="pc-cmd">pip install dof-sdk==0.5.0</div>
+      <div class="pc-tags"><span class="tag">Python</span><span class="tag g">PyPI</span><span class="tag">v0.5.0</span></div>
+      <div class="pc-foot">
+        <div class="pc-meta"><div class="pm"><div class="val">0.5.0</div><div class="lbl">versión</div></div></div>
+        <a href="https://pypi.org/project/dof-sdk/" target="_blank" class="pc-link">PyPI ↗</a>
+      </div>
+    </div>
+    </div>
+
+    <!-- Apex Arbitrage Agent -->
+    <div data-cat="finance" data-wrap>
+    <div class="pc" data-cat="finance">
+      <div class="pc-glow"></div>
+      <div class="pc-top">
+        <span class="pc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>
+        <div class="pc-status"><span class="sd live"></span><span class="slive">RAILWAY LIVE</span></div>
+      </div>
+      <h3 class="pc-title">Apex Arbitrage Agent</h3>
+      <p class="pc-desc">Agent #1687. Arbitraje triangular Bellman-Ford en tiempo real sobre Avalanche. x402 paywalled signals, whale monitor.</p>
+      <div class="pc-cmd">GET /api/health → {"status":"ok"}</div>
+      <div class="pc-tags"><span class="tag">Python</span><span class="tag">FastAPI</span><span class="tag g">Avalanche</span><span class="tag">ERC-8004</span></div>
+      <div class="pc-foot">
+        <div class="pc-meta"><div class="pm"><div class="val">#1687</div><div class="lbl">Agent ID</div></div></div>
+        <a href="https://apex-arbitrage-agent-production.up.railway.app" target="_blank" class="pc-link">API ↗</a>
+      </div>
+    </div>
+    </div>
+
+    <!-- AvaRiskScan DeFi -->
+    <div data-cat="identity" data-wrap>
+    <div class="pc" data-cat="identity">
+      <div class="pc-glow"></div>
+      <div class="pc-top">
+        <span class="pc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 22 20 2 20"/><line x1="7" y1="14" x2="17" y2="14"/></svg></span>
+        <div class="pc-status"><span class="sd live"></span><span class="slive">RAILWAY LIVE</span></div>
+      </div>
+      <h3 class="pc-title">AvaRiskScan DeFi</h3>
+      <p class="pc-desc">AvaBuilder Agent #1686. Scanner de riesgo DeFi en Avalanche. Node.js + Python hybrid. Análisis on-chain en tiempo real.</p>
+      <div class="pc-cmd">GET /api/health → {"agent":"AvaBuilder","id":1686}</div>
+      <div class="pc-tags"><span class="tag">Node.js</span><span class="tag">Python</span><span class="tag g">Avalanche</span><span class="tag">ERC-8004</span></div>
+      <div class="pc-foot">
+        <div class="pc-meta"><div class="pm"><div class="val">#1686</div><div class="lbl">Agent ID</div></div></div>
+        <a href="https://avariskscan-defi-production.up.railway.app" target="_blank" class="pc-link">API ↗</a>
+      </div>
+    </div>
+    </div>
+
+    <!-- dof-landing -->
+    <div data-cat="frontend" data-wrap>
+    <div class="pc" data-cat="frontend">
+      <div class="pc-glow"></div>
+      <div class="pc-top">
+        <span class="pc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></span>
+        <div class="pc-status"><span class="sd live"></span><span class="slive">VERCEL</span></div>
+      </div>
+      <h3 class="pc-title">dof-landing</h3>
+      <p class="pc-desc">Landing principal del ecosistema. HTML + GSAP cinematográfico. Recursos activos, governance visual, efectos premium.</p>
+      <div class="pc-tags"><span class="tag p">HTML</span><span class="tag">GSAP</span><span class="tag go">Vercel</span></div>
+      <div class="pc-foot">
+        <div class="pc-meta"><div class="pm"><div class="val">Live</div><div class="lbl">Deploy</div></div></div>
+        <a href="https://dof-landing.vercel.app" target="_blank" class="pc-link">Visitar ↗</a>
+      </div>
+    </div>
+    </div>
+
+    <!-- dof-governance -->
+    <div data-cat="frontend" data-wrap>
+    <div class="pc" data-cat="frontend">
+      <div class="pc-glow"></div>
+      <div class="pc-top">
+        <span class="pc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></span>
+        <div class="pc-status"><span class="sd live"></span><span class="slive">VERCEL</span></div>
+      </div>
+      <h3 class="pc-title">dof-governance</h3>
+      <p class="pc-desc">Frontend governance DOF. ethers.js + Node.js. ACP Evaluator live, métricas on-chain, attestations visualizadas.</p>
+      <div class="pc-tags"><span class="tag">ethers.js</span><span class="tag go">Vercel</span><span class="tag g">Base</span></div>
+      <div class="pc-foot">
+        <div class="pc-meta"><div class="pm"><div class="val">ACP</div><div class="lbl">Evaluator</div></div></div>
+        <a href="https://dof-governance.vercel.app" target="_blank" class="pc-link">Visitar ↗</a>
+      </div>
+    </div>
+    </div>
+
+    <!-- ERC-8004 Identity Registry -->
+    <div data-cat="contracts" data-wrap>
+    <div class="pc" data-cat="contracts">
+      <div class="pc-glow"></div>
+      <div class="pc-top">
+        <span class="pc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+        <div class="pc-status"><span class="sd live"></span><span class="slive">AVALANCHE MAINNET</span></div>
+      </div>
+      <h3 class="pc-title">ERC-8004 Identity Registry</h3>
+      <p class="pc-desc">Registro de identidad para agentes IA. Standard ERC-8004 en Avalanche C-Chain mainnet.</p>
+      <div class="pc-cmd">0x8004A169FB4a3325136EB29fA0ceB6D2e539a432</div>
+      <div class="pc-tags"><span class="tag g">Avalanche</span><span class="tag">Solidity</span><span class="tag go">Mainnet</span></div>
+      <div class="pc-foot">
+        <div class="pc-meta"><div class="pm"><div class="val">ERC-8004</div><div class="lbl">Standard</div></div></div>
+        <a href="https://snowtrace.io/address/0x8004A169FB4a3325136EB29fA0ceB6D2e539a432" target="_blank" class="pc-link">Snowtrace ↗</a>
+      </div>
+    </div>
+    </div>
+
+    <!-- DOFProofRegistry + Reputation -->
+    <div data-cat="contracts" data-wrap>
+    <div class="pc" data-cat="contracts">
+      <div class="pc-glow"></div>
+      <div class="pc-top">
+        <span class="pc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+        <div class="pc-status"><span class="sd live"></span><span class="slive">5 CHAINS</span></div>
+      </div>
+      <h3 class="pc-title">DOFProofRegistry + Reputation</h3>
+      <p class="pc-desc">Registro de pruebas DOF en 5 chains. 21 attestations on-chain. Reputation Registry para scores verificables de agentes.</p>
+      <div class="pc-cmd">0x8004B663056A597Dffe9eCcC1965A193B7388713</div>
+      <div class="pc-tags"><span class="tag g">Avalanche</span><span class="tag g">Base</span><span class="tag g">SKALE</span><span class="tag">Solidity</span></div>
+      <div class="pc-foot">
+        <div class="pc-meta">
+          <div class="pm"><div class="val">21</div><div class="lbl">Attest.</div></div>
+          <div class="pm"><div class="val">5</div><div class="lbl">Chains</div></div>
+        </div>
+        <a href="https://snowtrace.io/address/0x8004B663056A597Dffe9eCcC1965A193B7388713" target="_blank" class="pc-link">Snowtrace ↗</a>
+      </div>
+    </div>
+    </div>
+
+
+
+  </div><!-- /cards-grid -->
+
+  <!-- STATS BAND -->
+  <div class="stats-band" id="statsband">
+    <div class="sc"><div class="big g" data-count="57000">0</div><div class="lbl">Líneas de Código</div></div>
+    <div class="sc"><div class="big c" data-count="142">0</div><div class="lbl">Módulos Core</div></div>
+    <div class="sc"><div class="big a" data-count="170">0</div><div class="lbl">Test Files</div></div>
+    <div class="sc"><div class="big go" data-count="7">0</div><div class="lbl">Capas Governance</div></div>
+    <div class="sc"><div class="big g" data-count="11">0</div><div class="lbl">Crews CrewAI</div></div>
+    <div class="sc"><div class="big c" data-count="5">0</div><div class="lbl">Chains Live</div></div>
+  </div>
+
+</div>
+</section>
+
+<!-- CREATOR -->
+<section id="creator">
+<div class="wrap">
+  <div class="creator-section">
+    <div class="creator-inner" id="creat">
+      <div class="creator-left">
+        <div class="eyebrow">// Creador del ecosistema</div>
+        <h2>Cyber <em>Paisa</em></h2>
+        <p style="max-width:460px;text-wrap:balance;">Construyendo infraestructura de confianza verificable para agentes autónomos desde Medellín. Enigma Group — ERC-8004 Agent #1687 &amp; #1686 en producción. DOF-MESH publicado en PyPI. Dos mainnets activas.</p>
+        <div class="creator-socials">
+          <a href="https://twitter.com/Cyber_paisa" target="_blank" class="soc-btn">
+            <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.741l7.73-8.835L1.254 2.25H8.08l4.259 5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            @Cyber_paisa
+          </a>
+          <a href="https://github.com/Cyberpaisa" target="_blank" class="soc-btn">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+            github.com/Cyberpaisa
+          </a>
+          <a href="https://dof-governance.vercel.app" target="_blank" class="soc-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            DOF Governance
+          </a>
+        </div>
+      </div>
+      <div class="creator-right">
+        <div class="creator-stat">
+          <span class="cs-label">Ubicación</span>
+          <span class="cs-val">Medellín, Colombia</span>
+        </div>
+        <div class="creator-stat">
+          <span class="cs-label">Organización</span>
+          <span class="cs-val">Enigma Group</span>
+        </div>
+        <div class="creator-stat">
+          <span class="cs-label">Estado</span>
+          <span class="cs-val g">● Construyendo activamente</span>
+        </div>
+        <div class="creator-stat">
+          <span class="cs-label">Mainnets activas</span>
+          <span class="cs-val">Avalanche C-Chain + Base</span>
+        </div>
+        <div class="creator-stat">
+          <span class="cs-label">Año</span>
+          <span class="cs-val">2026</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-inner">
+    <div class="foot-marquee">
+      <div class="foot-marquee-track">
+        <div class="fmt" id="fmt1"></div>
+        <div class="fmt" id="fmt2"></div>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="foot-bottom">
+        <div class="foot-cta">
+          Construyendo el futuro<br><em>de los agentes autónomos.</em>
+        </div>
+        <div class="foot-links">
+          <div class="foot-soc">
+            <a href="https://twitter.com/Cyber_paisa" target="_blank">Twitter / X</a>
+            <a href="https://github.com/Cyberpaisa" target="_blank">GitHub</a>
+            <a href="https://dof-governance.vercel.app" target="_blank">DOF Governance</a>
+            <a href="https://github.com/UltravioletaDAO" target="_blank">Ultravioleta DAO</a>
+          </div>
+          <div class="foot-avail">
+            <div class="foot-avail-dot"></div>
+            Proyectos activos — 2026
+          </div>
+        </div>
+        <div class="foot-copy">
+          © 2026 <span>Cyber Paisa</span> — Enigma Group — DOF Mesh Legion
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+try { gsap.registerPlugin(ScrollTrigger); } catch(e){}
+
+/* ── CURSOR ── */
+const cur = document.getElementById('cur');
+const cur2 = document.getElementById('cur2');
+let cx=0,cy=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{cx=e.clientX;cy=e.clientY;});
+(function animC(){
+  rx+=(cx-rx)*.12;ry+=(cy-ry)*.12;
+  cur.style.left=cx+'px';cur.style.top=cy+'px';
+  cur2.style.left=rx+'px';cur2.style.top=ry+'px';
+  requestAnimationFrame(animC);
+})();
+document.querySelectorAll('a,button,.pc').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{gsap.to(cur,{width:14,height:14,duration:.2});gsap.to(cur2,{width:44,height:44,duration:.3});});
+  el.addEventListener('mouseleave',()=>{gsap.to(cur,{width:8,height:8,duration:.2});gsap.to(cur2,{width:28,height:28,duration:.3});});
+});
+
+/* ── LOADER ── */
+const words=['Construyendo','Soberanía','Governance','Verificando','Desplegando'];
+let wi=0,count=0;
+const wEl=document.getElementById('ld-word');
+const cEl=document.getElementById('ld-count');
+const bar=document.getElementById('ld-bar');
+gsap.to(['#ld-l','#ld-a'],{opacity:1,y:0,stagger:.15,duration:.5,delay:.1});
+const wordTimer=setInterval(()=>{
+  wi=(wi+1)%words.length;
+  gsap.to(wEl,{opacity:0,y:-14,duration:.22,onComplete:()=>{
+    wEl.textContent=words[wi];gsap.to(wEl,{opacity:1,y:0,duration:.28});
+  }});
+},700);
+const start=performance.now();
+const DURATION=2600;
+function tick(now){
+  const p=Math.min((now-start)/DURATION,1);
+  const ease=p<.5?2*p*p:-1+(4-2*p)*p;
+  count=Math.round(ease*100);
+  cEl.textContent=String(count).padStart(3,'0');
+  gsap.set(bar,{scaleX:ease});
+  if(p<1) requestAnimationFrame(tick);
+  else{clearInterval(wordTimer);setTimeout(exitLoader,300);}
+}
+requestAnimationFrame(tick);
+function exitLoader(){
+  gsap.to('#loader',{opacity:0,duration:.7,ease:'power2.inOut',
+    onComplete:()=>{document.getElementById('loader').style.display='none';playHero();}
+  });
+}
+
+/* ── MARQUEE ── */
+const mItems=[
+  ['4,229','Tests Passing'],['57K+','LOC'],['142','Módulos'],
+  ['21','Attestations'],['7','Capas DOF'],['170','Test Files'],
+  ['4','Teoremas Z3'],['2','Mainnets'],['7µs','Rust Gate'],
+  ['5','Chains Live'],['9','Agentes AI'],['57K+','Lines of Code'],
+];
+[document.getElementById('mtrack'),document.getElementById('mtrack2')].forEach(t=>{
+  t.innerHTML=mItems.map(([v,l])=>`<div class="mi"><div class="mi-val">${v}</div><div class="mi-lbl">${l}</div></div>`).join('');
+});
+const fmText='AVALANCHE C-CHAIN  •  BASE MAINNET  •  CELO  •  POLYGON  •  SKALE EUROPA  •  CONFLUX  •  FUJI TESTNET  •  GOVERNANCE SOBERANA  •  Z3 VERIFIED  •  ON-CHAIN ATTESTATIONS  •  DOF-MESH  •  ERC-8004  •  ';
+[document.getElementById('fmt1'),document.getElementById('fmt2')].forEach(t=>{
+  t.innerHTML=Array(4).fill(`<span class="fmt-item">${fmText}</span>`).join('');
+});
+
+/* ── HERO ── */
+const ROLES=['Gobernado','Verificado','Autónomo','Soberano','On-chain'];
+let ri=0;
+function cycleRole(){
+  ri=(ri+1)%ROLES.length;
+  const el=document.getElementById('hword');
+  gsap.to(el,{opacity:0,y:-10,duration:.25,onComplete:()=>{
+    el.textContent=ROLES[ri];gsap.to(el,{opacity:1,y:0,duration:.3});
+  }});
+}
+function playHero(){
+  const tl=gsap.timeline({defaults:{ease:'power3.out'}});
+  tl
+    .to('#hey',{opacity:1,y:0,duration:.6,from:{y:-18}})
+    .to('.inner',{y:'0%',stagger:.12,duration:1},'-=.3')
+    .to('#hrole',{opacity:1,y:0,duration:.6,from:{y:16}},'-=.4')
+    .to('#hsub',{opacity:1,y:0,duration:.6,from:{y:16}},'-=.4')
+    .to('#hbtns',{opacity:1,scale:1,duration:.5,from:{scale:.94}},'-=.3')
+    .to('#scind',{opacity:1,duration:.5},'-=.2');
+  setInterval(cycleRole,2200);
+}
+
+/* ── SCROLL ── */
+window.addEventListener('scroll',()=>{
+  document.getElementById('navpill').classList.toggle('scrolled',window.scrollY>80);
+});
+try {
+  gsap.from('#sh1',{scrollTrigger:{trigger:'#sh1',start:'top 88%'},opacity:0,y:40,duration:.8,ease:'power2.out'});
+  ScrollTrigger.batch('[data-wrap]',{
+    start:'top 88%',
+    onEnter:batch=>gsap.from(batch,{opacity:0,y:50,stagger:.06,duration:.7,ease:'power2.out'}),
+    once:true
+  });
+  gsap.from('#creat > *',{scrollTrigger:{trigger:'#creat',start:'top 85%'},opacity:0,y:40,stagger:.15,duration:.8,ease:'power2.out'});
+} catch(e){}
+
+/* ── STATS COUNTERS — IntersectionObserver (igual que v1, funciona garantizado) ── */
+const counterObs=new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(!entry.isIntersecting) return;
+    const el=entry.target;
+    counterObs.unobserve(el);
+    const t=parseFloat(el.dataset.count);
+    const obj={v:0};
+    gsap.to(obj,{v:t,duration:2.2,ease:'power2.out',
+      onUpdate(){el.textContent=t>=1000?Math.round(obj.v).toLocaleString():Math.round(obj.v);}
+    });
+  });
+},{threshold:0.1});
+document.querySelectorAll('.sc .big[data-count]').forEach(el=>{
+  el.textContent='0';
+  counterObs.observe(el);
+});
+
+/* ── CARD 3D TILT ── */
+document.querySelectorAll('.pc:not(.priv)').forEach(card=>{
+  const wrap=card.parentElement;
+  wrap.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-.5;
+    const y=(e.clientY-r.top)/r.height-.5;
+    gsap.to(card,{rotateY:x*10,rotateX:-y*7,duration:.35,ease:'power1.out',transformPerspective:1000});
+    card.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
+    card.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
+  });
+  wrap.addEventListener('mouseleave',()=>{
+    gsap.to(card,{rotateY:0,rotateX:0,duration:.7,ease:'elastic.out(1,.4)'});
+  });
+});
+
+/* ── FILTROS ── */
+document.querySelectorAll('.fb').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.fb').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+    const f=btn.dataset.f;
+    document.querySelectorAll('[data-wrap]').forEach(w=>{
+      const show=f==='all'||w.querySelector('.pc').dataset.cat===f;
+      gsap.to(w,{opacity:show?1:.07,scale:show?1:.97,duration:.3,ease:'power2.out'});
+      w.style.pointerEvents=show?'auto':'none';
+    });
+  });
+});
+
+/* ── MAGNETIC NAV ── */
+document.querySelectorAll('.nav-hi').forEach(el=>{
+  el.addEventListener('mousemove',e=>{
+    const r=el.getBoundingClientRect();
+    gsap.to(el,{x:(e.clientX-r.left-r.width/2)*.25,y:(e.clientY-r.top-r.height/2)*.25,duration:.3});
+  });
+  el.addEventListener('mouseleave',()=>{gsap.to(el,{x:0,y:0,duration:.7,ease:'elastic.out(1,.3)'}); });
+});
+
+/* ── MULTILINGUAL ES / EN ── */
+const T={
+  es:{
+    eyebrow:'DOF Mesh Legion — Ecosistema 2026',
+    role:'Un sistema <span class="hero-role-word" id="hword">Gobernado</span> por matemáticas.',
+    sub:'Las reglas que mantienen a los agentes de IA honestos — cada decisión registrada y verificable por cualquiera. Construido por <strong>Cyber Paisa</strong> — Enigma Group, Medellín.',
+    cta1:'Ver Proyectos',cta2:'GitHub ↗',
+    seyebrow:'// Repositorios, agentes, contratos, UIs',
+    stitle:'Proyectos <em>Activos</em>',
+    ssub:'Cada proyecto con enlace directo a su versión pública — GitHub, live URL, on-chain o PyPI.',
+    smore:'Ver GitHub ↗',
+    filters:['Todos','Core','Finanzas','Identidad','Agentes','Frontend','Contratos','Lab'],
+    creatorEyebrow:'// Creador del ecosistema',
+    creatorDesc:'Construyendo infraestructura de confianza verificable para agentes autónomos desde Medellín. Enigma Group — ERC-8004 Agent #1687 &amp; #1686 en producción. DOF-MESH publicado en PyPI. Dos mainnets activas.',
+    statLabels:['Líneas de Código','Módulos Core','Test Files','Capas Governance','Crews CrewAI','Chains Live'],
+    footCta:'Construyendo el futuro<br><em>de los agentes autónomos.</em>',
+    footAvail:'Proyectos activos — 2026',
+    copy:'© 2026 <span>Cyber Paisa</span> — Enigma Group — DOF Mesh Legion',
+  },
+  en:{
+    eyebrow:'DOF Mesh Legion — Ecosystem 2026',
+    role:'A system <span class="hero-role-word" id="hword">Governed</span> by mathematics.',
+    sub:'The rules that keep AI agents honest — every decision recorded and verifiable by anyone. Built by <strong>Cyber Paisa</strong> — Enigma Group, Medellín.',
+    cta1:'View Projects',cta2:'GitHub ↗',
+    seyebrow:'// Repos, agents, contracts, UIs',
+    stitle:'Active <em>Projects</em>',
+    ssub:'Each project with a direct link to its public version — GitHub, live URL, on-chain or PyPI.',
+    smore:'View GitHub ↗',
+    filters:['All','Core','Finance','Identity','Agents','Frontend','Contracts','Lab'],
+    creatorEyebrow:'// Ecosystem creator',
+    creatorDesc:'Building verifiable trust infrastructure for autonomous agents from Medellín. Enigma Group — ERC-8004 Agent #1687 &amp; #1686 in production. DOF-MESH published on PyPI. Two active mainnets.',
+    statLabels:['Lines of Code','Core Modules','Test Files','Governance Layers','CrewAI Crews','Live Chains'],
+    footCta:'Building the future<br><em>of autonomous agents.</em>',
+    footAvail:'Active projects — 2026',
+    copy:'© 2026 <span>Cyber Paisa</span> — Enigma Group — DOF Mesh Legion',
+  }
+};
+let lang='es';
+function applyLang(l){
+  lang=l;
+  const t=T[l];
+  document.getElementById('hey').textContent=t.eyebrow;
+  document.getElementById('hrole').innerHTML=t.role;
+  document.getElementById('hsub').innerHTML=t.sub;
+  document.querySelector('.btn-solid').textContent=t.cta1;
+  document.querySelector('.btn-ghost').textContent=t.cta2;
+  document.querySelector('.sh-eye').textContent=t.seyebrow;
+  document.querySelector('.sh-title').innerHTML=t.stitle;
+  document.querySelector('.sh-sub').textContent=t.ssub;
+  document.querySelector('.sh-more').textContent=t.smore;
+  document.querySelectorAll('.fb[data-f]').forEach((btn,i)=>{if(t.filters[i])btn.textContent=t.filters[i];});
+  document.querySelector('.creator-left .eyebrow').textContent=t.creatorEyebrow;
+  document.querySelector('.creator-left p').innerHTML=t.creatorDesc;
+  document.querySelectorAll('.sc .lbl').forEach((el,i)=>{if(t.statLabels[i])el.textContent=t.statLabels[i];});
+  document.querySelector('.foot-cta').innerHTML=t.footCta;
+  document.querySelector('.foot-avail').innerHTML='<div class="foot-avail-dot"></div>'+t.footAvail;
+  document.querySelector('.foot-copy').innerHTML=t.copy;
+  document.getElementById('lang-btn').textContent=l==='es'?'EN':'ES';
+}
+document.getElementById('lang-btn').addEventListener('click',()=>applyLang(lang==='es'?'en':'es'));
+</script>
+</body>
+</html>

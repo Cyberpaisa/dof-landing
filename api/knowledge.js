@@ -57,6 +57,12 @@ export default async function handler(req, res) {
   const apiUrl = process.env.KNOWLEDGE_API_URL;
   const path = req.query.path || 'pending';
 
+  // Security: only allow safe paths to be proxied
+  const allowedPaths = ['pending', 'approved', 'stats'];
+  if (!allowedPaths.includes(path)) {
+    return res.status(403).json({ error: 'Path not allowed' });
+  }
+
   // Demo mode: no hay backend configurado
   if (!apiUrl) {
     if (path === 'stats') {

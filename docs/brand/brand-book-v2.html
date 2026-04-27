@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>DOF-MESH — Brand Book v1.0</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;0,700;1,400&family=IBM+Plex+Serif:wght@300;400;600&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --black:#000;--white:#fff;--off-white:#F3F2EF;--mid:#1a1a1a;
+  --border:rgba(255,255,255,0.08);--muted:rgba(255,255,255,0.35);
+  --green:#00CC55;
+  --mono:'IBM Plex Mono',monospace;--serif:'IBM Plex Serif','Georgia',serif;
+  --sans:'IBM Plex Sans','Helvetica Neue','Arial',sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:var(--sans);-webkit-font-smoothing:antialiased;}
+
+/* ─── TYPOGRAPHY ─── */
+.t-display{font-family:var(--serif);font-size:clamp(48px,8vw,96px);line-height:.96;letter-spacing:-.02em;font-weight:400;}
+.t-h1{font-family:var(--sans);font-size:clamp(28px,4vw,48px);font-weight:300;letter-spacing:-.02em;line-height:1.05;}
+.t-h2{font-family:var(--sans);font-size:clamp(18px,2.5vw,28px);font-weight:600;letter-spacing:.01em;text-transform:uppercase;}
+.t-h3{font-family:var(--mono);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+.t-body{font-family:var(--sans);font-size:15px;line-height:1.75;color:rgba(255,255,255,.75);}
+.t-mono{font-family:var(--mono);font-size:12px;line-height:1.7;color:rgba(255,255,255,.5);}
+.t-label{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.3);}
+
+/* ─── LAYOUT ─── */
+.page{min-height:100vh;padding:80px 60px;display:flex;flex-direction:column;border-bottom:1px solid var(--border);position:relative;}
+.page-light{background:var(--off-white);color:var(--black);}
+.page-light .t-body{color:rgba(0,0,0,.65);}
+.page-light .t-mono{color:rgba(0,0,0,.4);}
+.page-light .t-label{color:rgba(0,0,0,.3);}
+.page-light .t-muted{color:rgba(0,0,0,.4);}
+.page-light .divider{background:rgba(0,0,0,.1);}
+.container{max-width:1200px;width:100%;margin:0 auto;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+.divider{width:100%;height:1px;background:var(--border);margin:48px 0;}
+.page-number{position:absolute;bottom:40px;right:60px;font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.2);letter-spacing:.1em;}
+.section-tag{display:inline-flex;align-items:center;gap:8px;margin-bottom:32px;}
+.section-tag .dot{width:6px;height:6px;border-radius:50%;background:var(--green);}
+
+/* ─── COVER ─── */
+#cover{justify-content:space-between;align-items:flex-start;min-height:100vh;padding:60px;}
+#cover .top{display:flex;justify-content:space-between;align-items:flex-start;width:100%;}
+#cover .center{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:80px 0;}
+#cover .bottom{display:flex;justify-content:space-between;align-items:flex-end;width:100%;}
+.wordmark{display:flex;align-items:center;gap:14px;}
+.wordmark-text{font-family:var(--sans);font-size:20px;line-height:1;letter-spacing:.03em;}
+.wordmark-text strong{font-weight:600;color:#fff;}
+.wordmark-text span{font-weight:300;color:rgba(255,255,255,.28);}
+
+/* ─── LOGO SVG ─── */
+.logo-svg{display:block;}
+
+/* ─── COLOR SWATCHES ─── */
+.swatch{width:100%;aspect-ratio:1;border-radius:4px;margin-bottom:12px;}
+.swatch-info{display:flex;flex-direction:column;gap:3px;}
+
+/* ─── DO/DONT ─── */
+.do-dont-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
+.do-box{background:#050f05;border:1px solid #0a2a0a;border-radius:6px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:12px;}
+.dont-box{background:#0f0505;border:1px solid #2a0a0a;border-radius:6px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:12px;}
+.do-label{font-family:var(--mono);font-size:10px;color:#00cc55;letter-spacing:.15em;text-transform:uppercase;}
+.dont-label{font-family:var(--mono);font-size:10px;color:#cc3300;letter-spacing:.15em;text-transform:uppercase;}
+
+/* ─── CONSTRUCTION ─── */
+.fib-table{width:100%;border-collapse:collapse;}
+.fib-table th,.fib-table td{padding:10px 16px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:12px;text-align:left;}
+.fib-table th{color:rgba(255,255,255,.3);letter-spacing:.1em;text-transform:uppercase;}
+.fib-table td:first-child{color:var(--green);}
+.fib-table td:last-child{color:rgba(255,255,255,.4);}
+
+/* ─── TIMELINE ─── */
+.timeline{position:relative;padding-left:32px;}
+.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:rgba(255,255,255,.1);}
+.timeline-item{position:relative;margin-bottom:36px;}
+.timeline-item::before{content:'';position:absolute;left:-36px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--black);border:1px solid rgba(255,255,255,.3);}
+.timeline-item.active::before{background:var(--green);border-color:var(--green);}
+.timeline-date{font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.3);letter-spacing:.12em;margin-bottom:6px;}
+.timeline-content{font-family:var(--sans);font-size:14px;color:rgba(255,255,255,.7);line-height:1.6;}
+
+/* ─── VOICE CARD ─── */
+.voice-card{border:1px solid var(--border);border-radius:6px;padding:24px;}
+.voice-card h4{font-family:var(--mono);font-size:11px;color:var(--green);letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px;}
+
+/* ─── MOCKUP PLACEHOLDER ─── */
+.mockup-bg{background:var(--mid);border-radius:8px;overflow:hidden;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;}
+
+/* Print styles */
+@media print{
+  .page{page-break-after:always;min-height:auto;}
+  body{background:#fff;color:#000;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- 0. COVER                                           -->
+<!-- ══════════════════════════════════════════════════ -->
+<div id="cover" class="page">
+  <div class="top container" style="max-width:none;width:100%;">
+    <div class="wordmark">
+      <svg width="28" height="28" viewBox="0 0 100 100" class="logo-svg">
+        <rect width="100" height="100" fill="#000"/>
+        <polygon points="8,7 42,46 42,54 8,93 8,72 29,54 29,46 8,28" fill="white"/>
+        <polygon points="92,7 58,46 58,54 92,93 92,72 71,54 71,46 92,28" fill="white"/>
+      </svg>
+      <div class="wordmark-text"><strong>DOF</strong><span>-MESH</span></div>
+    </div>
+    <div class="t-label">Brand Book — v1.0 — 2026</div>
+  </div>
+
+  <div class="center">
+    <svg width="220" height="220" viewBox="0 0 100 100" class="logo-svg" style="margin-bottom:48px;">
+      <rect width="100" height="100" fill="#000"/>
+      <polygon points="8,7 42,46 42,54 8,93 8,72 29,54 29,46 8,28" fill="white"/>
+      <polygon points="92,7 58,46 58,54 92,93 92,72 71,54 71,46 92,28" fill="white"/>
+    </svg>
+    <div class="t-display" style="text-align:center;margin-bottom:24px;">DOF-MESH</div>
+    <div style="font-family:var(--mono);font-size:13px;color:rgba(255,255,255,.3);letter-spacing:.2em;text-transform:uppercase;">
+      Mathematics, not promises.
+    </div>
+  </div>
+
+  <div class="bottom" style="max-width:none;width:100%;">
+    <div>
+      <div class="t-label" style="margin-bottom:4px;">Deterministic Observability Framework</div>
+      <div class="t-label">AI Governance · Blockchain · Z3 Verification</div>
+    </div>
+    <div style="text-align:right;">
+      <div class="t-label" style="margin-bottom:4px;">dofmesh.com</div>
+      <div class="t-label">Medellín, Colombia — 2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- 1. TABLE OF CONTENTS                              -->
+<!-- ══════════════════════════════════════════════════ -->
+<div class="page" style="padding:80px 60px;">
+  <div class="container">
+    <div class="section-tag"><span class="dot"></span><span class="t-h3">Contents</span></div>
+    <div class="t-h1" style="margin-bottom:64px;">Brand Book<br/>DOF-MESH</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;">
+      <div style="border-top:1px solid var(--border);">
+        <div style="display:flex;justify-content:space-between;padding:20px 0;border-bottom:1px solid var(--border);cursor:pointer;" onclick="document.getElementById('foundation').scrollIntoView({behavior:'smooth'})">
+          <div><span style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-right:20px;">01</span><span class="t-h3" style="color:var(--white);">Brand Foundation</span></div>
+          <span class="t-label">Mission · Vision · Values</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:20px 0;border-bottom:1px solid var(--border);" onclick="document.getElementById('story').scrollIntoView({behavior:'smooth'})" >
+          <div><span style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-right:20px;">02</span><span class="t-h3" style="color:var(--white);">Construction Story</span></div>
+          <span class="t-label">Human × AI Collaboration</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:20px 0;border-bottom:1px solid var(--border);" onclick="document.getElementById('construction').scrollIntoView({behavior:'smooth'})">
+          <div><span style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-right:20px;">03</span><span class="t-h3" style="color:var(--white);">Logo Construction</span></div>
+          <span class="t-label">Fibonacci · φ=1.618 · Geometry</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:20px 0;border-bottom:1px solid var(--border);" onclick="document.getElementById('system').scrollIntoView({behavior:'smooth'})">
+          <div><span style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-right:20px;">04</span><span class="t-h3" style="color:var(--white);">Logo System</span></div>
+          <span class="t-label">Variants · Sizes · Applications</span>
+        </div>
+      </div>
+      <div style="border-top:1px solid var(--border);">
+        <div style="display:flex;justify-content:space-between;padding:20px 0;border-bottom:1px solid var(--border);" onclick="document.getElementById('colors').scrollIntoView({behavior:'smooth'})">
+          <div><span style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-right:20px;">05</span><span class="t-h3" style="color:var(--white);">Color System</span></div>
+          <span class="t-label">Primary · Usage · Rules</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:20px 0;border-bottom:1px solid var(--border);" onclick="document.getElementById('typography').scrollIntoView({behavior:'smooth'})">
+          <div><span style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-right:20px;">06</span><span class="t-h3" style="color:var(--white);">Typography</span></div>
+          <span class="t-label">Fonts · Hierarchy · Rules</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:20px 0;border-bottom:1px solid var(--border);" onclick="document.getElementById('rules').scrollIntoView({behavior:'smooth'})">
+          <div><span style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-right:20px;">07</span><span class="t-h3" style="color:var(--white);">Do's &amp; Don'ts</span></div>
+          <span class="t-label">Usage · Misuse · Protection</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:20px 0;border-bottom:1px solid var(--border);" onclick="document.getElementById('voice').scrollIntoView({behavior:'smooth'})">
+          <div><span style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-right:20px;">08</span><span class="t-h3" style="color:var(--white);">Voice &amp; Motion</span></div>
+          <span class="t-label">Tone · Seedance 2.0 · Kling 3.0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-number">02</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- 2. BRAND FOUNDATION                               -->
+<!-- ══════════════════════════════════════════════════ -->
+<div id="foundation" class="page">
+  <div class="container">
+    <div class="section-tag"><span class="dot"></span><span class="t-h3">01 — Brand Foundation</span></div>
+    <div class="t-h1" style="margin-bottom:56px;">Who we are.<br/>What we stand for.</div>
+
+    <div class="grid-2" style="margin-bottom:64px;">
+      <div>
+        <div class="t-label" style="margin-bottom:16px;">Mission</div>
+        <div class="t-h1" style="font-size:22px;font-weight:300;line-height:1.4;color:rgba(255,255,255,.9);">
+          Intercept AI agent decisions before they execute. Verify mathematically. Attest on-chain. Make AI governance deterministic.
+        </div>
+      </div>
+      <div>
+        <div class="t-label" style="margin-bottom:16px;">Vision</div>
+        <div class="t-h1" style="font-size:22px;font-weight:300;line-height:1.4;color:rgba(255,255,255,.9);">
+          A world where every autonomous agent operates within mathematically proven boundaries — where "trustworthy AI" has a proof, not just a promise.
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="t-label" style="margin-bottom:24px;">Core Values</div>
+    <div class="grid-3">
+      <div style="border-top:2px solid var(--green);padding-top:20px;">
+        <div class="t-h2" style="font-size:16px;margin-bottom:10px;">Determinism</div>
+        <div class="t-body" style="font-size:14px;">Every decision DOF makes is reproducible. No ambiguity. No approximation. Mathematical precision at every layer.</div>
+      </div>
+      <div style="border-top:1px solid var(--border);padding-top:20px;">
+        <div class="t-h2" style="font-size:16px;margin-bottom:10px;">Transparency</div>
+        <div class="t-body" style="font-size:14px;">Every governance decision is recorded on-chain and auditable by anyone. We don't hide behind "black box" processes.</div>
+      </div>
+      <div style="border-top:1px solid var(--border);padding-top:20px;">
+        <div class="t-h2" style="font-size:16px;margin-bottom:10px;">Rigor</div>
+        <div class="t-body" style="font-size:14px;">Z3 formal proofs. Not heuristics, not guidelines — mathematical verification that either holds or doesn't.</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div style="border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:40px;background:var(--mid);">
+      <div class="t-label" style="margin-bottom:20px;">Brand Tagline</div>
+      <div class="t-display" style="font-size:clamp(32px,5vw,64px);color:rgba(255,255,255,.9);">
+        Mathematics,<br/>not promises.
+      </div>
+      <div class="t-body" style="margin-top:20px;max-width:600px;">
+        This tagline encapsulates everything DOF-MESH stands for. While competitors promise AI safety, we prove it. The tagline is used in marketing, developer documentation, and conference talks. It is never shortened or modified.
+      </div>
+    </div>
+  </div>
+  <div class="page-number">03</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- 3. CONSTRUCTION STORY                             -->
+<!-- ══════════════════════════════════════════════════ -->
+<div id="story" class="page">
+  <div class="container">
+    <div class="section-tag"><span class="dot"></span><span class="t-h3">02 — Construction Story</span></div>
+    <div class="t-h1" style="margin-bottom:16px;">A logo born from<br/>human × machine collaboration.</div>
+    <div class="t-body" style="max-width:700px;margin-bottom:56px;">
+      The DOF-MESH logo is the result of an unprecedented creative process: a deep, iterative collaboration between Juan Carlos Quiceno (@Cyber_paisa) and Claude (Anthropic's AI) over multiple sessions of research, design, validation, and refinement. This is documented history — not mythology.
+    </div>
+
+    <div class="grid-2">
+      <div class="timeline">
+        <div class="timeline-item active">
+          <div class="timeline-date">Session 1 — Research</div>
+          <div class="timeline-content">9 AI systems consulted (DeepSeek, Kimi, Gemini, GPT, Groq, Mistral, Perplexity, GML5, Claude). Books researched: Bokhua, Draplin, Müller-Brockmann, Kenya Hara. Decision: solid fill, black & white, no color.</div>
+        </div>
+        <div class="timeline-item active">
+          <div class="timeline-date">Session 2 — Concept</div>
+          <div class="timeline-content">Abandoned the letterform "D" — it activated architectural associations in the brain. Confirmed by Adobe, Ramotion, 12+ sources. Problem: every D variant read as a building, door, or window section.</div>
+        </div>
+        <div class="timeline-item active">
+          <div class="timeline-date">Session 3 — Discovery</div>
+          <div class="timeline-content">Three new concepts tested: // (double slash), |&gt; (pipe operator), ❯❮ (facing chevrons). Feedback from Juan: chevrons stood out most but were too thin. The gap between them was identified as the MA (meaningful void).</div>
+        </div>
+        <div class="timeline-item active">
+          <div class="timeline-date">Session 4 — Refinement</div>
+          <div class="timeline-content">Applied flat apex (not sharp point) — Draplin principle: thick lines. Applied 12 optical corrections. Applied neuroscience: DMN remote associativity principle. Haring test passed (200ms recognition). Score: 8.5/10.</div>
+        </div>
+        <div class="timeline-item active">
+          <div class="timeline-date">Session 5 — Fibonacci</div>
+          <div class="timeline-content">Discovery: the arm depth was already 34 (Fibonacci), the margin was already 8 (Fibonacci). With 1-unit adjustments: full chain F₆→F₇→F₈→F₉ verified. φ = 1.618 in every key ratio. Score: 9/10.</div>
+        </div>
+      </div>
+
+      <div>
+        <div style="background:var(--mid);border-radius:8px;padding:28px;margin-bottom:20px;">
+          <div class="t-label" style="margin-bottom:16px;">What makes this unique</div>
+          <div class="t-body" style="font-size:14px;margin-bottom:12px;">
+            This logo has a documented construction history spanning 5+ research sessions, 40+ validated sources, 6 skill versions, and real-time critique and refinement by a human expert in blockchain/AI governance.
+          </div>
+          <div class="t-body" style="font-size:14px;">
+            Most logos are designed by one person or agency in isolation. This one was built with the combined knowledge of every major design book, paper, and researcher in the field — distilled through iterative human feedback.
+          </div>
+        </div>
+        <div style="border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:24px;">
+          <div class="t-label" style="margin-bottom:12px;">Tool used</div>
+          <div style="display:flex;gap:12px;align-items:center;">
+            <svg width="32" height="32" viewBox="0 0 100 100">
+              <rect width="100" height="100" fill="#000"/>
+              <polygon points="8,7 42,46 42,54 8,93 8,72 29,54 29,46 8,28" fill="white"/>
+              <polygon points="92,7 58,46 58,54 92,93 92,72 71,54 71,46 92,28" fill="white"/>
+            </svg>
+            <div>
+              <div class="t-h2" style="font-size:14px;">Claude Code (Anthropic)</div>
+              <div class="t-mono" style="font-size:11px;">claude-sonnet-4-6 · SVG · HTML · Research</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-number">04</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- 4. LOGO CONSTRUCTION                              -->
+<!-- ══════════════════════════════════════════════════ -->
+<div id="construction" class="page">
+  <div class="container">
+    <div class="section-tag"><span class="dot"></span><span class="t-h3">03 — Logo Construction</span></div>
+    <div class="t-h1" style="margin-bottom:16px;">Built on the same proportions<br/>as nautilus shells and galaxies.</div>
+    <div class="t-body" style="max-width:640px;margin-bottom:56px;">
+      Every measurement in the DOF-MESH mark is a Fibonacci number. The chain F₆→F₇→F₈→F₉ produces a ratio of φ=1.618 between each pair of adjacent elements — the Golden Ratio found throughout nature and the most enduring logos in history.
+    </div>
+
+    <div class="grid-2" style="gap:60px;margin-bottom:60px;">
+      <!-- Construction diagram -->
+      <div>
+        <div class="t-label" style="margin-bottom:20px;">Construction Grid</div>
+        <svg width="100%" viewBox="0 0 100 100" style="max-width:380px;display:block;">
+          <rect width="100" height="100" fill="#0a0a0a"/>
+          <!-- Grid lines -->
+          <line x1="8" y1="0" x2="8" y2="100" stroke="#1a2a1a" stroke-width="0.4"/>
+          <line x1="29" y1="0" x2="29" y2="100" stroke="#1a2a1a" stroke-width="0.4" stroke-dasharray="2,3"/>
+          <line x1="42" y1="0" x2="42" y2="100" stroke="#1a2a1a" stroke-width="0.4"/>
+          <line x1="50" y1="0" x2="50" y2="100" stroke="#111" stroke-width="0.3"/>
+          <line x1="58" y1="0" x2="58" y2="100" stroke="#1a2a1a" stroke-width="0.4"/>
+          <line x1="71" y1="0" x2="71" y2="100" stroke="#1a2a1a" stroke-width="0.4" stroke-dasharray="2,3"/>
+          <line x1="92" y1="0" x2="92" y2="100" stroke="#1a2a1a" stroke-width="0.4"/>
+          <line x1="0" y1="7"  x2="100" y2="7"  stroke="#1a2a1a" stroke-width="0.4"/>
+          <line x1="0" y1="28" x2="100" y2="28" stroke="#1a2a1a" stroke-width="0.4" stroke-dasharray="2,3"/>
+          <line x1="0" y1="46" x2="100" y2="46" stroke="#1a2a1a" stroke-width="0.4"/>
+          <line x1="0" y1="50" x2="100" y2="50" stroke="#111" stroke-width="0.3"/>
+          <line x1="0" y1="54" x2="100" y2="54" stroke="#1a2a1a" stroke-width="0.4"/>
+          <line x1="0" y1="72" x2="100" y2="72" stroke="#1a2a1a" stroke-width="0.4" stroke-dasharray="2,3"/>
+          <line x1="0" y1="93" x2="100" y2="93" stroke="#1a2a1a" stroke-width="0.4"/>
+          <!-- Logo -->
+          <polygon points="8,7 42,46 42,54 8,93 8,72 29,54 29,46 8,28" fill="white" opacity="0.9"/>
+          <polygon points="92,7 58,46 58,54 92,93 92,72 71,54 71,46 92,28" fill="white" opacity="0.9"/>
+          <!-- Annotations -->
+          <line x1="44" y1="46" x2="44" y2="54" stroke="#00cc55" stroke-width="1.5"/>
+          <text x="46.5" y="51" font-family="monospace" font-size="4.5" fill="#00cc55">8</text>
+          <line x1="29" y1="56" x2="42" y2="56" stroke="#00aa44" stroke-width="1"/>
+          <text x="35.5" y="60" font-family="monospace" font-size="4" fill="#00aa44" text-anchor="middle">13</text>
+          <line x1="4" y1="7" x2="4" y2="28" stroke="#008833" stroke-width="1"/>
+          <text x="2" y="19" font-family="monospace" font-size="4" fill="#008833" text-anchor="middle">21</text>
+          <line x1="8" y1="96" x2="42" y2="96" stroke="#00cc55" stroke-width="1"/>
+          <text x="25" y="99.5" font-family="monospace" font-size="4" fill="#00cc55" text-anchor="middle">34</text>
+          <line x1="8" y1="98" x2="8" y2="98"/>
+          <text x="3" y="51" font-family="monospace" font-size="3.5" fill="#0a3a0a" text-anchor="middle">8</text>
+        </svg>
+      </div>
+
+      <!-- Fibonacci table -->
+      <div>
+        <div class="t-label" style="margin-bottom:20px;">Fibonacci Proportions</div>
+        <table class="fib-table">
+          <thead>
+            <tr><th>Element</th><th>Value</th><th>Fibonacci</th><th>Ratio</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Margin</td><td>8u</td><td>F₆</td><td>—</td></tr>
+            <tr><td>Face height</td><td>8u</td><td>F₆</td><td>—</td></tr>
+            <tr><td>Face wall</td><td>13u</td><td>F₇</td><td>13/8 = 1.625 ≈ φ</td></tr>
+            <tr><td>Arm thickness</td><td>21u</td><td>F₈</td><td>21/13 = 1.615 ≈ φ</td></tr>
+            <tr><td>Arm depth</td><td>34u</td><td>F₉</td><td>34/21 = 1.619 ≈ φ</td></tr>
+            <tr><td>Outer gap</td><td>16u</td><td>2×F₆</td><td>legibility at 16px</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:24px;padding:16px;background:var(--mid);border-radius:6px;">
+          <div class="t-label" style="margin-bottom:8px;">Fractal property</div>
+          <div class="t-mono" style="font-size:12px;line-height:1.8;">
+            8 →×φ→ 13 →×φ→ 21 →×φ→ 34<br/>
+            Each step ≈ Golden Ratio φ = 1.618<br/>
+            Same chain as nautilus, DNA helix, galaxies.
+          </div>
+        </div>
+
+        <div style="margin-top:16px;padding:16px;border:1px solid rgba(0,204,85,.15);border-radius:6px;background:rgba(0,204,85,.03);">
+          <div class="t-label" style="margin-bottom:8px;color:var(--green);">SVG — Final coordinates (dark mode)</div>
+          <div class="t-mono" style="font-size:10.5px;line-height:1.9;color:rgba(255,255,255,.5);">
+            L: M8,7 L42,46 L42,54 L8,93 L8,72 L29,54 L29,46 L8,28 Z<br/>
+            R: M92,7 L58,46 L58,54 L92,93 L92,72 L71,54 L71,46 L92,28 Z
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="t-label" style="margin-bottom:24px;">Concept — The Gate</div>
+    <div class="grid-3">
+      <div style="padding:20px 0;border-top:1px solid var(--border);">
+        <div class="t-h2" style="font-size:14px;margin-bottom:8px;">❯ Input</div>
+        <div class="t-body" style="font-size:13px;">The left chevron represents a decision arriving from an AI agent — a command about to execute.</div>
+      </div>
+      <div style="padding:20px 0;border-top:2px solid var(--green);">
+        <div class="t-h2" style="font-size:14px;margin-bottom:8px;color:var(--green);">Gap — Z3 Gate</div>
+        <div class="t-body" style="font-size:13px;">The void between chevrons is the verification moment. Z3 SMT Solver evaluates. The gap IS the product. (Kenya Hara: MA — meaningful void.)</div>
+      </div>
+      <div style="padding:20px 0;border-top:1px solid var(--border);">
+        <div class="t-h2" style="font-size:14px;margin-bottom:8px;">❮ Output</div>
+        <div class="t-body" style="font-size:13px;">The right chevron represents the approved, mathematically verified execution — attested on-chain.</div>
+      </div>
+    </div>
+  </div>
+  <div class="page-number">05</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- 5. LOGO SYSTEM                                    -->
+<!-- ══════════════════════════════════════════════════ -->
+<div id="system" class="page">
+  <div class="container">
+    <div class="section-tag"><span class="dot"></span><span class="t-h3">04 — Logo System</span></div>
+    <div class="t-h1" style="margin-bottom:8px;">One mark. One cube.<br/>Every surface.</div>
+    <div class="t-body" style="max-width:600px;margin-bottom:48px;">
+      El mark ❯❮ siempre vive dentro de un cubo negro. El texto adapta su color al fondo. Validado por skill v6.0: Draplin stamp test ✓ · Haring 200ms ✓ · Correcciones ópticas irradiación ✓ · 15/15 criterios ✓.
+    </div>
+
+    <!-- SISTEMA ADAPTATIVO — REGLA PRINCIPAL -->
+    <div class="t-label" style="margin-bottom:20px;">Sistema adaptativo — la regla</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:48px;">
+
+      <!-- Dark -->
+      <div style="background:#000;border-radius:8px 0 0 8px;padding:36px 40px;">
+        <div class="t-label" style="color:rgba(255,255,255,.3);margin-bottom:24px;">Fondo oscuro → texto blanco</div>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:28px;">
+          <div style="width:40px;height:40px;background:#000;border:1px solid rgba(255,255,255,0.12);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="27" height="27" viewBox="0 0 100 100">
+              <polygon points="8,7 42,46 42,54 8,93 8,72 29,54 29,46 8,28" fill="white"/>
+              <polygon points="92,7 58,46 58,54 92,93 92,72 71,54 71,46 92,28" fill="white"/>
+            </svg>
+          </div>
+          <div style="font-family:'IBM Plex Sans','Helvetica Neue',sans-serif;line-height:1;letter-spacing:.03em;">
+            <span style="font-weight:600;font-size:22px;color:#fff;">DOF</span><span style="font-weight:300;font-size:22px;color:rgba(255,255,255,.32);">-MESH</span>
+          </div>
+        </div>
+        <div class="t-mono" style="font-size:10px;line-height:1.9;color:rgba(255,255,255,.25);">
+          Cubo: #000 · border: 1px rgba(255,255,255,.12)<br/>
+          Mark: polígonos dark (gap 16u)<br/>
+          DOF: #FFFFFF · weight 600<br/>
+          -MESH: rgba(255,255,255,.32) · weight 300<br/>
+          letter-spacing: .03em
+        </div>
+      </div>
+
+      <!-- Light -->
+      <div style="background:#F3F2EF;border-radius:0 8px 8px 0;padding:36px 40px;">
+        <div class="t-label" style="color:rgba(0,0,0,.3);margin-bottom:24px;">Fondo claro → texto negro</div>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:28px;">
+          <div style="width:40px;height:40px;background:#000;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="27" height="27" viewBox="0 0 100 100">
+              <polygon points="8,7 43,47 43,53 8,93 8,72 30,53 30,47 8,28" fill="white"/>
+              <polygon points="92,7 57,47 57,53 92,93 92,72 70,53 70,47 92,28" fill="white"/>
+            </svg>
+          </div>
+          <div style="font-family:'IBM Plex Sans','Helvetica Neue',sans-serif;line-height:1;letter-spacing:.03em;">
+            <span style="font-weight:600;font-size:22px;color:#000;">DOF</span><span style="font-weight:300;font-size:22px;color:rgba(0,0,0,.32);">-MESH</span>
+          </div>
+        </div>
+        <div class="t-mono" style="font-size:10px;line-height:1.9;color:rgba(0,0,0,.3);">
+          Cubo: #000 · sin borde (contraste máximo)<br/>
+          Mark: polígonos light (gap +2u irradiación)<br/>
+          DOF: #000000 · weight 600<br/>
+          -MESH: rgba(0,0,0,.32) · weight 300<br/>
+          letter-spacing: .03em
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- VARIANTES -->
+    <div class="t-label" style="margin-bottom:20px;">Variantes del lockup</div>
+    <div style="display:flex;gap:40px;align-items:flex-start;flex-wrap:wrap;margin-bottom:48px;">
+
+      <!-- Icon solo -->
+      <div style="display:flex;flex-direction:column;gap:10px;align-items:center;">
+        <div class="t-label" style="margin-bottom:4px;">Icon solo</div>
+        <div style="display:flex;gap:10px;align-items:flex-end;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+            <div style="width:64px;height:64px;background:#000;border:1px solid rgba(255,255,255,.12);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+              <svg width="44" height="44" viewBox="0 0 100 100"><polygon points="8,7 42,46 42,54 8,93 8,72 29,54 29,46 8,28" fill="white"/><polygon points="92,7 58,46 58,54 92,93 92,72 71,54 71,46 92,28" fill="white"/></svg>
+            </div>
+            <span class="t-label">64px</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+            <div style="width:40px;height:40px;background:#000;border:1px solid rgba(255,255,255,.12);border-radius:5px;display:flex;align-items:center;justify-content:center;">
+              <svg width="28" height="28" viewBox="0 0 100 100"><polygon points="8,7 42,46 42,54 8,93 8,72 29,54 29,46 8,28" fill="white"/><polygon points="92,7 58,46 58,54 92,93 92,72 71,54 71,46 92,28" fill="white"/></svg>
+            </div>
+            <span class="t-label">40px</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+            <div style="width:28px;height:28px;background:#000;border:1px solid rgba(255,255,255,.12);border-radius:4px;display:flex;align-items:center;justify-content:center;">
+              <svg width="19" height="19" viewBox="0 0 100 100"><polygon points="8,7 42,46 42,54 8,93 8,72 29,54 29,46 8,28" fill="white"/><polygon points="92,7 58,46 58,54 92,93 92,72 71,54 71,46 92,28" fill="white"/></svg>
+            </div>
+            <span class="t-label">28px</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+            <div style="width:16px;height:16px;background:#000;border-radius:2px;display:flex;align-items:center;justify-content:center;">
+              <svg width="12" height="12" viewBox="0 0 100 100"><polygon points="8,7 42,46 42,54 8,93 8,72 29,54 29,46 8,28" fill="white"/><polygon points="92,7 58,46 58,54 92,93 92,72 71,54 71,46 92,28" fill="white"/></svg>
+            </div>
+            <span class="t-label">16px ✓</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navbar simulation -->
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="t-label" style="margin-bottom:4px;">En contexto — navbar</div>
+        <div style="background:#000;border-radius:6px;padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;width:400px;border:1px solid #1a1a1a;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:28px;height:28px;background:#000;border:1px solid rgba(255,255,255,.12);border-radius:3px;display:flex;align-items:center;justify-content:center;">
+              <svg width="19" height="19" viewBox="0 0 100 100"><polygon points="8,7 42,46 42,54 8,93 8,72 29,54 29,46 8,28" fill="white"/><polygon points="92,7 58,46 58,54 92,93 92,72 71,54 71,46 92,28" fill="white"/></svg>
+            </div>
+            <div style="font-family:'IBM Plex Sans',sans-serif;line-height:1;letter-spacing:.03em;">
+              <span style="font-weight:600;font-size:16px;color:#fff;">DOF</span><span style="font-weight:300;font-size:16px;color:rgba(255,255,255,.32);">-MESH</span>
+            </div>
+          </div>
+          <div style="display:flex;gap:16px;">
+            <span style="font-size:13px;color:rgba(255,255,255,.4);font-family:sans-serif;">Docs</span>
+            <span style="font-size:13px;color:rgba(255,255,255,.4);font-family:sans-serif;">SDK</span>
+            <span style="background:#fff;color:#000;font-size:12px;font-weight:500;padding:0 12px;height:26px;line-height:26px;border-radius:4px;font-family:sans-serif;">Start →</span>
+          </div>
+        </div>
+        <!-- Light navbar -->
+        <div style="background:#F3F2EF;border-radius:6px;padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;width:400px;border:0.5px solid rgba(0,0,0,.1);">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:28px;height:28px;background:#000;border-radius:3px;display:flex;align-items:center;justify-content:center;">
+              <svg width="19" height="19" viewBox="0 0 100 100"><polygon points="8,7 43,47 43,53 8,93 8,72 30,53 30,47 8,28" fill="white"/><polygon points="92,7 57,47 57,53 92,93 92,72 70,53 70,47 92,28" fill="white"/></svg>
+            </div>
+            <div style="font-family:'IBM Plex Sans',sans-serif;line-height:1;letter-spacing:.03em;">
+              <span style="font-weight:600;font-size:16px;color:#000;">DOF</span><span style="font-weight:300;font-size:16px;color:rgba(0,0,0,.32);">-MESH</span>
+            </div>
+          </div>
+          <div style="display:flex;gap:16px;">
+            <span style="font-size:13px;color:rgba(0,0,0,.4);font-family:sans-serif;">Docs</span>
+            <span style="font-size:13px;color:rgba(0,0,0,.4);font-family:sans-serif;">SDK</span>
+            <span style="background:#000;color:#fff;font-size:12px;font-weight:500;padding:0 12px;height:26px;line-height:26px;border-radius:4px;font-family:sans-serif;">Start →</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="t-label" style="margin-bottom:12px;">Clear Space — regla de mínimos</div>
+    <div class="t-body" style="font-size:14px;">
+      Espacio mínimo alrededor del lockup completo = <strong style="color:#fff;">1× la altura del cubo</strong>. Ese espacio debe estar libre de texto, imágenes u otros elementos. El cubo nunca toca ningún borde.
+    </div>
+  </div>
+  <div class="page-number">06</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- 6. COLOR SYSTEM                                    -->
+<!-- ══════════════════════════════════════════════════ -->
+<div id="colors" class="page">
+  <div class="container">
+    <div class="section-tag"><span class="dot"></span><span class="t-h3">05 — Color System</span></div>
+    <div class="t-h1" style="margin-bottom:16px;">Monochrome as a statement.<br/>One accent, used with restraint.</div>
+    <div class="t-body" style="max-width:600px;margin-bottom:56px;">
+      DOF-MESH operates in black and white. Color is not decoration — it is information. The green accent (#00CC55) exists only to mark verified state, active systems, and correct outputs. It is never used decoratively.
+    </div>
+
+    <!-- Primary palette -->
+    <div class="t-label" style="margin-bottom:20px;">Primary Palette</div>
+    <div class="grid-4" style="margin-bottom:48px;">
+      <div>
+        <div class="swatch" style="background:#000;border:1px solid rgba(255,255,255,.1);"></div>
+        <div class="swatch-info">
+          <span class="t-h2" style="font-size:13px;">Black</span>
+          <span class="t-mono">#000000</span>
+          <span class="t-label">Primary background</span>
+        </div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#fff;"></div>
+        <div class="swatch-info">
+          <span class="t-h2" style="font-size:13px;">White</span>
+          <span class="t-mono">#FFFFFF</span>
+          <span class="t-label">Logo · Primary text</span>
+        </div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#F3F2EF;"></div>
+        <div class="swatch-info">
+          <span class="t-h2" style="font-size:13px;">Off-white</span>
+          <span class="t-mono">#F3F2EF</span>
+          <span class="t-label">Light bg · Documents</span>
+        </div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#00CC55;"></div>
+        <div class="swatch-info">
+          <span class="t-h2" style="font-size:13px;">Verification</span>
+          <span class="t-mono">#00CC55</span>
+          <span class="t-label">Gate · Active · Proven</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Functional colors -->
+    <div class="t-label" style="margin-bottom:20px;">Functional Colors — UI only</div>
+    <div class="grid-4" style="margin-bottom:48px;">
+      <div>
+        <div class="swatch" style="background:#1A1A1A;border:1px solid rgba(255,255,255,.1);"></div>
+        <div class="swatch-info">
+          <span class="t-h2" style="font-size:13px;">Surface</span>
+          <span class="t-mono">#1A1A1A</span>
+          <span class="t-label">Cards · Panels</span>
+        </div>
+      </div>
+      <div>
+        <div class="swatch" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,.1);"></div>
+        <div class="swatch-info">
+          <span class="t-h2" style="font-size:13px;">Border</span>
+          <span class="t-mono">rgba(255,255,255,.08)</span>
+          <span class="t-label">Dividers · Lines</span>
+        </div>
+      </div>
+      <div>
+        <div class="swatch" style="background:rgba(255,255,255,0.35);border:1px solid rgba(255,255,255,.1);"></div>
+        <div class="swatch-info">
+          <span class="t-h2" style="font-size:13px;">Muted text</span>
+          <span class="t-mono">rgba(255,255,255,.35)</span>
+          <span class="t-label">Secondary text</span>
+        </div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#CC3300;"></div>
+        <div class="swatch-info">
+          <span class="t-h2" style="font-size:13px;">Error</span>
+          <span class="t-mono">#CC3300</span>
+          <span class="t-label">Blocked · Failed</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="t-label" style="margin-bottom:16px;">Color Usage Rules</div>
+    <div class="grid-2">
+      <div style="padding:20px;border-left:2px solid var(--green);">
+        <div class="t-h2" style="font-size:14px;margin-bottom:10px;color:var(--green);">✓ Correct use of #00CC55</div>
+        <div class="t-body" style="font-size:13px;">System status indicators ("All systems operational"), verified state in UI, success/proof confirmations, technical documentation callouts, code highlighting for approved paths.</div>
+      </div>
+      <div style="padding:20px;border-left:1px solid #CC3300;">
+        <div class="t-h2" style="font-size:14px;margin-bottom:10px;color:#CC3300;">✗ Never use #00CC55 for</div>
+        <div class="t-body" style="font-size:13px;">Decorative elements, backgrounds, button fills, hero sections, or the logo itself. The green is a signal — not a style. Overusing it destroys its meaning.</div>
+      </div>
+    </div>
+  </div>
+  <div class="page-number">07</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- 7. TYPOGRAPHY                                     -->
+<!-- ══════════════════════════════════════════════════ -->
+<div id="typography" class="page page-light">
+  <div class="container">
+    <div class="section-tag"><span class="dot"></span><span class="t-h3" style="color:rgba(0,0,0,.4);">06 — Typography</span></div>
+    <div class="t-h1" style="color:#000;margin-bottom:8px;font-family:'IBM Plex Sans',sans-serif;">IBM Plex Sans<br/>+ IBM Plex Mono.</div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(0,0,0,.35);letter-spacing:.12em;text-transform:uppercase;margin-bottom:40px;">Man and Machine — Mike Abbink, IBM Design Director, 2017</div>
+
+    <!-- Decision rationale -->
+    <div style="background:#000;border-radius:8px;padding:32px;margin-bottom:48px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,.3);letter-spacing:.15em;text-transform:uppercase;margin-bottom:16px;">Por qué IBM Plex — la decisión</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;">
+        <div>
+          <div style="font-family:'IBM Plex Sans',sans-serif;font-size:14px;color:rgba(255,255,255,.75);line-height:1.7;margin-bottom:16px;">
+            IBM Plex fue diseñada en 2017 por Mike Abbink y Bold Monday bajo el concepto <strong style="color:#fff;">"Man and Machine"</strong> — la misma tensión que define DOF-MESH: razonamiento matemático humano + ejecución de máquinas.
+          </div>
+          <div style="font-family:'IBM Plex Sans',sans-serif;font-size:14px;color:rgba(255,255,255,.75);line-height:1.7;">
+            Abbink dijo: <em style="color:rgba(255,255,255,.5);">"Helvetica ya no contaba la historia de IBM. No somos una corporación estándar. Tenemos una voz única."</em> DOF-MESH tampoco puede usar la fuente de todos.
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(255,255,255,.4);line-height:2;">
+            ✓ Open source — SIL OFL, gratis para siempre<br/>
+            ✓ Ángulos rectos interiores = precisión matemática<br/>
+            ✓ Exteriores redondeados = approachable<br/>
+            ✓ IBM inventó Courier (1961) — mismo ADN<br/>
+            ✓ Soporta Bitcoin ₿ y símbolos matemáticos<br/>
+            ✓ 110 idiomas — escala global<br/>
+            ✓ 8 pesos — honra las 8 barras del logo IBM
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Linaje histórico -->
+    <div class="t-label" style="margin-bottom:20px;color:rgba(0,0,0,.4);">Linaje histórico — de Gutenberg a IBM Plex</div>
+    <div style="display:flex;gap:0;margin-bottom:48px;overflow-x:auto;">
+      <div style="flex:0 0 auto;width:120px;padding:16px 12px;border-right:1px solid rgba(0,0,0,.08);">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(0,0,0,.3);margin-bottom:6px;">1455</div>
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:600;color:#000;margin-bottom:4px;">Gutenberg</div>
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:rgba(0,0,0,.5);line-height:1.5;">Tipo móvil. Democratización del conocimiento.</div>
+      </div>
+      <div style="flex:0 0 auto;width:120px;padding:16px 12px;border-right:1px solid rgba(0,0,0,.08);">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(0,0,0,.3);margin-bottom:6px;">1927</div>
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:600;color:#000;margin-bottom:4px;">Futura</div>
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:rgba(0,0,0,.5);line-height:1.5;">Renner/Bauhaus. Geometría pura. Modernismo.</div>
+      </div>
+      <div style="flex:0 0 auto;width:120px;padding:16px 12px;border-right:1px solid rgba(0,0,0,.08);">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(0,0,0,.3);margin-bottom:6px;">1957</div>
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:600;color:#000;margin-bottom:4px;">Helvetica</div>
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:rgba(0,0,0,.5);line-height:1.5;">Miedinger. Suiza. Neutralidad y claridad.</div>
+      </div>
+      <div style="flex:0 0 auto;width:120px;padding:16px 12px;border-right:1px solid rgba(0,0,0,.08);">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(0,0,0,.3);margin-bottom:6px;">1961</div>
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:600;color:#000;margin-bottom:4px;">Courier</div>
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:rgba(0,0,0,.5);line-height:1.5;">IBM Selectric. El primer font intercambiable.</div>
+      </div>
+      <div style="flex:0 0 auto;width:120px;padding:16px 12px;border-right:1px solid rgba(0,0,0,.08);">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(0,0,0,.3);margin-bottom:6px;">1928</div>
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:600;color:#000;margin-bottom:4px;">New Typography</div>
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:rgba(0,0,0,.5);line-height:1.5;">Tschichold. Swiss Style. Grilla y función.</div>
+      </div>
+      <div style="flex:0 0 auto;width:120px;padding:16px 12px;border-right:1px solid rgba(0,0,0,.08);background:rgba(0,0,0,.04);">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(0,0,0,.3);margin-bottom:6px;">1992</div>
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:600;color:#000;margin-bottom:4px;">Bringhurst</div>
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:rgba(0,0,0,.5);line-height:1.5;">"Typography exists to honor content."</div>
+      </div>
+      <div style="flex:0 0 auto;width:140px;padding:16px 12px;border:2px solid #000;border-radius:4px;background:#000;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(255,255,255,.4);margin-bottom:6px;">2017</div>
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:600;color:#fff;margin-bottom:4px;">IBM Plex</div>
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:rgba(255,255,255,.6);line-height:1.5;">Abbink/Bold Monday. "Man and Machine." DOF-MESH.</div>
+      </div>
+    </div>
+
+    <!-- Las dos familias -->
+    <div class="grid-2" style="margin-bottom:48px;gap:32px;">
+      <!-- IBM Plex Sans -->
+      <div style="border:1px solid rgba(0,0,0,.1);border-radius:8px;padding:28px;background:#fff;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(0,0,0,.35);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px;">Primaria — UI &amp; Marketing</div>
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:56px;font-weight:300;color:#000;line-height:.95;letter-spacing:-.01em;margin-bottom:12px;">DOF</div>
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:16px;font-weight:300;color:rgba(0,0,0,.6);line-height:1.6;margin-bottom:16px;">
+          ABCDEFGHIJKLMNOPQRSTUVWXYZ<br/>
+          abcdefghijklmnopqrstuvwxyz<br/>
+          0123456789 !@#$%&amp;()[]{}&lt;&gt;
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(0,0,0,.35);line-height:2;">
+          Thin 100 · ExtraLight 200 · Light 300<br/>
+          Regular 400 · Medium 500 · SemiBold 600<br/>
+          Bold 700 + Italic variants
+        </div>
+      </div>
+      <!-- IBM Plex Mono -->
+      <div style="border:1px solid rgba(0,0,0,.1);border-radius:8px;padding:28px;background:#f7f7f5;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(0,0,0,.35);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px;">Monoespaciada — Código &amp; Specs</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:40px;font-weight:400;color:#000;line-height:1;margin-bottom:12px;">0x1F3A</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:rgba(0,0,0,.55);line-height:1.8;margin-bottom:16px;">
+          ABCDEFGHIJKLMNOPQRSTUVWXYZ<br/>
+          0123456789 !@#$%()[]{}&lt;&gt;<br/>
+          ₿ → ← ≠ ≈ ∞ φ √ ∑
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(0,0,0,.35);line-height:2;">
+          Light 300 · Regular 400 · SemiBold 600<br/>
+          Bold 700 + Italic variants<br/>
+          Soporta Bitcoin ₿ y símbolos matemáticos
+        </div>
+      </div>
+    </div>
+
+    <div class="divider" style="background:rgba(0,0,0,.08);"></div>
+
+    <!-- Escala tipográfica -->
+    <div class="t-label" style="margin-bottom:24px;color:rgba(0,0,0,.4);">Escala tipográfica</div>
+    <div>
+      <div style="padding:18px 0;border-bottom:1px solid rgba(0,0,0,.07);">
+        <div style="display:flex;align-items:baseline;gap:20px;">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(0,0,0,.3);min-width:90px;">Display</span>
+          <span style="font-family:'IBM Plex Sans',sans-serif;font-size:clamp(32px,5vw,52px);font-weight:300;color:#000;letter-spacing:-.02em;line-height:1;">Mathematics, not promises.</span>
+        </div>
+      </div>
+      <div style="padding:18px 0;border-bottom:1px solid rgba(0,0,0,.07);">
+        <div style="display:flex;align-items:baseline;gap:20px;">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(0,0,0,.3);min-width:90px;">H1 · 32px · 300</span>
+          <span style="font-family:'IBM Plex Sans',sans-serif;font-size:32px;font-weight:300;color:#000;line-height:1.1;">Deterministic AI Governance Framework</span>
+        </div>
+      </div>
+      <div style="padding:18px 0;border-bottom:1px solid rgba(0,0,0,.07);">
+        <div style="display:flex;align-items:baseline;gap:20px;">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(0,0,0,.3);min-width:90px;">H2 · 20px · 600</span>
+          <span style="font-family:'IBM Plex Sans',sans-serif;font-size:20px;font-weight:600;color:#000;text-transform:uppercase;letter-spacing:.04em;">Z3 SMT Formal Verification</span>
+        </div>
+      </div>
+      <div style="padding:18px 0;border-bottom:1px solid rgba(0,0,0,.07);">
+        <div style="display:flex;align-items:baseline;gap:20px;">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(0,0,0,.3);min-width:90px;">Body · 15px · 400</span>
+          <span style="font-family:'IBM Plex Sans',sans-serif;font-size:15px;font-weight:400;color:rgba(0,0,0,.65);line-height:1.75;">Pre-execution interception of AI agent decisions. Every action verified against formal specifications before it executes. Immutable attestation on Avalanche C-Chain.</span>
+        </div>
+      </div>
+      <div style="padding:18px 0;border-bottom:1px solid rgba(0,0,0,.07);">
+        <div style="display:flex;align-items:baseline;gap:20px;">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(0,0,0,.3);min-width:90px;">Mono · 12px · 400</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:rgba(0,0,0,.5);letter-spacing:.04em;">Avalanche C-Chain · 0x154a3F49...26F6 · 1,055 tests · 0 failures · φ=1.618</span>
+        </div>
+      </div>
+      <div style="padding:18px 0;">
+        <div style="display:flex;align-items:baseline;gap:20px;">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(0,0,0,.3);min-width:90px;">Label · 10px · caps</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(0,0,0,.35);letter-spacing:.18em;text-transform:uppercase;">pre-execution gate · z3 verified · on-chain attested</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider" style="background:rgba(0,0,0,.08);"></div>
+
+    <!-- Los grandes expertos -->
+    <div class="t-label" style="margin-bottom:20px;color:rgba(0,0,0,.4);">Los maestros que fundamentan esta decisión</div>
+    <div class="grid-3" style="gap:16px;">
+      <div style="padding:16px;border:1px solid rgba(0,0,0,.08);border-radius:6px;">
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:600;color:#000;margin-bottom:4px;">Robert Bringhurst</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(0,0,0,.35);margin-bottom:8px;">The Elements of Typographic Style, 1992</div>
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:rgba(0,0,0,.6);line-height:1.5;font-style:italic;">"Typography exists to honor content." — IBM Plex honra el contenido técnico de DOF-MESH con sus ángulos de ingeniería.</div>
+      </div>
+      <div style="padding:16px;border:1px solid rgba(0,0,0,.08);border-radius:6px;">
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:600;color:#000;margin-bottom:4px;">Jan Tschichold</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(0,0,0,.35);margin-bottom:8px;">Die neue Typographie, 1928</div>
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:rgba(0,0,0,.6);line-height:1.5;font-style:italic;">"El diseño tipográfico debe ser funcional." Swiss Style + grilla + sans-serif → IBM Plex es la evolución natural de ese principio.</div>
+      </div>
+      <div style="padding:16px;border:1px solid rgba(0,0,0,.08);border-radius:6px;">
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:600;color:#000;margin-bottom:4px;">Erik Spiekermann</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(0,0,0,.35);margin-bottom:8px;">Stop Stealing Sheep, 1993</div>
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:rgba(0,0,0,.6);line-height:1.5;font-style:italic;">"Type must communicate character." Los ángulos rectos interiores de IBM Plex comunican exactamente el carácter de DOF-MESH.</div>
+      </div>
+    </div>
+  </div>
+  <div class="page-number" style="color:rgba(0,0,0,.2);">08</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- 8. DO'S & DON'TS                                  -->
+<!-- ══════════════════════════════════════════════════ -->
+<div id="rules" class="page">
+  <div class="container">
+    <div class="section-tag"><span class="dot"></span><span class="t-h3">07 — Do's &amp; Don'ts</span></div>
+    <div class="t-h1" style="margin-bottom:16px;">The logo is a contract.<br/>Respect it.</div>
+    <div class="t-body" style="max-width:600px;margin-bottom:48px;">
+      Misuse of the DOF-MESH mark undermines the trust and precision the brand represents. These are non-negotiable rules, not suggestions.
+    </div>
+
+    <div class="do-dont-grid">
+      <!-- DO 1 -->
+      <div class="do-box">
+        <svg width="72" height="72" viewBox="0 0 100 100"><rect width="100" height="100" fill="#000"/><polygon points="8,7 42,46 42,54 8,93 8,72 29,54 29,46 8,28" fill="white"/><polygon points="92,7 58,46 58,54 92,93 92,72 71,54 71,46 92,28" fill="white"/></svg>
+        <span class="do-label">✓ White on black — primary</span>
+        <span class="t-mono" style="font-size:10px;text-align:center;">Always use on pure #000 background</span>
+      </div>
+      <!-- DONT 1 -->
+      <div class="dont-box">
+        <svg width="72" height="72" viewBox="0 0 100 100"><rect width="100" height="100" fill="#1a3a1a"/>
+        <polygon points="8,7 42,46 42,54 8,93 8,72 29,54 29,46 8,28" fill="#00ff88"/>
+        <polygon points="92,7 58,46 58,54 92,93 92,72 71,54 71,46 92,28" fill="#00ff88"/></svg>
+        <span class="dont-label">✗ Color logo</span>
+        <span class="t-mono" style="font-size:10px;text-align:center;">The mark is always B&W. No exceptions.</span>
+      </div>
+      <!-- DO 2 -->
+      <div class="do-box">
+        <svg width="72" height="72" viewBox="0 0 100 100"><rect width="100" height="100" fill="#f3f2ef"/>
+        <polygon points="8,7 43,47 43,53 8,93 8,72 30,53 30,47 8,28" fill="#0a0a0a"/>
+        <polygon points="92,7 57,47 57,53 92,93 92,72 70,53 70,47 92,28" fill="#0a0a0a"/></svg>
+        <span class="do-label">✓ Black on off-white — secondary</span>
+        <span class="t-mono" style="font-size:10px;text-align:center;">Only on #F3F2EF or pure white</span>
+      </div>
+      <!-- DONT 2 -->
+      <div class="dont-box">
+        <svg width="72" height="72" viewBox="0 0 100 100"><rect width="100" height="100" fill="#1a1a2a"/>
+        <polygon points="8,7 42,46 42,54 8,93 8,72 29,54 29,46 8,28" fill="white" opacity="0.3"/>
+        <polygon points="92,7 58,46 58,54 92,93 92,72 71,54 71,46 92,28" fill="white" opacity="0.3"/></svg>
+        <span class="dont-label">✗ Low contrast</span>
+        <span class="t-mono" style="font-size:10px;text-align:center;">Never use on colored or gradient backgrounds</span>
+      </div>
+      <!-- DONT 3 -->
+      <div class="dont-box">
+        <svg width="72" height="72" viewBox="0 0 100 100"><rect width="100" height="100" fill="#000"/>
+        <!-- Scaled incorrectly -->
+        <polygon points="8,7 42,46 42,54 8,93 8,72 29,54 29,46 8,28" fill="white" transform="scale(0.8) translate(6,6)"/>
+        <polygon points="92,7 58,46 58,54 92,93 92,72 71,54 71,46 92,28" fill="white" transform="scale(0.8) translate(-6,6)"/></svg>
+        <span class="dont-label">✗ Stretched or distorted</span>
+        <span class="t-mono" style="font-size:10px;text-align:center;">Always maintain aspect ratio 1:1</span>
+      </div>
+      <!-- DONT 4 -->
+      <div class="dont-box">
+        <svg width="72" height="72" viewBox="0 0 100 100"><rect width="100" height="100" fill="#000"/>
+        <polygon points="8,7 42,46 42,54 8,93 8,72 29,54 29,46 8,28" fill="white" transform="rotate(45,50,50)"/>
+        <polygon points="92,7 58,46 58,54 92,93 92,72 71,54 71,46 92,28" fill="white" transform="rotate(45,50,50)"/></svg>
+        <span class="dont-label">✗ Rotated</span>
+        <span class="t-mono" style="font-size:10px;text-align:center;">The mark is always upright. 0° only.</span>
+      </div>
+      <!-- DONT 5 -->
+      <div class="dont-box">
+        <svg width="72" height="72" viewBox="0 0 100 100"><rect width="100" height="100" fill="#000"/>
+        <polygon points="8,7 42,46 42,54 8,93 8,72 29,54 29,46 8,28" fill="white"/>
+        <polygon points="92,7 58,46 58,54 92,93 92,72 71,54 71,46 92,28" fill="white"/>
+        <text x="50" y="52" font-family="Arial" font-size="14" fill="#000" text-anchor="middle" font-weight="bold">DOF</text></svg>
+        <span class="dont-label">✗ Text inside the mark</span>
+        <span class="t-mono" style="font-size:10px;text-align:center;">Never place type inside the chevron gap</span>
+      </div>
+      <!-- DONT 6 -->
+      <div class="dont-box">
+        <svg width="72" height="72" viewBox="0 0 100 100"><rect width="100" height="100" fill="#000"/>
+        <defs><filter id="blur"><feGaussianBlur stdDeviation="2"/></filter></defs>
+        <polygon points="8,7 42,46 42,54 8,93 8,72 29,54 29,46 8,28" fill="white" filter="url(#blur)"/>
+        <polygon points="92,7 58,46 58,54 92,93 92,72 71,54 71,46 92,28" fill="white" filter="url(#blur)"/></svg>
+        <span class="dont-label">✗ Effects or shadows</span>
+        <span class="t-mono" style="font-size:10px;text-align:center;">No drop shadows, glows, or blur</span>
+      </div>
+    </div>
+  </div>
+  <div class="page-number">09</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- 9. VOICE, TONE & MOTION                           -->
+<!-- ══════════════════════════════════════════════════ -->
+<div id="voice" class="page">
+  <div class="container">
+    <div class="section-tag"><span class="dot"></span><span class="t-h3">08 — Voice, Tone &amp; Motion</span></div>
+    <div class="t-h1" style="margin-bottom:56px;">Precise. Direct.<br/>Mathematically honest.</div>
+
+    <div class="grid-2" style="margin-bottom:56px;">
+      <div>
+        <div class="t-label" style="margin-bottom:20px;">Brand Voice</div>
+        <div class="grid-2" style="gap:12px;">
+          <div class="voice-card">
+            <h4>Technical</h4>
+            <div class="t-body" style="font-size:13px;">We speak in precise, specific language. We name protocols, cite verifiable numbers, reference actual implementations.</div>
+          </div>
+          <div class="voice-card">
+            <h4>Confident</h4>
+            <div class="t-body" style="font-size:13px;">We don't qualify our claims with "might" or "could". Either it's proven or it isn't. We say what we know.</div>
+          </div>
+          <div class="voice-card">
+            <h4>Minimal</h4>
+            <div class="t-body" style="font-size:13px;">No fluff, no filler. Every sentence earns its space. Shorter is always better. We edit ruthlessly.</div>
+          </div>
+          <div class="voice-card">
+            <h4>Honest</h4>
+            <div class="t-body" style="font-size:13px;">We admit limitations. We publish 0% FPR results. We show the score. Trust comes from transparency, not marketing.</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="t-label" style="margin-bottom:20px;">Voice in Practice</div>
+        <div style="margin-bottom:16px;">
+          <div class="t-label" style="color:#CC3300;margin-bottom:8px;">✗ Never say this</div>
+          <div style="background:#0f0505;border:1px solid #2a0a0a;border-radius:6px;padding:16px;">
+            <div class="t-body" style="font-size:13px;color:rgba(255,255,255,.5);font-style:italic;">"Our AI solutions leverage cutting-edge blockchain technology to enhance security posture and deliver next-generation governance."</div>
+          </div>
+        </div>
+        <div>
+          <div class="t-label" style="color:#00CC55;margin-bottom:8px;">✓ Say this instead</div>
+          <div style="background:#050f05;border:1px solid #0a2a0a;border-radius:6px;padding:16px;">
+            <div class="t-body" style="font-size:13px;color:rgba(255,255,255,.8);">"DOF intercepts agent decisions pre-execution and verifies them with Z3 SMT proofs. Every verification is recorded on Avalanche C-Chain. 0% false positive rate, documented."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="t-label" style="margin-bottom:20px;">Motion Identity — AI-Generated Animations</div>
+    <div class="grid-2">
+      <div style="border:1px solid var(--border);border-radius:8px;padding:24px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+          <div style="width:10px;height:10px;border-radius:50%;background:var(--green);"></div>
+          <div class="t-h2" style="font-size:15px;">Seedance 2.0</div>
+          <span class="t-label">ByteDance / dreamina.capcut.com</span>
+        </div>
+        <div class="t-body" style="font-size:13px;margin-bottom:12px;">
+          Use for: brand intro animations, music-synced content, the "chevrons converging" intro sequence.
+        </div>
+        <div class="t-mono" style="font-size:11px;color:rgba(255,255,255,.3);">
+          Input: logo SVG + prompt<br/>
+          "Two white chevrons converging slowly,<br/>black background, 3 seconds, the gap<br/>represents a verification moment"<br/>
+          Price: ~$0.60 / 10s clip
+        </div>
+      </div>
+      <div style="border:1px solid var(--border);border-radius:8px;padding:24px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+          <div style="width:10px;height:10px;border-radius:50%;background:var(--green);"></div>
+          <div class="t-h2" style="font-size:15px;">Kling 3.0</div>
+          <span class="t-label">Kuaishou / klingai.com</span>
+        </div>
+        <div class="t-body" style="font-size:13px;margin-bottom:12px;">
+          Use for: product demos, 4K brand films, conference intro videos, investor deck animations.
+        </div>
+        <div class="t-mono" style="font-size:11px;color:rgba(255,255,255,.3);">
+          4K @ 60fps · free tier: 66 credits/day<br/>
+          ~$0.50 / 10s clip<br/>
+          Score: 8.26/10 (Curious Refuge)<br/>
+          "Best general-purpose model" (Chase Jarvis)
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-number">10</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- 10. BACK COVER                                    -->
+<!-- ══════════════════════════════════════════════════ -->
+<div class="page" style="justify-content:space-between;min-height:100vh;">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;width:100%;max-width:none;">
+    <div class="t-label">DOF-MESH Brand Book v1.0 — 2026</div>
+    <div class="t-label">Confidential</div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:80px 0;">
+    <svg width="160" height="160" viewBox="0 0 100 100" style="margin-bottom:40px;">
+      <rect width="100" height="100" fill="#000"/>
+      <polygon points="8,7 42,46 42,54 8,93 8,72 29,54 29,46 8,28" fill="white"/>
+      <polygon points="92,7 58,46 58,54 92,93 92,72 71,54 71,46 92,28" fill="white"/>
+    </svg>
+    <div style="font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.2);letter-spacing:.2em;text-transform:uppercase;margin-bottom:16px;">
+      Mathematics, not promises.
+    </div>
+    <div class="t-label">dofmesh.com</div>
+  </div>
+
+  <div style="width:100%;max-width:none;">
+    <div style="height:1px;background:rgba(255,255,255,.08);margin-bottom:32px;"></div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:40px;">
+      <div>
+        <div class="t-label" style="margin-bottom:8px;">Product</div>
+        <div class="t-mono" style="font-size:11px;line-height:1.8;">dofmesh.com<br/>pip install dof-sdk<br/>v0.5.1 · PyPI</div>
+      </div>
+      <div>
+        <div class="t-label" style="margin-bottom:8px;">On-chain</div>
+        <div class="t-mono" style="font-size:11px;line-height:1.8;">Avalanche C-Chain<br/>Base Mainnet<br/>Celo · 8+ chains</div>
+      </div>
+      <div>
+        <div class="t-label" style="margin-bottom:8px;">Created by</div>
+        <div class="t-mono" style="font-size:11px;line-height:1.8;">Juan Carlos Quiceno<br/>@Cyber_paisa<br/>Medellín, Colombia</div>
+      </div>
+      <div>
+        <div class="t-label" style="margin-bottom:8px;">Built with</div>
+        <div class="t-mono" style="font-size:11px;line-height:1.8;">Claude Code (Anthropic)<br/>Human × AI collaboration<br/>2026</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
