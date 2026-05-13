@@ -125,7 +125,7 @@ Format: `YYYY-MM-DD-session-NN.md` — each file records what changed, commit ha
 
 <div align="center">
 
-Built by **[@Cyber_paisa](https://github.com/Cyberpaisa)** · Enigma Group · Medellín, Colombia
+Built by **[@Cyber_paisa](https://github.com/Cyberpaisa)** · Cyber Paisa · Medellín, Colombia
 
 *If you can't prove it, you can't defend it.*
 
